@@ -1,82 +1,541 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Product Page</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f4;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --text-dark: #2a2118;
+      --text-mid: #6b5c4a;
+      --text-light: #a89880;
+      --border: #e8ddd0;
+      --card-bg: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: Arial;
-      display: flex;
-      gap: 40px;
-      padding: 20px;
+      font-family: 'Jost', sans-serif;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      min-height: 100vh;
     }
 
-    /* LEFT IMAGE COLUMN */
-    .images {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    /* ── Header ── */
+    .header {
+      background: var(--warm-white);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .header-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 7vw, 64px);
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.05;
+    }
+    .header-name em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .header-sub {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-top: 8px;
+      font-weight: 300;
     }
 
-    .images img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border: 1px solid #ccc;
+    /* ── Layout ── */
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 2rem;
+      align-items: start;
     }
 
-    /* RIGHT CONTENT */
-    .content {
-      max-width: 600px;
+    /* ── Sidebar photos ── */
+    .sidebar { display: flex; flex-direction: column; gap: 12px; }
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .photo-slot {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--warm-white);
+      border: 1px dashed var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 20px;
+      color: var(--text-light);
+    }
+    .photo-slot:hover { border-color: var(--gold); background: #fdf6ec; }
+    .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+    .sidebar-hint {
+      font-size: 11px;
+      color: var(--text-light);
+      text-align: center;
+      letter-spacing: 0.04em;
     }
 
-    textarea {
+    /* ── Main content ── */
+    .main { display: flex; flex-direction: column; gap: 2rem; }
+
+    /* ── Form card ── */
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1.25rem;
+    }
+    .field { margin-bottom: 12px; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 5px;
+    }
+    .field input, .field textarea {
       width: 100%;
-      height: 80px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      color: var(--text-dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--gold); }
+    .field textarea { min-height: 90px; resize: vertical; }
+
+    .stars-row { display: flex; gap: 6px; margin-bottom: 14px; }
+    .star-btn {
+      font-size: 26px; cursor: pointer;
+      background: none; border: none; padding: 2px;
+      opacity: 0.2; transition: opacity 0.15s, transform 0.15s;
+      line-height: 1;
+    }
+    .star-btn.on { opacity: 1; }
+    .star-btn:hover { transform: scale(1.15); }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--text-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .submit-btn:hover { background: #3d2e1e; }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .form-status {
+      text-align: center;
+      font-size: 13px;
+      min-height: 20px;
+      margin-top: 10px;
+      color: #6a9e6a;
+    }
+    .form-status.error { color: #c0504d; }
+
+    /* ── Wishes list ── */
+    .wishes-header {
+      display: flex; align-items: baseline; gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .wishes-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    .wishes-count {
+      font-size: 13px;
+      color: var(--text-light);
     }
 
-    .review {
-      border-bottom: 1px solid #ddd;
-      padding: 10px;
+    .wish-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 12px;
+      animation: fadeUp 0.35s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .wish-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .wish-name { font-weight: 500; font-size: 15px; color: var(--text-dark); }
+    .wish-stars { font-size: 13px; letter-spacing: 1px; }
+    .wish-text { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+    .wish-date { font-size: 11px; color: var(--text-light); margin-top: 6px; }
+
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem;
+      color: var(--text-light);
+      font-size: 14px;
+      background: var(--card-bg);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+    .loading-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    /* ── Config banner ── */
+    .config-banner {
+      background: #fff8e6;
+      border: 1px solid #f0d080;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 13px;
+      color: #7a5c10;
+      margin-bottom: 1.5rem;
+    }
+    .config-banner strong { font-weight: 500; }
+    .config-banner code {
+      background: #fef0b0;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 12px;
+    }
+
+    /* ── Confetti ── */
+    #confetti-wrap {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      top: -12px;
+      width: 8px; height: 6px;
+      border-radius: 2px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
     }
   </style>
 </head>
-
 <body>
 
-<!-- LEFT: 6 IMAGES -->
-<div class="images">
-  <img src="https://via.placeholder.com/120">
-  <img src="https://via.placeholder.com/120">
-  <img src="https://via.placeholder.com/120">
-  <img src="https://via.placeholder.com/120">
-  <img src="https://via.placeholder.com/120">
-  <img src="https://via.placeholder.com/120">
+<!-- ── STEP 1: Replace this with your Firebase config ── -->
+<script>
+  var FIREBASE_CONFIG = {
+    apiKey:            "REPLACE_WITH_YOUR_API_KEY",
+    authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+    projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+    storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+    messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
+    appId:             "REPLACE_WITH_YOUR_APP_ID"
+  };
+  var BIRTHDAY_PERSON = "Your Friend"; // ← Change this name
+</script>
+
+<div id="confetti-wrap"></div>
+
+<div class="header">
+  <div class="header-label">✦ A celebration for</div>
+  <div class="header-name">Happy Birthday, <em id="header-name-em">—</em></div>
+  <div class="header-sub">Leave a wish, share a memory, sign the guestbook</div>
 </div>
 
-<!-- RIGHT: REVIEWS -->
-<div class="content">
-  <h2>Leave a Review</h2>
+<div class="layout">
+  <!-- Sidebar photos -->
+  <div class="sidebar">
+    <div class="photo-grid">
+      <div class="photo-slot" id="s0" title="Click to add photo">+</div>
+      <div class="photo-slot" id="s1" title="Click to add photo">+</div>
+      <div class="photo-slot" id="s2" title="Click to add photo">+</div>
+      <div class="photo-slot" id="s3" title="Click to add photo">+</div>
+    </div>
+    <div class="sidebar-hint">Click any box to add a photo</div>
+  </div>
 
-  <input id="name" placeholder="Your name"><br><br>
+  <!-- Main -->
+  <div class="main">
 
-  <select id="rating">
-    <option value="5">⭐⭐⭐⭐⭐</option>
-    <option value="4">⭐⭐⭐⭐</option>
-    <option value="3">⭐⭐⭐</option>
-    <option value="2">⭐⭐</option>
-    <option value="1">⭐</option>
-  </select><br><br>
+    <!-- Firebase config warning -->
+    <div class="config-banner" id="config-banner" style="display:none">
+      ⚠️ <strong>Firebase not configured yet.</strong>
+      Open <code>index.html</code>, find <code>FIREBASE_CONFIG</code> at the top, and paste in your Firebase project details.
+      See the instructions below the page for how to set this up.
+    </div>
 
-  <textarea id="comment" placeholder="Write your message"></textarea><br><br>
+    <!-- Form -->
+    <div class="form-card">
+      <div class="card-title">Leave a wish 🎂</div>
+      <div class="field">
+        <label>Your name</label>
+        <input type="text" id="uname" placeholder="e.g. Sarah">
+      </div>
+      <div class="stars-row" id="stars">
+        <button class="star-btn on" data-i="1">⭐</button>
+        <button class="star-btn on" data-i="2">⭐</button>
+        <button class="star-btn on" data-i="3">⭐</button>
+        <button class="star-btn on" data-i="4">⭐</button>
+        <button class="star-btn on" data-i="5">⭐</button>
+      </div>
+      <div class="field">
+        <label>Your wish / message</label>
+        <textarea id="msg-text" placeholder="Happy birthday! Wishing you all the best..."></textarea>
+      </div>
+      <button class="submit-btn" id="go-btn">Submit wish 🎉</button>
+      <div class="form-status" id="form-status"></div>
+    </div>
 
-  <button onclick="submitReview()">Submit</button>
+    <!-- Wishes list -->
+    <div>
+      <div class="wishes-header">
+        <div class="wishes-title">Wishes & greetings</div>
+        <div class="wishes-count" id="wishes-count"></div>
+      </div>
+      <div id="wishes-list">
+        <div class="loading-state">Loading wishes...</div>
+      </div>
+    </div>
 
-  <h3>Reviews</h3>
-  <div id="reviews"></div>
+  </div>
 </div>
 
-<!-- Your app script -->
-<script type="module" src="app.js"></script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // ── Init ──
+  document.getElementById('header-name-em').textContent = BIRTHDAY_PERSON;
+
+  var db;
+  var firebaseReady = false;
+
+  try {
+    if (FIREBASE_CONFIG.apiKey === "REPLACE_WITH_YOUR_API_KEY") {
+      document.getElementById('config-banner').style.display = 'block';
+    } else {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.firestore();
+      firebaseReady = true;
+      loadWishes();
+    }
+  } catch(e) {
+    document.getElementById('config-banner').style.display = 'block';
+    console.error('Firebase init error:', e);
+  }
+
+  // ── Photo slots ──
+  var activeSlot = -1;
+  var fileInput = document.createElement('input');
+  fileInput.type = 'file'; fileInput.accept = 'image/*';
+  fileInput.style.display = 'none';
+  document.body.appendChild(fileInput);
+
+  for (var i = 0; i < 4; i++) {
+    (function(idx) {
+      document.getElementById('s' + idx).addEventListener('click', function() {
+        activeSlot = idx;
+        fileInput.value = '';
+        fileInput.click();
+      });
+    })(i);
+  }
+
+  fileInput.addEventListener('change', function() {
+    if (!this.files[0] || activeSlot < 0) return;
+    var reader = new FileReader();
+    var idx = activeSlot;
+    reader.onload = function(e) {
+      var slot = document.getElementById('s' + idx);
+      slot.innerHTML = '<img src="' + e.target.result + '">';
+    };
+    reader.readAsDataURL(this.files[0]);
+  });
+
+  // ── Stars ──
+  var rating = 5;
+  document.getElementById('stars').addEventListener('click', function(e) {
+    var btn = e.target.closest('.star-btn');
+    if (!btn) return;
+    rating = parseInt(btn.getAttribute('data-i'));
+    document.querySelectorAll('.star-btn').forEach(function(s) {
+      s.classList.toggle('on', parseInt(s.getAttribute('data-i')) <= rating);
+    });
+  });
+
+  // ── Submit ──
+  document.getElementById('go-btn').addEventListener('click', function() {
+    var name = document.getElementById('uname').value.trim();
+    var text = document.getElementById('msg-text').value.trim();
+    var status = document.getElementById('form-status');
+
+    status.className = 'form-status';
+    if (!name) { status.textContent = 'Please enter your name.'; return; }
+    if (!text) { status.textContent = 'Please write a wish!'; return; }
+    if (!firebaseReady) { status.className = 'form-status error'; status.textContent = 'Firebase not set up yet.'; return; }
+
+    var btn = document.getElementById('go-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+
+    db.collection('wishes').add({
+      name: name,
+      text: text,
+      stars: rating,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      document.getElementById('uname').value = '';
+      document.getElementById('msg-text').value = '';
+      rating = 5;
+      document.querySelectorAll('.star-btn').forEach(function(s) { s.classList.add('on'); });
+      status.textContent = '🎉 Wish saved! Everyone can now see it.';
+      btn.disabled = false; btn.textContent = 'Submit wish 🎉';
+      launchConfetti();
+    }).catch(function(err) {
+      status.className = 'form-status error';
+      status.textContent = 'Error: ' + err.message;
+      btn.disabled = false; btn.textContent = 'Submit wish 🎉';
+    });
+  });
+
+  // ── Load & display wishes (real-time listener) ──
+  function loadWishes() {
+    db.collection('wishes')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot(function(snapshot) {
+        var list = document.getElementById('wishes-list');
+        var count = document.getElementById('wishes-count');
+
+        if (snapshot.empty) {
+          list.innerHTML = '<div class="empty-state">No wishes yet — be the first to leave one! 🎈</div>';
+          count.textContent = '';
+          return;
+        }
+
+        count.textContent = snapshot.size + ' wish' + (snapshot.size !== 1 ? 'es' : '');
+        list.innerHTML = snapshot.docs.map(function(doc) {
+          var w = doc.data();
+          var stars = '⭐'.repeat(w.stars || 5);
+          var date = w.timestamp
+            ? w.timestamp.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : 'Just now';
+          return '<div class="wish-card">' +
+            '<div class="wish-top">' +
+              '<span class="wish-name">' + esc(w.name) + '</span>' +
+              '<span class="wish-stars">' + stars + '</span>' +
+            '</div>' +
+            '<div class="wish-text">' + esc(w.text) + '</div>' +
+            '<div class="wish-date">' + date + '</div>' +
+          '</div>';
+        }).join('');
+      }, function(err) {
+        document.getElementById('wishes-list').innerHTML =
+          '<div class="empty-state">Could not load wishes: ' + err.message + '</div>';
+      });
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── Confetti ──
+  function launchConfetti() {
+    var wrap = document.getElementById('confetti-wrap');
+    var colors = ['#FAC775','#F0997B','#9FE1CB','#c9a96e','#F4C0D1','#AFA9EC'];
+    for (var i = 0; i < 60; i++) {
+      (function() {
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.animationDuration = (1.2 + Math.random() * 1.5) + 's';
+        el.style.animationDelay = (Math.random() * 0.6) + 's';
+        el.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+        wrap.appendChild(el);
+        el.addEventListener('animationend', function() { el.remove(); });
+      })();
+    }
+  }
+</script>
+
+<!--
+════════════════════════════════════════════════
+  HOW TO SET UP FIREBASE (free, takes ~3 min)
+════════════════════════════════════════════════
+
+1. Go to https://console.firebase.google.com
+2. Click "Add project" → give it a name → Continue
+3. Disable Google Analytics (optional) → Create project
+4. Click "Firestore Database" in the left sidebar
+5. Click "Create database" → choose "Start in test mode" → Next → Enable
+6. Click the gear ⚙ icon → "Project settings"
+7. Scroll to "Your apps" → click the </> Web icon
+8. Register the app (any nickname) → copy the firebaseConfig object
+9. Paste the values into FIREBASE_CONFIG at the top of this file
+10. Change BIRTHDAY_PERSON to the name you want displayed
+11. Save and push to GitHub — done!
+
+Note: "Test mode" allows anyone to read/write for 30 days.
+For a permanent setup, go to Firestore → Rules and set:
+  allow read, write: if true;
+════════════════════════════════════════════════
+-->
+
 </body>
 </html>
