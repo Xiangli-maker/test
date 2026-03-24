@@ -1,6 +1,13 @@
 // 🔴 REPLACE WITH YOUR FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyCx0hTlL7PYk8z01qmBqw2RswWjPPwEbjc",
+  authDomain: "happybirthay-b8c0d.firebaseapp.com",
+  projectId: "happybirthay-b8c0d",
+  storageBucket: "happybirthay-b8c0d.firebasestorage.app",
+  messagingSenderId: "52519306440",
+  appId: "1:52519306440:web:0415d22f3a5ac5b94951fd",
+  measurementId: "G-5CV0XP4CR4"
+};
   authDomain: "YOUR_PROJECT.firebaseapp.com",
   projectId: "YOUR_PROJECT_ID",
 };
