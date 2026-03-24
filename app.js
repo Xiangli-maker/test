@@ -1,67 +1,87 @@
-// 🔴 REPLACE WITH YOUR FIREBASE CONFIG
+// Firebase (modular v10)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 🔴 Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCx0hTlL7PYk8z01qmBqw2RswWjPPwEbjc",
   authDomain: "happybirthay-b8c0d.firebaseapp.com",
   projectId: "happybirthay-b8c0d",
-  storageBucket: "happybirthay-b8c0d.firebasestorage.app",
+  storageBucket: "happybirthay-b8c0d.appspot.com",
   messagingSenderId: "52519306440",
-  appId: "1:52519306440:web:0415d22f3a5ac5b94951fd",
-  measurementId: "G-5CV0XP4CR4"
-};
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
+  appId: "1:52519306440:web:0415d22f3a5ac5b94951fd"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// Submit review (limit to 12)
-async function submitReview() {
-  const name = document.getElementById("name").value;
+// 🔐 Keep track of submitted names (simple anti-duplicate)
+const submittedNames = new Set();
+
+// ✅ Submit review
+window.submitReview = async function () {
+  const name = document.getElementById("name").value.trim();
   const rating = document.getElementById("rating").value;
-  const comment = document.getElementById("comment").value;
+  const comment = document.getElementById("comment").value.trim();
 
   if (!name || !comment) {
-    alert("Fill everything");
+    alert("Please fill all fields");
     return;
   }
 
-  const snapshot = await db.collection("reviews").get();
+  // Prevent duplicate names (optional but recommended)
+  if (submittedNames.has(name.toLowerCase())) {
+    alert("You already submitted a review!");
+    return;
+  }
+
+  // Limit to 12 reviews
+  const snapshot = await getDocs(collection(db, "reviews"));
 
   if (snapshot.size >= 12) {
     alert("Only 12 reviews allowed");
     return;
   }
 
-  db.collection("reviews").add({
+  await addDoc(collection(db, "reviews"), {
     name,
-    rating,
+    rating: Number(rating),
     comment,
     time: Date.now()
   });
 
+  submittedNames.add(name.toLowerCase());
+
   document.getElementById("name").value = "";
   document.getElementById("comment").value = "";
-}
+};
 
-// Real-time display
-db.collection("reviews")
-  .orderBy("time", "desc")
-  .onSnapshot(snapshot => {
-    const reviewsDiv = document.getElementById("reviews");
-    reviewsDiv.innerHTML = "";
+// 🔄 Real-time display
+const q = query(collection(db, "reviews"), orderBy("time", "desc"));
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
+onSnapshot(q, (snapshot) => {
+  const reviewsDiv = document.getElementById("reviews");
+  reviewsDiv.innerHTML = "";
 
-      const div = document.createElement("div");
-      div.className = "review";
+  snapshot.forEach((doc) => {
+    const data = doc.data();
 
-      div.innerHTML = `
-        <h4>${data.name} - ${"⭐".repeat(data.rating)}</h4>
-        <p>${data.comment}</p>
-      `;
+    const div = document.createElement("div");
+    div.className = "review";
 
-      reviewsDiv.appendChild(div);
-    });
+    div.innerHTML = `
+      <h4>${data.name} - ${"⭐".repeat(data.rating)}</h4>
+      <p>${data.comment}</p>
+    `;
+
+    reviewsDiv.appendChild(div);
   });
+});
