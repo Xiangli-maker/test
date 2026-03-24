@@ -1,53 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Reviews</title>
+  <title>Product Page</title>
 
   <style>
-    #review-section {
-      max-width: 600px;
-      margin: auto;
+    body {
+      font-family: Arial;
+      display: flex;
+      gap: 40px;
+      padding: 20px;
     }
 
-    .review {
-      border-bottom: 1px solid #ddd;
-      padding: 10px;
+    /* LEFT IMAGE COLUMN */
+    .images {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .images img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+    }
+
+    /* RIGHT CONTENT */
+    .content {
+      max-width: 600px;
     }
 
     textarea {
       width: 100%;
       height: 80px;
     }
+
+    .review {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+    }
   </style>
 </head>
 
 <body>
 
-<div id="review-section">
-  <h2>Reviews</h2>
+<!-- LEFT: 6 IMAGES -->
+<div class="images">
+  <img src="https://via.placeholder.com/120">
+  <img src="https://via.placeholder.com/120">
+  <img src="https://via.placeholder.com/120">
+  <img src="https://via.placeholder.com/120">
+  <img src="https://via.placeholder.com/120">
+  <img src="https://via.placeholder.com/120">
+</div>
 
-  <input id="name" placeholder="Your name" />
-  
+<!-- RIGHT: REVIEWS -->
+<div class="content">
+  <h2>Leave a Review</h2>
+
+  <input id="name" placeholder="Your name"><br><br>
+
   <select id="rating">
     <option value="5">⭐⭐⭐⭐⭐</option>
     <option value="4">⭐⭐⭐⭐</option>
     <option value="3">⭐⭐⭐</option>
     <option value="2">⭐⭐</option>
     <option value="1">⭐</option>
-  </select>
+  </select><br><br>
 
-  <textarea id="comment" placeholder="Write your review"></textarea>
-  
+  <textarea id="comment" placeholder="Write your message"></textarea><br><br>
+
   <button onclick="submitReview()">Submit</button>
 
+  <h3>Reviews</h3>
   <div id="reviews"></div>
 </div>
 
-<!-- Firebase scripts -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 
-<!-- Your JS file -->
 <script src="app.js"></script>
 
 </body>
