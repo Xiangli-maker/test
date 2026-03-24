@@ -6,6 +6,8 @@
   <title>Happy Birthday!</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
     :root {
       --cream: #faf7f2;
@@ -19,14 +21,14 @@
       --card-bg: #ffffff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
     body {
       font-family: 'Jost', sans-serif;
       background-color: var(--cream);
       color: var(--text-dark);
       min-height: 100vh;
     }
- 
+
     /* ── Header ── */
     .header {
       background: var(--warm-white);
@@ -69,7 +71,7 @@
       margin-top: 8px;
       font-weight: 300;
     }
- 
+
     /* ── Layout ── */
     .layout {
       max-width: 1100px;
@@ -80,7 +82,7 @@
       gap: 2rem;
       align-items: start;
     }
- 
+
     /* ── Sidebar photos ── */
     .sidebar { display: flex; flex-direction: column; gap: 12px; }
     .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -104,10 +106,10 @@
       text-align: center;
       letter-spacing: 0.04em;
     }
- 
+
     /* ── Main content ── */
     .main { display: flex; flex-direction: column; gap: 2rem; }
- 
+
     /* ── Form card ── */
     .form-card {
       background: var(--card-bg);
@@ -145,7 +147,7 @@
     }
     .field input:focus, .field textarea:focus { border-color: var(--gold); }
     .field textarea { min-height: 90px; resize: vertical; }
- 
+
     .stars-row { display: flex; gap: 6px; margin-bottom: 14px; }
     .star-btn {
       font-size: 26px; cursor: pointer;
@@ -155,7 +157,7 @@
     }
     .star-btn.on { opacity: 1; }
     .star-btn:hover { transform: scale(1.15); }
- 
+
     .submit-btn {
       width: 100%;
       padding: 12px;
@@ -173,7 +175,7 @@
     .submit-btn:hover { background: #3d2e1e; }
     .submit-btn:active { transform: scale(0.98); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
- 
+
     .form-status {
       text-align: center;
       font-size: 13px;
@@ -182,7 +184,7 @@
       color: #6a9e6a;
     }
     .form-status.error { color: #c0504d; }
- 
+
     /* ── Wishes list ── */
     .wishes-header {
       display: flex; align-items: baseline; gap: 10px;
@@ -198,7 +200,7 @@
       font-size: 13px;
       color: var(--text-light);
     }
- 
+
     .wish-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -216,7 +218,7 @@
     .wish-stars { font-size: 13px; letter-spacing: 1px; }
     .wish-text { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
     .wish-date { font-size: 11px; color: var(--text-light); margin-top: 6px; }
- 
+
     .empty-state {
       text-align: center;
       padding: 2.5rem;
@@ -232,7 +234,7 @@
       color: var(--text-light);
       font-size: 14px;
     }
- 
+
     /* ── Config banner ── */
     .config-banner {
       background: #fff8e6;
@@ -250,7 +252,7 @@
       padding: 1px 5px;
       font-size: 12px;
     }
- 
+
     /* ── Confetti ── */
     #confetti-wrap {
       position: fixed; inset: 0;
@@ -268,7 +270,7 @@
     @keyframes fall {
       to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
     }
- 
+
     @media (max-width: 700px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -276,28 +278,28 @@
   </style>
 </head>
 <body>
- 
+
 <!-- ── STEP 1: Replace this with your Firebase config ── -->
 <script>
   var FIREBASE_CONFIG = {
-    apiKey:            "REPLACE_WITH_YOUR_API_KEY",
-    authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
-    projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
-    storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
-    messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
-    appId:             "REPLACE_WITH_YOUR_APP_ID"
+    apiKey:            "AIzaSyCx0hTlL7PYk8z01qmBqw2RswWjPPwEbjc",
+    authDomain:        "happybirthay-b8c0d.firebaseapp.com",
+    projectId:         "happybirthay-b8c0d",
+    storageBucket:     "happybirthay-b8c0d.firebasestorage.app",
+    messagingSenderId: "52519306440",
+    appId:             "1:52519306440:web:0415d22f3a5ac5b94951fd"
   };
-  var BIRTHDAY_PERSON = "Your Friend"; // ← Change this name
+  var BIRTHDAY_PERSON = "Dad"; // ← Change this name
 </script>
- 
+
 <div id="confetti-wrap"></div>
- 
+
 <div class="header">
   <div class="header-label">✦ A celebration for</div>
   <div class="header-name">Happy Birthday, <em id="header-name-em">—</em></div>
   <div class="header-sub">Leave a wish, share a memory, sign the guestbook</div>
 </div>
- 
+
 <div class="layout">
   <!-- Sidebar photos -->
   <div class="sidebar">
@@ -309,17 +311,17 @@
     </div>
     <div class="sidebar-hint">Click any box to add a photo</div>
   </div>
- 
+
   <!-- Main -->
   <div class="main">
- 
+
     <!-- Firebase config warning -->
     <div class="config-banner" id="config-banner" style="display:none">
       ⚠️ <strong>Firebase not configured yet.</strong>
       Open <code>index.html</code>, find <code>FIREBASE_CONFIG</code> at the top, and paste in your Firebase project details.
       See the instructions below the page for how to set this up.
     </div>
- 
+
     <!-- Form -->
     <div class="form-card">
       <div class="card-title">Leave a wish 🎂</div>
@@ -341,7 +343,7 @@
       <button class="submit-btn" id="go-btn">Submit wish 🎉</button>
       <div class="form-status" id="form-status"></div>
     </div>
- 
+
     <!-- Wishes list -->
     <div>
       <div class="wishes-header">
@@ -352,21 +354,17 @@
         <div class="loading-state">Loading wishes...</div>
       </div>
     </div>
- 
+
   </div>
 </div>
- 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
- 
+
 <script>
   // ── Init ──
   document.getElementById('header-name-em').textContent = BIRTHDAY_PERSON;
- 
+
   var db;
   var firebaseReady = false;
- 
+
   try {
     if (FIREBASE_CONFIG.apiKey === "REPLACE_WITH_YOUR_API_KEY") {
       document.getElementById('config-banner').style.display = 'block';
@@ -380,14 +378,14 @@
     document.getElementById('config-banner').style.display = 'block';
     console.error('Firebase init error:', e);
   }
- 
+
   // ── Photo slots ──
   var activeSlot = -1;
   var fileInput = document.createElement('input');
   fileInput.type = 'file'; fileInput.accept = 'image/*';
   fileInput.style.display = 'none';
   document.body.appendChild(fileInput);
- 
+
   for (var i = 0; i < 4; i++) {
     (function(idx) {
       document.getElementById('s' + idx).addEventListener('click', function() {
@@ -397,7 +395,7 @@
       });
     })(i);
   }
- 
+
   fileInput.addEventListener('change', function() {
     if (!this.files[0] || activeSlot < 0) return;
     var reader = new FileReader();
@@ -408,7 +406,7 @@
     };
     reader.readAsDataURL(this.files[0]);
   });
- 
+
   // ── Stars ──
   var rating = 5;
   document.getElementById('stars').addEventListener('click', function(e) {
@@ -419,21 +417,21 @@
       s.classList.toggle('on', parseInt(s.getAttribute('data-i')) <= rating);
     });
   });
- 
+
   // ── Submit ──
   document.getElementById('go-btn').addEventListener('click', function() {
     var name = document.getElementById('uname').value.trim();
     var text = document.getElementById('msg-text').value.trim();
     var status = document.getElementById('form-status');
- 
+
     status.className = 'form-status';
     if (!name) { status.textContent = 'Please enter your name.'; return; }
     if (!text) { status.textContent = 'Please write a wish!'; return; }
     if (!firebaseReady) { status.className = 'form-status error'; status.textContent = 'Firebase not set up yet.'; return; }
- 
+
     var btn = document.getElementById('go-btn');
     btn.disabled = true; btn.textContent = 'Saving...';
- 
+
     db.collection('wishes').add({
       name: name,
       text: text,
@@ -453,7 +451,7 @@
       btn.disabled = false; btn.textContent = 'Submit wish 🎉';
     });
   });
- 
+
   // ── Load & display wishes (real-time listener) ──
   function loadWishes() {
     db.collection('wishes')
@@ -461,13 +459,13 @@
       .onSnapshot(function(snapshot) {
         var list = document.getElementById('wishes-list');
         var count = document.getElementById('wishes-count');
- 
+
         if (snapshot.empty) {
           list.innerHTML = '<div class="empty-state">No wishes yet — be the first to leave one! 🎈</div>';
           count.textContent = '';
           return;
         }
- 
+
         count.textContent = snapshot.size + ' wish' + (snapshot.size !== 1 ? 'es' : '');
         list.innerHTML = snapshot.docs.map(function(doc) {
           var w = doc.data();
@@ -489,11 +487,11 @@
           '<div class="empty-state">Could not load wishes: ' + err.message + '</div>';
       });
   }
- 
+
   function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
- 
+
   // ── Confetti ──
   function launchConfetti() {
     var wrap = document.getElementById('confetti-wrap');
@@ -513,12 +511,12 @@
     }
   }
 </script>
- 
+
 <!--
 ════════════════════════════════════════════════
   HOW TO SET UP FIREBASE (free, takes ~3 min)
 ════════════════════════════════════════════════
- 
+
 1. Go to https://console.firebase.google.com
 2. Click "Add project" → give it a name → Continue
 3. Disable Google Analytics (optional) → Create project
@@ -530,12 +528,12 @@
 9. Paste the values into FIREBASE_CONFIG at the top of this file
 10. Change BIRTHDAY_PERSON to the name you want displayed
 11. Save and push to GitHub — done!
- 
+
 Note: "Test mode" allows anyone to read/write for 30 days.
 For a permanent setup, go to Firestore → Rules and set:
   allow read, write: if true;
 ════════════════════════════════════════════════
 -->
- 
+
 </body>
 </html>
