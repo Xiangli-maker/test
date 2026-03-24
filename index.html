@@ -1,81 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon.com: Custom Heritage Keepsake</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-    <style>
-        body { font-family: "Amazon Ember", Arial, sans-serif; color: #0F1111; }
-        .amzn-orange { color: #e47911; }
-        .amzn-btn-yellow { background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; cursor: pointer; }
-        .amzn-btn-orange { background: #ffa41c; border: 1px solid #ff8f00; border-radius: 20px; cursor: pointer; }
-        .thumbnail { border: 1px solid #ddd; padding: 2px; cursor: pointer; width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
-        .thumbnail:hover { border-color: #e47911; box-shadow: 0 0 3px #e47911; }
-        .main-img-container { min-height: 400px; display: flex; align-items: flex-start; }
-    </style>
-</head>
-<body class="bg-white">
-    <div class="bg-[#131921] p-3">
-        <div class="max-w-6xl mx-auto">
-            <img src="https://white.logodownload.org/wp-content/uploads/2020/11/amazon-white-logo.png" alt="Amazon" class="h-7">
-        </div>
-    </div>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="app.js"></script>
 
-    <div class="max-w-6xl mx-auto p-4 md:p-8 flex flex-col md:flex-row gap-8">
-        <div class="w-full md:w-2/5 flex gap-3">
-            <div class="flex flex-col gap-2">
-                <img src="Fall.jpg" class="thumbnail" alt="Fall View" onclick="document.getElementById('main-img').src='Fall.jpg'">
-                <img src="Time.jpg" class="thumbnail" alt="Time Magazine View" onclick="document.getElementById('main-img').src='Time.jpg'">
-            </div>
-            <div class="flex-grow main-img-container">
-                <img id="main-img" src="Fall.jpg" alt="Main Product" class="w-full rounded-sm shadow-sm border border-gray-100">
-            </div>
-        </div>
 
-        <div class="w-full md:w-2/5">
-            <h1 class="text-2xl font-medium leading-tight mb-1">Personalized Heritage Keepsake - Limited Edition Autumn Campus & Person of the Year Collectible</h1>
-            <p class="text-blue-600 text-sm hover:underline cursor-pointer mb-2">Visit the Memory Lane Store</p>
-            <div class="flex items-center mb-4">
-                <span class="amzn-orange text-lg">★★★★★</span>
-                <span class="text-blue-600 text-sm ml-2">4,281 ratings | 155 answered questions</span>
-            </div>
-            <hr class="mb-4">
-            <div class="flex items-baseline gap-2 mb-4">
-                <span class="text-sm align-top mt-1">$</span>
-                <span class="text-3xl font-medium">29</span>
-                <span class="text-sm align-top mt-1">99</span>
-            </div>
-            <p class="text-sm font-bold mb-2">Product Description:</p>
-            <ul class="list-disc ml-5 text-sm space-y-2">
-                <li><strong>Dual View System:</strong> Use the side thumbnails to switch between the scenic campus view and the custom magazine cover.</li>
-                <li><strong>Interactive Community:</strong> Fully functional review system below for friends and family to share thoughts.</li>
-                <li><strong>Premium Finish:</strong> Inspired by the "Dad Gifts" engraving style.</li>
-            </ul>
-        </div>
+<div id="review-section">
+  <h2>Reviews</h2>
 
-        <div class="w-full md:w-1/5 border border-gray-300 rounded-lg p-4 h-fit shadow-md">
-            <p class="text-2xl mb-4">$29.99</p>
-            <p class="text-sm text-green-700 font-bold mb-4">In Stock</p>
-            <button class="w-full amzn-btn-yellow py-2 text-sm mb-2 font-medium hover:bg-[#f7ca00]">Add to Cart</button>
-            <button class="w-full amzn-btn-orange py-2 text-sm font-medium hover:bg-[#fa8900]">Buy Now</button>
-            <div class="mt-4 text-xs space-y-1">
-                <p class="text-gray-500">Ships from: <span class="text-black">Amazon</span></p>
-                <p class="text-gray-500">Sold by: <span class="text-black">Memory Lane Official</span></p>
-            </div>
-        </div>
-    </div>
+  <input id="name" placeholder="Your name" />
+  
+  <select id="rating">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+  </select>
 
-    <div class="max-w-6xl mx-auto mt-12 border-t pt-8 px-4">
-        <h2 class="text-2xl font-bold mb-6">Customer reviews</h2>
-        
-        <div class="elfsight-app-4fd95cb9-db39-4fc2-b92d-4daf055a65ee" data-elfsight-app-lazy></div>
-        
-    </div>
+  <textarea id="comment" placeholder="Write your review"></textarea>
+  
+  <button onclick="submitReview()">Submit</button>
 
-    <div class="bg-[#232f3e] text-white text-center p-10 mt-20">
-        <p class="text-sm">© 1996-2026, Amazon.com, Inc. or its affiliates</p>
-    </div>
-</body>
-</html>
+  <div id="reviews"></div>
+</div>
+
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Submit review
+function submitReview() {
+  const name = document.getElementById("name").value;
+  const rating = document.getElementById("rating").value;
+  const comment = document.getElementById("comment").value;
+
+  if (!name || !comment) {
+    alert("Please fill everything");
+    return;
+  }
+
+  db.collection("reviews").add({
+    name,
+    rating,
+    comment,
+    time: Date.now()
+  });
+
+  document.getElementById("name").value = "";
+  document.getElementById("comment").value = "";
+}
+
+// Real-time listener
+db.collection("reviews")
+  .orderBy("time", "desc")
+  .onSnapshot(snapshot => {
+    const reviewsDiv = document.getElementById("reviews");
+    reviewsDiv.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      const div = document.createElement("div");
+      div.className = "review";
+
+      div.innerHTML = `
+        <h4>${data.name} - ${"⭐".repeat(data.rating)}</h4>
+        <p>${data.comment}</p>
+      `;
+
+      reviewsDiv.appendChild(div);
+    });
+  });
+
+#review-section {
+  max-width: 600px;
+  margin: auto;
+}
+
+.review {
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 80px;
+}
+
+git add .
+git commit -m "added real reviews"
+git push
