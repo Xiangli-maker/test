@@ -401,7 +401,7 @@
   </div>
 
   <div class="header-name">Happy Birthday, <em id="header-name-em">—</em></div>
-  <div class="header-sub"></div>
+  <div class="header-sub">Leave a wish, share a memory, sign the guestbook</div>
 </div>
 
 <div class="layout">
@@ -435,7 +435,7 @@
       <div class="card-title">Leave a wish 🎂</div>
       <div class="field">
         <label>Your name</label>
-        <input type="text" id="uname" placeholder="">
+        <input type="text" id="uname" placeholder="e.g. Sarah">
       </div>
       <div class="stars-row" id="stars">
         <button class="star-btn on" data-i="1">⭐</button>
@@ -487,33 +487,7 @@
     console.error('Firebase init error:', e);
   }
 
-  // ── Photo slots ──
-  var activeSlot = -1;
-  var fileInput = document.createElement('input');
-  fileInput.type = 'file'; fileInput.accept = 'image/*';
-  fileInput.style.display = 'none';
-  document.body.appendChild(fileInput);
-
-  for (var i = 0; i < 4; i++) {
-    (function(idx) {
-      document.getElementById('s' + idx).addEventListener('click', function() {
-        activeSlot = idx;
-        fileInput.value = '';
-        fileInput.click();
-      });
-    })(i);
-  }
-
-  fileInput.addEventListener('change', function() {
-    if (!this.files[0] || activeSlot < 0) return;
-    var reader = new FileReader();
-    var idx = activeSlot;
-    reader.onload = function(e) {
-      var slot = document.getElementById('s' + idx);
-      slot.innerHTML = '<img src="' + e.target.result + '">';
-    };
-    reader.readAsDataURL(this.files[0]);
-  });
+  // Photo slots removed - photos are hardcoded in sidebar
 
   // ── Stars ──
   var rating = 5;
