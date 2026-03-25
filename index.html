@@ -47,7 +47,7 @@
       background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%);
       pointer-events: none;
     }
-    .header-label {
+
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -56,13 +56,15 @@
     }
     .header-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(36px, 7vw, 64px);
-      font-weight: 600;
+      font-size: clamp(48px, 9vw, 90px);
+      font-weight: 700;
       color: #c0392b;
       line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
     .header-name em {
-      font-style: italic;
+      font-style: normal;
       color: #e74c3c;
     }
     .header-sub {
@@ -434,7 +436,7 @@
 </style>
 
 <div class="header">
-  <div class="header-label">✦ A celebration for</div>
+
 
   <div style="display:flex;align-items:flex-end;justify-content:center;gap:6px;margin:12px 0 16px;">
 
@@ -528,7 +530,7 @@
 
   </div>
 
-  <div class="header-name">Happy Birthday, <em id="header-name-em">—</em></div>
+  <div class="header-name" style="font-size:clamp(52px,10vw,96px);font-weight:900;color:#c0392b;text-transform:uppercase;letter-spacing:0.05em;">HAPPY BIRTHDAY, <span id="header-name-em" style="color:#e74c3c;">DAD</span></div>
 
 </div>
 
