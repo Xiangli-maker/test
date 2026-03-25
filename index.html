@@ -78,7 +78,7 @@
       margin: 0 auto;
       padding: 2rem 1.5rem;
       display: grid;
-      grid-template-columns: 220px 1fr;
+      grid-template-columns: 1fr;
       gap: 2rem;
       align-items: start;
     }
@@ -292,6 +292,61 @@
       }
     }
 
+
+    /* ── Photo Gallery ── */
+    .gallery-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 0;
+    }
+    .gallery-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      background: var(--warm-white);
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease, opacity 0.3s;
+    }
+    .gallery-item:hover img { transform: scale(1.05); opacity: 0.9; }
+    .gallery-item .overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s;
+    }
+    .gallery-item:hover .overlay { background: rgba(0,0,0,0.18); }
+    .gallery-item .overlay span {
+      color: white; font-size: 28px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery-item:hover .overlay span { opacity: 1; }
+    @media (max-width: 700px) {
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    }
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    }
     /* ── Lightbox ── */
     .lightbox-overlay {
       display: none;
@@ -462,24 +517,49 @@
 
 </div>
 
-<div class="layout">
-  <!-- Sidebar photos -->
-  <div class="sidebar">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div onclick="openLightbox('Person of Year-Alec.JPG','Alec')" style="cursor:pointer;border-radius:10px;border:1px solid var(--border);padding:10px 14px;background:var(--warm-white);display:flex;align-items:center;gap:8px;transition:background 0.2s;" onmouseover="this.style.background='#fdf6ec'" onmouseout="this.style.background='var(--warm-white)'">
-        <span style="font-size:18px;">🖼</span>
-        <span style="font-size:13px;color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Alec</span>
-      </div>
-      <div onclick="openLightbox('Beam1.jpg','Beam 1')" style="cursor:pointer;border-radius:10px;border:1px solid var(--border);padding:10px 14px;background:var(--warm-white);display:flex;align-items:center;gap:8px;transition:background 0.2s;" onmouseover="this.style.background='#fdf6ec'" onmouseout="this.style.background='var(--warm-white)'">
-        <span style="font-size:18px;">🖼</span>
-        <span style="font-size:13px;color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Beam 1</span>
-      </div>
-      <div onclick="openLightbox('BeamAI.jpg','Beam AI')" style="cursor:pointer;border-radius:10px;border:1px solid var(--border);padding:10px 14px;background:var(--warm-white);display:flex;align-items:center;gap:8px;transition:background 0.2s;" onmouseover="this.style.background='#fdf6ec'" onmouseout="this.style.background='var(--warm-white)'">
-        <span style="font-size:18px;">🖼</span>
-        <span style="font-size:13px;color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Beam AI</span>
-      </div>
+
+<!-- Photo Gallery -->
+<div class="gallery-section">
+  <div class="gallery-title">📸 Memories</div>
+  <div class="gallery-grid">
+    <div class="gallery-item" onclick="openLightbox('Photo1.jpg','Photo 1')">
+      <img src="Photo1.jpg" alt="Photo 1">
+      <div class="overlay"><span>⊕</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('Photo2.jpg','Photo 2')">
+      <img src="Photo2.jpg" alt="Photo 2">
+      <div class="overlay"><span>⊕</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('Photo3.jpg','Photo 3')">
+      <img src="Photo3.jpg" alt="Photo 3">
+      <div class="overlay"><span>⊕</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('Photo4.jpg','Photo 4')">
+      <img src="Photo4.jpg" alt="Photo 4">
+      <div class="overlay"><span>⊕</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('Photo5.jpg','Photo 5')">
+      <img src="Photo5.jpg" alt="Photo 5">
+      <div class="overlay"><span>⊕</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('Photo6.jpg','Photo 6')">
+      <img src="Photo6.jpg" alt="Photo 6">
+      <div class="overlay"><span>⊕</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('Photo7.jpg','Photo 7')">
+      <img src="Photo7.jpg" alt="Photo 7">
+      <div class="overlay"><span>⊕</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('Photo8.jpg','Photo 8')">
+      <img src="Photo8.jpg" alt="Photo 8">
+      <div class="overlay"><span>⊕</span></div>
     </div>
   </div>
+</div>
+
+<div class="layout">
+  <!-- Sidebar hidden - gallery shown below header instead -->
+  <div class="sidebar" style="display:none;"></div>
 
   <!-- Main -->
   <div class="main">
