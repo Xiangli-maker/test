@@ -323,6 +323,16 @@
     .lightbox-close:hover { opacity: 1; }
     .sidebar img { cursor: pointer; transition: opacity 0.2s; }
     .sidebar img:hover { opacity: 0.85; }
+
+    /* ── Collapsible wishes ── */
+    .wish-card { cursor: default; }
+    .wish-text { display: none; }
+    .wish-date { display: none; }
+    .wish-name { cursor: pointer; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+    .wish-name:hover { color: var(--text-dark); }
+    .wish-card.open .wish-text { display: block; }
+    .wish-card.open .wish-date { display: block; }
+    .wish-name-hint { font-size: 11px; color: var(--text-light); margin-bottom: 12px; }
   </style>
 </head>
 <body>
@@ -506,6 +516,7 @@
         <div class="wishes-title">Wishes & greetings</div>
         <div class="wishes-count" id="wishes-count"></div>
       </div>
+      <div class="wish-name-hint">Click a name to read their wish</div>
       <div id="wishes-list">
         <div class="loading-state">Loading wishes...</div>
       </div>
@@ -689,6 +700,16 @@ For a permanent setup, go to Firestore → Rules and set:
     img.addEventListener('click', function() {
       openLightbox(this.src, this.alt);
     });
+  });
+</script>
+
+<script>
+  // Collapsible wish cards
+  document.addEventListener('click', function(e) {
+    var name = e.target.closest('.wish-name');
+    if (!name) return;
+    var card = name.closest('.wish-card');
+    card.classList.toggle('open');
   });
 </script>
 </body>
