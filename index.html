@@ -405,6 +405,46 @@
     .wish-card.open .wish-text { display: block; }
     .wish-card.open .wish-date { display: block; }
     .wish-name-hint { font-size: 11px; color: var(--text-light); margin-bottom: 12px; }
+
+    /* ── Music Player ── */
+    .music-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #c0392b;
+      color: white;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .music-btn:hover { transform: scale(1.1); background: #e74c3c; }
+    .music-label {
+      position: fixed;
+      bottom: 28px;
+      right: 80px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      z-index: 1000;
+      font-family: 'Jost', sans-serif;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .music-btn:hover + .music-label,
+    .music-label.show { opacity: 1; }
   </style>
 </head>
 <body>
@@ -791,6 +831,53 @@ For a permanent setup, go to Firestore → Rules and set:
     var card = name.closest('.wish-card');
     card.classList.toggle('open');
   });
+</script>
+
+<!-- Background Music -->
+<audio id="bg-music" loop>
+  <source src="Watching the Stars.mp3" type="audio/mpeg">
+</audio>
+<button class="music-btn" id="music-btn" onclick="toggleMusic()" title="Play/Pause music">🎵</button>
+<div class="music-label" id="music-label">Watching the Stars</div>
+
+<script>
+  var music = document.getElementById('bg-music');
+  var btn = document.getElementById('music-btn');
+  var label = document.getElementById('music-label');
+  var playing = false;
+
+  function toggleMusic() {
+    if (playing) {
+      music.pause();
+      btn.textContent = '🎵';
+      label.classList.remove('show');
+    } else {
+      music.play();
+      btn.textContent = '⏸';
+      label.classList.add('show');
+      setTimeout(function(){ label.classList.remove('show'); }, 3000);
+    }
+    playing = !playing;
+  }
+
+  music.volume = 0.4;
+
+  // Try autoplay immediately
+  var autoplayPromise = music.play();
+  if (autoplayPromise !== undefined) {
+    autoplayPromise.then(function() {
+      playing = true;
+      btn.textContent = '⏸';
+    }).catch(function() {
+      // Browser blocked autoplay — wait for first user interaction
+      document.addEventListener('click', function startOnClick() {
+        music.play();
+        playing = true;
+        btn.textContent = '⏸';
+        document.removeEventListener('click', startOnClick);
+      }, { once: true });
+    });
+  }
 </script>
 </body>
 </html>
