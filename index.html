@@ -291,6 +291,38 @@
         height: 100px;
       }
     }
+
+    /* ── Lightbox ── */
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-overlay img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 10px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+      cursor: default;
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 18px; right: 24px;
+      color: white;
+      font-size: 32px;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.8;
+    }
+    .lightbox-close:hover { opacity: 1; }
+    .sidebar img { cursor: pointer; transition: opacity 0.2s; }
+    .sidebar img:hover { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -633,5 +665,31 @@ For a permanent setup, go to Firestore → Rules and set:
 ════════════════════════════════════════════════
 -->
 
+
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+<script>
+  function openLightbox(src, alt) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-img').alt = alt;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+  // Attach click to all sidebar images
+  document.querySelectorAll('.sidebar img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      openLightbox(this.src, this.alt);
+    });
+  });
+</script>
 </body>
 </html>
