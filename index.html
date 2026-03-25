@@ -535,15 +535,19 @@
 <!-- Photo Gallery -->
 <div class="gallery-section">
   <div class="gallery-title">📸 Memories</div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
-    <div onclick="openLightbox('Photo1.jpg','Photo 1')" class="photo-btn">📷 Photo 1</div>
-    <div onclick="openLightbox('Photo2.jpg','Photo 2')" class="photo-btn">📷 Photo 2</div>
-    <div onclick="openLightbox('Photo3.jpg','Photo 3')" class="photo-btn">📷 Photo 3</div>
-    <div onclick="openLightbox('Photo4.jpg','Photo 4')" class="photo-btn">📷 Photo 4</div>
-    <div onclick="openLightbox('Photo5.jpg','Photo 5')" class="photo-btn">📷 Photo 5</div>
-    <div onclick="openLightbox('Photo6.jpg','Photo 6')" class="photo-btn">📷 Photo 6</div>
-    <div onclick="openLightbox('Photo7.jpg','Photo 7')" class="photo-btn">📷 Photo 7</div>
-    <div onclick="openLightbox('Photo8.jpg','Photo 8')" class="photo-btn">📷 Photo 8</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:0 auto;">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div onclick="openLightbox('Photo1.jpg','Photo 1')" class="photo-btn">📷 Photo 1</div>
+      <div onclick="openLightbox('Photo2.jpg','Photo 2')" class="photo-btn">📷 Photo 2</div>
+      <div onclick="openLightbox('Photo3.jpg','Photo 3')" class="photo-btn">📷 Photo 3</div>
+      <div onclick="openLightbox('Photo4.jpg','Photo 4')" class="photo-btn">📷 Photo 4</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div onclick="openLightbox('Photo5.jpg','Photo 5')" class="photo-btn">📷 Photo 5</div>
+      <div onclick="openLightbox('Photo6.jpg','Photo 6')" class="photo-btn">📷 Photo 6</div>
+      <div onclick="openLightbox('Photo7.jpg','Photo 7')" class="photo-btn">📷 Photo 7</div>
+      <div onclick="openLightbox('Photo8.jpg','Photo 8')" class="photo-btn">📷 Photo 8</div>
+    </div>
   </div>
 </div>
 
