@@ -21,435 +21,98 @@
       --card-bg: #ffffff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; background-color: var(--cream); color: var(--text-dark); min-height: 100vh; position: relative; }
 
-    body {
-      font-family: 'Jost', sans-serif;
-      background-color: var(--cream);
-      color: var(--text-dark);
-      min-height: 100vh;
-    }
-
-    /* ── Header ── */
-    .header {
-      background: var(--warm-white);
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-      padding: 2.5rem 1rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .header::before {
+    /* ── Festive background ── */
+    body::before {
       content: '';
-      position: absolute;
-      top: -60px; left: 50%;
-      transform: translateX(-50%);
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%);
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse at 10% 20%, rgba(231,76,60,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 10%, rgba(241,196,15,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(52,152,219,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 90%, rgba(155,89,182,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(46,204,113,0.04) 0%, transparent 60%),
+        #faf7f2;
+    }
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
       pointer-events: none;
     }
-
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 10px;
-    }
-    .header-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(48px, 9vw, 90px);
-      font-weight: 700;
-      color: #c0392b;
-      line-height: 1.05;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .header-name em {
-      font-style: normal;
-      color: #e74c3c;
-    }
-    .header-sub {
-      font-size: 14px;
-      color: var(--text-light);
-      margin-top: 8px;
-      font-weight: 300;
-    }
-
-    /* ── Layout ── */
-    .layout {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    /* ── Sidebar photos ── */
+    .header { background: var(--warm-white); border-bottom: 1px solid var(--border); text-align: center; padding: 2.5rem 1rem 2rem; position: relative; overflow: hidden; }
+    .header::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%); pointer-events: none; }
+    .header-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 9vw, 90px); font-weight: 700; color: #c0392b; line-height: 1.05; text-transform: uppercase; letter-spacing: 0.04em; }
+    .header-name em { font-style: normal; color: #e74c3c; }
+    .header-sub { font-size: 14px; color: var(--text-light); margin-top: 8px; font-weight: 300; }
+    .layout { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start; }
     .sidebar { display: flex; flex-direction: column; gap: 12px; }
-    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .photo-slot {
-      aspect-ratio: 1;
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--warm-white);
-      border: 1px dashed var(--border);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      font-size: 20px;
-      color: var(--text-light);
-    }
-    .photo-slot:hover { border-color: var(--gold); background: #fdf6ec; }
-    .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
-    .sidebar-hint {
-      font-size: 11px;
-      color: var(--text-light);
-      text-align: center;
-      letter-spacing: 0.04em;
-    }
-
-    /* ── Main content ── */
     .main { display: flex; flex-direction: column; gap: 2rem; }
-
-    /* ── Form card ── */
-    .form-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.75rem;
-    }
-    .card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 1.25rem;
-    }
+    .form-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; }
+    .card-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--text-dark); margin-bottom: 1.25rem; }
     .field { margin-bottom: 12px; }
-    .field label {
-      display: block;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-light);
-      margin-bottom: 5px;
-    }
-    .field input, .field textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-family: 'Jost', sans-serif;
-      font-size: 14px;
-      color: var(--text-dark);
-      background: var(--cream);
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    .field label { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 5px; }
+    .field input, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Jost', sans-serif; font-size: 14px; color: var(--text-dark); background: var(--cream); outline: none; transition: border-color 0.2s; }
     .field input:focus, .field textarea:focus { border-color: var(--gold); }
     .field textarea { min-height: 90px; resize: vertical; }
-
     .stars-row { display: flex; gap: 6px; margin-bottom: 14px; }
-    .star-btn {
-      font-size: 26px; cursor: pointer;
-      background: none; border: none; padding: 2px;
-      opacity: 0.2; transition: opacity 0.15s, transform 0.15s;
-      line-height: 1;
-    }
+    .star-btn { font-size: 26px; cursor: pointer; background: none; border: none; padding: 2px; opacity: 0.2; transition: opacity 0.15s, transform 0.15s; line-height: 1; }
     .star-btn.on { opacity: 1; }
     .star-btn:hover { transform: scale(1.15); }
-
-    .submit-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--text-dark);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Jost', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      letter-spacing: 0.04em;
-      transition: background 0.2s, transform 0.1s;
-    }
+    .submit-btn { width: 100%; padding: 12px; background: var(--text-dark); color: #fff; border: none; border-radius: 8px; font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; letter-spacing: 0.04em; transition: background 0.2s, transform 0.1s; }
     .submit-btn:hover { background: #3d2e1e; }
     .submit-btn:active { transform: scale(0.98); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .form-status {
-      text-align: center;
-      font-size: 13px;
-      min-height: 20px;
-      margin-top: 10px;
-      color: #6a9e6a;
-    }
+    .form-status { text-align: center; font-size: 13px; min-height: 20px; margin-top: 10px; color: #6a9e6a; }
     .form-status.error { color: #c0504d; }
-
-    /* ── Wishes list ── */
-    .wishes-header {
-      display: flex; align-items: baseline; gap: 10px;
-      margin-bottom: 1rem;
-    }
-    .wishes-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-    .wishes-count {
-      font-size: 13px;
-      color: var(--text-light);
-    }
-
-    .wish-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.1rem 1.25rem;
-      margin-bottom: 12px;
-      animation: fadeUp 0.35s ease both;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .wishes-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 1rem; }
+    .wishes-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--text-dark); }
+    .wishes-count { font-size: 13px; color: var(--text-light); }
+    .wish-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.25rem; margin-bottom: 12px; animation: fadeUp 0.35s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .wish-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-    .wish-name { font-weight: 500; font-size: 15px; color: var(--text-dark); }
-    .wish-stars { font-size: 13px; letter-spacing: 1px; }
-    .wish-text { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
-    .wish-date { font-size: 11px; color: var(--text-light); margin-top: 6px; }
-
-    .empty-state {
-      text-align: center;
-      padding: 2.5rem;
-      color: var(--text-light);
-      font-size: 14px;
-      background: var(--card-bg);
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-    }
-    .loading-state {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-light);
-      font-size: 14px;
-    }
-
-    /* ── Config banner ── */
-    .config-banner {
-      background: #fff8e6;
-      border: 1px solid #f0d080;
-      border-radius: 10px;
-      padding: 1rem 1.25rem;
-      font-size: 13px;
-      color: #7a5c10;
-      margin-bottom: 1.5rem;
-    }
-    .config-banner strong { font-weight: 500; }
-    .config-banner code {
-      background: #fef0b0;
-      border-radius: 4px;
-      padding: 1px 5px;
-      font-size: 12px;
-    }
-
-    /* ── Confetti ── */
-    #confetti-wrap {
-      position: fixed; inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      overflow: hidden;
-    }
-    .confetti-piece {
-      position: absolute;
-      top: -12px;
-      width: 8px; height: 6px;
-      border-radius: 2px;
-      animation: fall linear forwards;
-    }
-    @keyframes fall {
-      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-    }
-
-    @media (max-width: 700px) {
-      .layout { grid-template-columns: 1fr; }
-      .sidebar {
-        display: flex;
-        flex-direction: row;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 4px;
-      }
-      .sidebar > div {
-        display: flex;
-        flex-direction: row;
-        gap: 8px;
-        width: 100%;
-      }
-      .sidebar > div > div {
-        flex: 0 0 100px;
-        height: 100px;
-      }
-    }
-
-
-    /* ── Photo Gallery ── */
-    .gallery-section {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1.5rem 1.5rem 0;
-    }
-    .gallery-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 1rem;
-      text-align: center;
-      letter-spacing: 0.02em;
-    }
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-    .gallery-item {
-      aspect-ratio: 1;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      position: relative;
-      background: var(--warm-white);
-    }
-    .gallery-item img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.3s ease, opacity 0.3s;
-    }
-    .gallery-item:hover img { transform: scale(1.05); opacity: 0.9; }
-    .gallery-item .overlay {
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0);
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.3s;
-    }
-    .gallery-item:hover .overlay { background: rgba(0,0,0,0.18); }
-    .gallery-item .overlay span {
-      color: white; font-size: 28px;
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .gallery-item:hover .overlay span { opacity: 1; }
-    @media (max-width: 700px) {
-      .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; }
-    }
-    @media (max-width: 480px) {
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-    }
-
-    .photo-btn {
-      cursor: pointer;
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--warm-white);
-      font-size: 13px;
-      color: var(--gold);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-    .photo-btn:hover { background: #fdf6ec; color: var(--text-dark); }
-    /* ── Lightbox ── */
-    .lightbox-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 10000;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .lightbox-overlay.open { display: flex; }
-    .lightbox-overlay img {
-      max-width: 90vw;
-      max-height: 90vh;
-      border-radius: 10px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-      cursor: default;
-    }
-    .lightbox-close {
-      position: fixed;
-      top: 18px; right: 24px;
-      color: white;
-      font-size: 32px;
-      cursor: pointer;
-      line-height: 1;
-      opacity: 0.8;
-    }
-    .lightbox-close:hover { opacity: 1; }
-    .sidebar img { cursor: pointer; transition: opacity 0.2s; }
-    .sidebar img:hover { opacity: 0.85; }
-
-    /* ── Collapsible wishes ── */
-    .wish-card { cursor: default; }
-    .wish-text { display: none; }
-    .wish-date { display: none; }
-    .wish-name { cursor: pointer; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+    .wish-name { font-weight: 500; font-size: 15px; color: var(--gold); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
     .wish-name:hover { color: var(--text-dark); }
+    .wish-stars { font-size: 13px; letter-spacing: 1px; }
+    .wish-text { font-size: 14px; color: var(--text-mid); line-height: 1.6; display: none; }
+    .wish-date { font-size: 11px; color: var(--text-light); margin-top: 6px; display: none; }
     .wish-card.open .wish-text { display: block; }
     .wish-card.open .wish-date { display: block; }
     .wish-name-hint { font-size: 11px; color: var(--text-light); margin-bottom: 12px; }
-
-    /* ── Music Player ── */
-    .music-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #c0392b;
-      color: white;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s, background 0.2s;
-    }
+    .empty-state { text-align: center; padding: 2.5rem; color: var(--text-light); font-size: 14px; background: var(--card-bg); border: 1px dashed var(--border); border-radius: 12px; }
+    .loading-state { text-align: center; padding: 2rem; color: var(--text-light); font-size: 14px; }
+    .config-banner { background: #fff8e6; border: 1px solid #f0d080; border-radius: 10px; padding: 1rem 1.25rem; font-size: 13px; color: #7a5c10; margin-bottom: 1.5rem; }
+    #confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+    .confetti-piece { position: absolute; top: -12px; width: 8px; height: 6px; border-radius: 2px; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+    .gallery-section { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.5rem 0; }
+    .gallery-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--text-dark); margin-bottom: 1rem; text-align: center; letter-spacing: 0.02em; }
+    .photo-btn { cursor: pointer; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--warm-white); font-size: 13px; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; transition: background 0.2s; white-space: nowrap; }
+    .photo-btn:hover { background: #fdf6ec; color: var(--text-dark); }
+    .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; cursor: pointer; }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-overlay img { max-width: 90vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.6); cursor: default; }
+    .lightbox-close { position: fixed; top: 18px; right: 24px; color: white; font-size: 32px; cursor: pointer; line-height: 1; opacity: 0.8; }
+    .lightbox-close:hover { opacity: 1; }
+    .music-btn { position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; background: #c0392b; color: white; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, background 0.2s; }
     .music-btn:hover { transform: scale(1.1); background: #e74c3c; }
-    .music-label {
-      position: fixed;
-      bottom: 28px;
-      right: 80px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      font-size: 12px;
-      padding: 5px 10px;
-      border-radius: 20px;
-      z-index: 1000;
-      font-family: 'Jost', sans-serif;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-    .music-btn:hover + .music-label,
+    .music-label { position: fixed; bottom: 28px; right: 80px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 5px 10px; border-radius: 20px; z-index: 1000; font-family: 'Jost', sans-serif; white-space: nowrap; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .music-label.show { opacity: 1; }
+
+    @keyframes sway { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-4px); } }
+    @keyframes flicker { 0%,100% { opacity:1; transform: scaleY(1); } 50% { opacity:0.7; transform: scaleY(0.85); } }
+    @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-<!-- ── STEP 1: Replace this with your Firebase config ── -->
+<canvas id="bg-canvas"></canvas>
+
 <script>
   var FIREBASE_CONFIG = {
     apiKey:            "AIzaSyCx0hTlL7PYk8z01qmBqw2RswWjPPwEbjc",
@@ -459,121 +122,48 @@
     messagingSenderId: "52519306440",
     appId:             "1:52519306440:web:0415d22f3a5ac5b94951fd"
   };
-  var BIRTHDAY_PERSON = "Dad"; // ← Change this name
+  var BIRTHDAY_PERSON = "Dad";
 </script>
 
 <div id="confetti-wrap"></div>
 
-<style>
-@keyframes sway {
-  0%, 100% { transform: rotate(-4deg) translateY(0); }
-  50%       { transform: rotate(4deg) translateY(-4px); }
-}
-@keyframes flicker {
-  0%,100% { opacity:1; transform: scaleY(1); }
-  50%     { opacity:0.7; transform: scaleY(0.85); }
-}
-</style>
-
 <div class="header">
-
-
   <div style="display:flex;align-items:flex-end;justify-content:center;gap:6px;margin:12px 0 16px;">
-
-    <!-- Balloon 1 red -->
     <svg width="42" height="88" viewBox="0 0 44 90" style="animation:sway 3.1s ease-in-out infinite;transform-origin:22px 84px;">
-      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#e74c3c"/>
-      <ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/>
-      <polygon points="22,50 19,54 25,54" fill="#e74c3c"/>
-      <path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#c0392b" stroke-width="1.4" fill="none"/>
+      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#e74c3c"/><ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/><polygon points="22,50 19,54 25,54" fill="#e74c3c"/><path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#c0392b" stroke-width="1.4" fill="none"/>
     </svg>
-
-    <!-- Balloon 2 orange -->
     <svg width="42" height="88" viewBox="0 0 44 90" style="animation:sway 2.7s ease-in-out infinite;animation-delay:0.3s;transform-origin:22px 84px;">
-      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#e67e22"/>
-      <ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/>
-      <polygon points="22,50 19,54 25,54" fill="#e67e22"/>
-      <path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#d35400" stroke-width="1.4" fill="none"/>
+      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#e67e22"/><ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/><polygon points="22,50 19,54 25,54" fill="#e67e22"/><path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#d35400" stroke-width="1.4" fill="none"/>
     </svg>
-
-    <!-- Balloon 3 yellow -->
     <svg width="42" height="88" viewBox="0 0 44 90" style="animation:sway 3.4s ease-in-out infinite;animation-delay:0.6s;transform-origin:22px 84px;">
-      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#f1c40f"/>
-      <ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/>
-      <polygon points="22,50 19,54 25,54" fill="#f1c40f"/>
-      <path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#d4ac0d" stroke-width="1.4" fill="none"/>
+      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#f1c40f"/><ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/><polygon points="22,50 19,54 25,54" fill="#f1c40f"/><path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#d4ac0d" stroke-width="1.4" fill="none"/>
     </svg>
-
-    <!-- CAKE -->
     <svg width="115" height="112" viewBox="0 0 115 112" style="margin:0 10px;flex-shrink:0;">
-      <!-- plate shadow -->
       <ellipse cx="57" cy="104" rx="48" ry="7" fill="#ddd0c0"/>
-      <!-- bottom tier -->
-      <rect x="10" y="68" width="94" height="30" rx="7" fill="#f8c8d4"/>
-      <rect x="10" y="68" width="94" height="9" rx="4" fill="#f4a0b8"/>
-      <!-- middle tier -->
-      <rect x="22" y="44" width="70" height="26" rx="6" fill="#fde68a"/>
-      <rect x="22" y="44" width="70" height="8" rx="3" fill="#fbbf24"/>
-      <!-- top tier -->
-      <rect x="34" y="24" width="46" height="22" rx="5" fill="#a7f3d0"/>
-      <rect x="34" y="24" width="46" height="7" rx="3" fill="#6ee7b7"/>
-      <!-- white drips bottom -->
+      <rect x="10" y="68" width="94" height="30" rx="7" fill="#f8c8d4"/><rect x="10" y="68" width="94" height="9" rx="4" fill="#f4a0b8"/>
+      <rect x="22" y="44" width="70" height="26" rx="6" fill="#fde68a"/><rect x="22" y="44" width="70" height="8" rx="3" fill="#fbbf24"/>
+      <rect x="34" y="24" width="46" height="22" rx="5" fill="#a7f3d0"/><rect x="34" y="24" width="46" height="7" rx="3" fill="#6ee7b7"/>
       <path d="M10 75 Q20 82 30 75 Q40 82 50 75 Q60 82 70 75 Q80 82 90 75 Q100 82 104 75" stroke="white" stroke-width="3" fill="none" opacity="0.55"/>
-      <!-- white drips middle -->
       <path d="M22 51 Q32 57 42 51 Q52 57 62 51 Q72 57 82 51 Q90 57 92 51" stroke="white" stroke-width="2.5" fill="none" opacity="0.55"/>
-      <!-- candles -->
-      <rect x="43" y="11" width="7" height="15" rx="2.5" fill="#e74c3c"/>
-      <rect x="54" y="9"  width="7" height="17" rx="2.5" fill="#3498db"/>
-      <rect x="65" y="11" width="7" height="15" rx="2.5" fill="#9b59b6"/>
-      <!-- flames -->
-      <ellipse cx="46.5" cy="10" rx="3.5" ry="4.5" fill="#f39c12" style="animation:flicker 0.9s ease-in-out infinite;transform-origin:46.5px 10px;"/>
-      <ellipse cx="46.5" cy="9"  rx="1.8" ry="2.2" fill="#fffde7"/>
-      <ellipse cx="57.5" cy="8"  rx="3.5" ry="4.5" fill="#f39c12" style="animation:flicker 1.1s ease-in-out infinite 0.2s;transform-origin:57.5px 8px;"/>
-      <ellipse cx="57.5" cy="7"  rx="1.8" ry="2.2" fill="#fffde7"/>
-      <ellipse cx="68.5" cy="10" rx="3.5" ry="4.5" fill="#f39c12" style="animation:flicker 0.8s ease-in-out infinite 0.4s;transform-origin:68.5px 10px;"/>
-      <ellipse cx="68.5" cy="9"  rx="1.8" ry="2.2" fill="#fffde7"/>
-      <!-- dot decorations bottom -->
-      <circle cx="28"  cy="83" r="3.5" fill="white" opacity="0.8"/>
-      <circle cx="44"  cy="88" r="3.5" fill="white" opacity="0.8"/>
-      <circle cx="60"  cy="83" r="3.5" fill="white" opacity="0.8"/>
-      <circle cx="76"  cy="88" r="3.5" fill="white" opacity="0.8"/>
-      <circle cx="92"  cy="83" r="3.5" fill="white" opacity="0.8"/>
-      <!-- dot decorations middle -->
-      <circle cx="36" cy="57" r="3" fill="#f87171" opacity="0.9"/>
-      <circle cx="57" cy="60" r="3" fill="#f87171" opacity="0.9"/>
-      <circle cx="78" cy="57" r="3" fill="#f87171" opacity="0.9"/>
+      <rect x="43" y="11" width="7" height="15" rx="2.5" fill="#e74c3c"/><rect x="54" y="9" width="7" height="17" rx="2.5" fill="#3498db"/><rect x="65" y="11" width="7" height="15" rx="2.5" fill="#9b59b6"/>
+      <ellipse cx="46.5" cy="10" rx="3.5" ry="4.5" fill="#f39c12" style="animation:flicker 0.9s ease-in-out infinite;transform-origin:46.5px 10px;"/><ellipse cx="46.5" cy="9" rx="1.8" ry="2.2" fill="#fffde7"/>
+      <ellipse cx="57.5" cy="8" rx="3.5" ry="4.5" fill="#f39c12" style="animation:flicker 1.1s ease-in-out infinite 0.2s;transform-origin:57.5px 8px;"/><ellipse cx="57.5" cy="7" rx="1.8" ry="2.2" fill="#fffde7"/>
+      <ellipse cx="68.5" cy="10" rx="3.5" ry="4.5" fill="#f39c12" style="animation:flicker 0.8s ease-in-out infinite 0.4s;transform-origin:68.5px 10px;"/><ellipse cx="68.5" cy="9" rx="1.8" ry="2.2" fill="#fffde7"/>
+      <circle cx="28" cy="83" r="3.5" fill="white" opacity="0.8"/><circle cx="44" cy="88" r="3.5" fill="white" opacity="0.8"/><circle cx="60" cy="83" r="3.5" fill="white" opacity="0.8"/><circle cx="76" cy="88" r="3.5" fill="white" opacity="0.8"/><circle cx="92" cy="83" r="3.5" fill="white" opacity="0.8"/>
+      <circle cx="36" cy="57" r="3" fill="#f87171" opacity="0.9"/><circle cx="57" cy="60" r="3" fill="#f87171" opacity="0.9"/><circle cx="78" cy="57" r="3" fill="#f87171" opacity="0.9"/>
     </svg>
-
-    <!-- Balloon 4 green -->
     <svg width="42" height="88" viewBox="0 0 44 90" style="animation:sway 2.9s ease-in-out infinite;animation-delay:0.2s;transform-origin:22px 84px;">
-      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#2ecc71"/>
-      <ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/>
-      <polygon points="22,50 19,54 25,54" fill="#2ecc71"/>
-      <path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#27ae60" stroke-width="1.4" fill="none"/>
+      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#2ecc71"/><ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/><polygon points="22,50 19,54 25,54" fill="#2ecc71"/><path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#27ae60" stroke-width="1.4" fill="none"/>
     </svg>
-
-    <!-- Balloon 5 blue -->
     <svg width="42" height="88" viewBox="0 0 44 90" style="animation:sway 3.2s ease-in-out infinite;animation-delay:0.5s;transform-origin:22px 84px;">
-      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#3498db"/>
-      <ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/>
-      <polygon points="22,50 19,54 25,54" fill="#3498db"/>
-      <path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#2980b9" stroke-width="1.4" fill="none"/>
+      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#3498db"/><ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/><polygon points="22,50 19,54 25,54" fill="#3498db"/><path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#2980b9" stroke-width="1.4" fill="none"/>
     </svg>
-
-    <!-- Balloon 6 purple -->
     <svg width="42" height="88" viewBox="0 0 44 90" style="animation:sway 2.8s ease-in-out infinite;animation-delay:0.8s;transform-origin:22px 84px;">
-      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#9b59b6"/>
-      <ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/>
-      <polygon points="22,50 19,54 25,54" fill="#9b59b6"/>
-      <path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#8e44ad" stroke-width="1.4" fill="none"/>
+      <ellipse cx="22" cy="28" rx="16" ry="22" fill="#9b59b6"/><ellipse cx="16" cy="20" rx="4" ry="5" fill="rgba(255,255,255,0.28)"/><polygon points="22,50 19,54 25,54" fill="#9b59b6"/><path d="M22 54 Q18 62 22 70 Q26 78 22 86" stroke="#8e44ad" stroke-width="1.4" fill="none"/>
     </svg>
-
   </div>
-
   <div class="header-name" style="font-family:'Great Vibes',cursive;font-size:clamp(52px,9vw,96px);font-weight:400;color:#c0392b;letter-spacing:0.02em;text-transform:none;">Happy Birthday! <span id="header-name-em" style="color:#e74c3c;">Dad</span></div>
-
 </div>
-
 
 <!-- Photo Gallery -->
 <div class="gallery-section">
@@ -595,25 +185,12 @@
   <div style="display:flex;justify-content:center;margin-top:8px;">
     <div onclick="openLightbox('Photo9.jpg','Photo 9')" class="photo-btn" style="width:100%;max-width:400px;text-align:center;">👨‍👩‍👧‍👦 Family Fun Time</div>
   </div>
-
-  </div>
 </div>
 
 <div class="layout">
-  <!-- Sidebar hidden - gallery shown below header instead -->
   <div class="sidebar" style="display:none;"></div>
-
-  <!-- Main -->
   <div class="main">
-
-    <!-- Firebase config warning -->
-    <div class="config-banner" id="config-banner" style="display:none">
-      ⚠️ <strong>Firebase not configured yet.</strong>
-      Open <code>index.html</code>, find <code>FIREBASE_CONFIG</code> at the top, and paste in your Firebase project details.
-      See the instructions below the page for how to set this up.
-    </div>
-
-    <!-- Form -->
+    <div class="config-banner" id="config-banner" style="display:none">⚠️ <strong>Firebase not configured yet.</strong></div>
     <div class="form-card">
       <div class="card-title">Leave a wish 🎂</div>
       <div class="field">
@@ -634,29 +211,34 @@
       <button class="submit-btn" id="go-btn">Submit wish 🎉</button>
       <div class="form-status" id="form-status"></div>
     </div>
-
-    <!-- Wishes list -->
     <div>
       <div class="wishes-header">
         <div class="wishes-title">Wishes & greetings</div>
         <div class="wishes-count" id="wishes-count"></div>
       </div>
       <div class="wish-name-hint">Click a name to read their wish</div>
-      <div id="wishes-list">
-        <div class="loading-state">Loading wishes...</div>
-      </div>
+      <div id="wishes-list"><div class="loading-state">Loading wishes...</div></div>
     </div>
-
   </div>
 </div>
 
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+<!-- Background Music -->
+<audio id="bg-music" loop muted>
+  <source src="Dad Bday 2023.mp3" type="audio/mpeg">
+</audio>
+<button class="music-btn" id="music-btn" onclick="toggleMusic()" title="Play/Pause music">⏸</button>
+<div class="music-label" id="music-label">Dad Bday 2023</div>
+
 <script>
-  // ── Init ──
+  // Firebase
   document.getElementById('header-name-em').textContent = BIRTHDAY_PERSON;
-
-  var db;
-  var firebaseReady = false;
-
+  var db, firebaseReady = false;
   try {
     if (FIREBASE_CONFIG.apiKey === "REPLACE_WITH_YOUR_API_KEY") {
       document.getElementById('config-banner').style.display = 'block';
@@ -671,9 +253,7 @@
     console.error('Firebase init error:', e);
   }
 
-  // Photo slots removed - photos are hardcoded in sidebar
-
-  // ── Stars ──
+  // Stars
   var rating = 5;
   document.getElementById('stars').addEventListener('click', function(e) {
     var btn = e.target.closest('.star-btn');
@@ -684,26 +264,19 @@
     });
   });
 
-  // ── Submit ──
+  // Submit
   document.getElementById('go-btn').addEventListener('click', function() {
     var name = document.getElementById('uname').value.trim();
     var text = document.getElementById('msg-text').value.trim();
     var status = document.getElementById('form-status');
-
     status.className = 'form-status';
     if (!name) { status.textContent = 'Please enter your name.'; return; }
     if (!text) { status.textContent = 'Please write a wish!'; return; }
     if (!firebaseReady) { status.className = 'form-status error'; status.textContent = 'Firebase not set up yet.'; return; }
-
     var btn = document.getElementById('go-btn');
     btn.disabled = true; btn.textContent = 'Saving...';
-
-    db.collection('wishes').add({
-      name: name,
-      text: text,
-      stars: rating,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function() {
+    db.collection('wishes').add({ name: name, text: text, stars: rating, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(function() {
       document.getElementById('uname').value = '';
       document.getElementById('msg-text').value = '';
       rating = 5;
@@ -718,47 +291,43 @@
     });
   });
 
-  // ── Load & display wishes (real-time listener) ──
+  // Load wishes
   function loadWishes() {
-    db.collection('wishes')
-      .orderBy('timestamp', 'desc')
-      .onSnapshot(function(snapshot) {
-        var list = document.getElementById('wishes-list');
-        var count = document.getElementById('wishes-count');
-
-        if (snapshot.empty) {
-          list.innerHTML = '<div class="empty-state">No wishes yet — be the first to leave one! 🎈</div>';
-          count.textContent = '';
-          return;
-        }
-
-        count.textContent = snapshot.size + ' wish' + (snapshot.size !== 1 ? 'es' : '');
-        list.innerHTML = snapshot.docs.map(function(doc) {
-          var w = doc.data();
-          var stars = '⭐'.repeat(w.stars || 5);
-          var date = w.timestamp
-            ? w.timestamp.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : 'Just now';
-          return '<div class="wish-card">' +
-            '<div class="wish-top">' +
-              '<span class="wish-name">' + esc(w.name) + '</span>' +
-              '<span class="wish-stars">' + stars + '</span>' +
-            '</div>' +
-            '<div class="wish-text">' + esc(w.text) + '</div>' +
-            '<div class="wish-date">' + date + '</div>' +
-          '</div>';
-        }).join('');
-      }, function(err) {
-        document.getElementById('wishes-list').innerHTML =
-          '<div class="empty-state">Could not load wishes: ' + err.message + '</div>';
-      });
+    db.collection('wishes').orderBy('timestamp', 'desc').onSnapshot(function(snapshot) {
+      var list = document.getElementById('wishes-list');
+      var count = document.getElementById('wishes-count');
+      if (snapshot.empty) { list.innerHTML = '<div class="empty-state">No wishes yet — be the first to leave one! 🎈</div>'; count.textContent = ''; return; }
+      count.textContent = snapshot.size + ' wish' + (snapshot.size !== 1 ? 'es' : '');
+      list.innerHTML = snapshot.docs.map(function(doc) {
+        var w = doc.data();
+        var stars = '⭐'.repeat(w.stars || 5);
+        var date = w.timestamp ? w.timestamp.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Just now';
+        return '<div class="wish-card"><div class="wish-top"><span class="wish-name">' + esc(w.name) + '</span><span class="wish-stars">' + stars + '</span></div><div class="wish-text">' + esc(w.text) + '</div><div class="wish-date">' + date + '</div></div>';
+      }).join('');
+    }, function(err) {
+      document.getElementById('wishes-list').innerHTML = '<div class="empty-state">Could not load wishes: ' + err.message + '</div>';
+    });
   }
 
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  // ── Confetti ──
+  // Collapsible wishes
+  document.addEventListener('click', function(e) {
+    var name = e.target.closest('.wish-name');
+    if (!name) return;
+    name.closest('.wish-card').classList.toggle('open');
+  });
+
+  // Lightbox
+  function openLightbox(src, alt) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-img').alt = alt;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+
+  // Confetti
   function launchConfetti() {
     var wrap = document.getElementById('confetti-wrap');
     var colors = ['#FAC775','#F0997B','#9FE1CB','#c9a96e','#F4C0D1','#AFA9EC'];
@@ -776,107 +345,87 @@
       })();
     }
   }
-</script>
 
-<!--
-════════════════════════════════════════════════
-  HOW TO SET UP FIREBASE (free, takes ~3 min)
-════════════════════════════════════════════════
-
-1. Go to https://console.firebase.google.com
-2. Click "Add project" → give it a name → Continue
-3. Disable Google Analytics (optional) → Create project
-4. Click "Firestore Database" in the left sidebar
-5. Click "Create database" → choose "Start in test mode" → Next → Enable
-6. Click the gear ⚙ icon → "Project settings"
-7. Scroll to "Your apps" → click the </> Web icon
-8. Register the app (any nickname) → copy the firebaseConfig object
-9. Paste the values into FIREBASE_CONFIG at the top of this file
-10. Change BIRTHDAY_PERSON to the name you want displayed
-11. Save and push to GitHub — done!
-
-Note: "Test mode" allows anyone to read/write for 30 days.
-For a permanent setup, go to Firestore → Rules and set:
-  allow read, write: if true;
-════════════════════════════════════════════════
--->
-
-
-<!-- Lightbox -->
-<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
-  <div class="lightbox-close" onclick="closeLightbox()">✕</div>
-  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
-</div>
-
-<script>
-  function openLightbox(src, alt) {
-    document.getElementById('lightbox-img').src = src;
-    document.getElementById('lightbox-img').alt = alt;
-    document.getElementById('lightbox').classList.add('open');
-  }
-  function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('open');
-  }
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
-  });
-  // Attach click to all sidebar images
-  document.querySelectorAll('.sidebar img').forEach(function(img) {
-    img.addEventListener('click', function() {
-      openLightbox(this.src, this.alt);
-    });
-  });
-</script>
-
-<script>
-  // Collapsible wish cards
-  document.addEventListener('click', function(e) {
-    var name = e.target.closest('.wish-name');
-    if (!name) return;
-    var card = name.closest('.wish-card');
-    card.classList.toggle('open');
-  });
-</script>
-
-<!-- Background Music -->
-<audio id="bg-music" loop muted>
-  <source src="Dad Bday 2023.mp3" type="audio/mpeg">
-</audio>
-<button class="music-btn" id="music-btn" onclick="toggleMusic()" title="Play/Pause music">⏸</button>
-<div class="music-label" id="music-label">Dad Bday 2023</div>
-
-<script>
+  // Music — starts on first click anywhere
   var music = document.getElementById('bg-music');
-  var btn = document.getElementById('music-btn');
-  var label = document.getElementById('music-label');
-  var playing = true;
+  var musicBtn = document.getElementById('music-btn');
+  var playing = false;
   music.volume = 0.4;
+  musicBtn.textContent = '🎵';
 
-  // Muted autoplay works in all browsers, then unmute after 1s
-  music.play().then(function() {
-    setTimeout(function() { music.muted = false; }, 1000);
-  }).catch(function() {
-    // Still blocked — start on first interaction
-    playing = false;
-    btn.textContent = '🎵';
-    document.addEventListener('click', function startOnClick() {
-      music.muted = false;
-      music.play();
+  document.addEventListener('click', function startMusic() {
+    music.muted = false;
+    music.play().then(function() {
       playing = true;
-      btn.textContent = '⏸';
-      document.removeEventListener('click', startOnClick);
-    }, { once: true });
-  });
+      musicBtn.textContent = '⏸';
+    }).catch(function(e){ console.log(e); });
+    document.removeEventListener('click', startMusic);
+  }, { once: true });
+
+  // Festive background animation
+  (function() {
+    var canvas = document.getElementById('bg-canvas');
+    var ctx = canvas.getContext('2d');
+    var W, H;
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var colors = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6','#e91e8c','#ff6b9d'];
+
+    // Floating confetti dots
+    var dots = Array.from({length: 35}, function() {
+      return {
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 5 + 3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        opacity: Math.random() * 0.4 + 0.1,
+        shape: Math.random() > 0.5 ? 'circle' : 'rect',
+        rot: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.02
+      };
+    });
+
+    var streamers = [];
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Draw dots
+      dots.forEach(function(d) {
+        d.x += d.vx; d.y += d.vy; d.rot += d.vr;
+        if (d.x < -10) d.x = W + 10;
+        if (d.x > W + 10) d.x = -10;
+        if (d.y < -10) d.y = H + 10;
+        if (d.y > H + 10) d.y = -10;
+        ctx.save();
+        ctx.globalAlpha = d.opacity;
+        ctx.fillStyle = d.color;
+        ctx.translate(d.x, d.y);
+        ctx.rotate(d.rot);
+        if (d.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, d.r, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-d.r, -d.r * 0.6, d.r * 2, d.r * 1.2);
+        }
+        ctx.restore();
+      });
+
+
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
 
   function toggleMusic() {
-    if (playing) {
-      music.pause();
-      btn.textContent = '🎵';
-    } else {
-      music.muted = false;
-      music.play();
-      btn.textContent = '⏸';
-    }
+    if (playing) { music.pause(); musicBtn.textContent = '🎵'; }
+    else { music.muted = false; music.play(); musicBtn.textContent = '⏸'; }
     playing = !playing;
   }
 </script>
