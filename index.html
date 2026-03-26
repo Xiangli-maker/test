@@ -839,49 +839,45 @@ For a permanent setup, go to Firestore → Rules and set:
 </script>
 
 <!-- Background Music -->
-<audio id="bg-music">
+<audio id="bg-music" loop muted>
   <source src="Dad Bday 2023.mp3" type="audio/mpeg">
 </audio>
-<button class="music-btn" id="music-btn" onclick="toggleMusic()" title="Play/Pause music">🎵</button>
+<button class="music-btn" id="music-btn" onclick="toggleMusic()" title="Play/Pause music">⏸</button>
 <div class="music-label" id="music-label">Dad Bday 2023</div>
 
 <script>
   var music = document.getElementById('bg-music');
   var btn = document.getElementById('music-btn');
   var label = document.getElementById('music-label');
-  var playing = false;
+  var playing = true;
+  music.volume = 0.4;
+
+  // Muted autoplay works in all browsers, then unmute after 1s
+  music.play().then(function() {
+    setTimeout(function() { music.muted = false; }, 1000);
+  }).catch(function() {
+    // Still blocked — start on first interaction
+    playing = false;
+    btn.textContent = '🎵';
+    document.addEventListener('click', function startOnClick() {
+      music.muted = false;
+      music.play();
+      playing = true;
+      btn.textContent = '⏸';
+      document.removeEventListener('click', startOnClick);
+    }, { once: true });
+  });
 
   function toggleMusic() {
     if (playing) {
       music.pause();
       btn.textContent = '🎵';
-      label.classList.remove('show');
     } else {
+      music.muted = false;
       music.play();
       btn.textContent = '⏸';
-      label.classList.add('show');
-      setTimeout(function(){ label.classList.remove('show'); }, 3000);
     }
     playing = !playing;
-  }
-
-  music.volume = 0.4;
-
-  // Try autoplay immediately
-  var autoplayPromise = music.play();
-  if (autoplayPromise !== undefined) {
-    autoplayPromise.then(function() {
-      playing = true;
-      btn.textContent = '⏸';
-    }).catch(function() {
-      // Browser blocked autoplay — wait for first user interaction
-      document.addEventListener('click', function startOnClick() {
-        music.play();
-        playing = true;
-        btn.textContent = '⏸';
-        document.removeEventListener('click', startOnClick);
-      }, { once: true });
-    });
   }
 </script>
 </body>
