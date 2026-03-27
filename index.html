@@ -185,7 +185,7 @@
       <div class="field">
         <label>Add photos (optional)</label>
         <div id="photo-upload-area" onclick="document.getElementById('photo-file').click()" style="border:1px dashed var(--border);border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:var(--cream);transition:border-color 0.2s;">
-          <span id="photo-upload-label" style="font-size:13px;color:var(--text-light);">📷 Click to choose photos (up to 4)</span>
+          <span id="photo-upload-label" style="font-size:13px;color:var(--text-light);">📷 Click to choose photos (up to 3)</span>
         </div>
         <div id="photo-previews" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
         <input type="file" id="photo-file" accept="image/*" multiple style="display:none;">
@@ -247,11 +247,11 @@
   // Photo preview (multiple)
   var selectedPhotos = [];
   document.getElementById('photo-file').addEventListener('change', function() {
-    var files = Array.from(this.files).slice(0, 4);
+    var files = Array.from(this.files).slice(0, 3);
     selectedPhotos = [];
     var previews = document.getElementById('photo-previews');
     previews.innerHTML = '';
-    document.getElementById('photo-upload-label').textContent = files.length ? '✓ ' + files.length + ' photo(s) selected' : '📷 Click to choose photos (up to 4)';
+    document.getElementById('photo-upload-label').textContent = files.length ? '✓ ' + files.length + ' photo(s) selected' : '📷 Click to choose photos (up to 3)';
     files.forEach(function(file) {
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -283,7 +283,7 @@
         document.getElementById('msg-text').value = '';
         document.getElementById('photo-file').value = '';
         document.getElementById('photo-previews').innerHTML = '';
-        document.getElementById('photo-upload-label').textContent = '📷 Click to choose photos (up to 4)';
+        document.getElementById('photo-upload-label').textContent = '📷 Click to choose photos (up to 3)';
         selectedPhotos = [];
         rating = 5;
         document.querySelectorAll('.star-btn').forEach(function(s) { s.classList.add('on'); });
@@ -297,7 +297,7 @@
       });
     }
 
-    var files = Array.from(document.getElementById('photo-file').files).slice(0, 4);
+    var files = Array.from(document.getElementById('photo-file').files).slice(0, 3);
     if (files.length) {
       btn.textContent = 'Uploading...';
       var compressed = [];
