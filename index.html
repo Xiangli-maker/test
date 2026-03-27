@@ -22,36 +22,11 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Jost', sans-serif; background-color: var(--cream); color: var(--text-dark); min-height: 100vh; position: relative; }
-
-    /* ── Festive background ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background:
-        radial-gradient(ellipse at 10% 20%, rgba(231,76,60,0.07) 0%, transparent 50%),
-        radial-gradient(ellipse at 90% 10%, rgba(241,196,15,0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(52,152,219,0.07) 0%, transparent 50%),
-        radial-gradient(ellipse at 20% 90%, rgba(155,89,182,0.07) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(46,204,113,0.04) 0%, transparent 60%),
-        #faf7f2;
-    }
-    #bg-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
+    body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at 10% 20%, rgba(231,76,60,0.07) 0%, transparent 50%), radial-gradient(ellipse at 90% 10%, rgba(241,196,15,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(52,152,219,0.07) 0%, transparent 50%), radial-gradient(ellipse at 20% 90%, rgba(155,89,182,0.07) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(46,204,113,0.04) 0%, transparent 60%), #faf7f2; }
+    #bg-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
     .header { background: var(--warm-white); border-bottom: 1px solid var(--border); text-align: center; padding: 2.5rem 1rem 2rem; position: relative; overflow: hidden; }
     .header::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%); pointer-events: none; }
-    .header-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 9vw, 90px); font-weight: 700; color: #c0392b; line-height: 1.05; text-transform: uppercase; letter-spacing: 0.04em; }
-    .header-name em { font-style: normal; color: #e74c3c; }
-    .header-sub { font-size: 14px; color: var(--text-light); margin-top: 8px; font-weight: 300; }
     .layout { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start; }
-    .sidebar { display: flex; flex-direction: column; gap: 12px; }
     .main { display: flex; flex-direction: column; gap: 2rem; }
     .form-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; }
     .card-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--text-dark); margin-bottom: 1.25rem; }
@@ -103,7 +78,6 @@
     .music-btn:hover { transform: scale(1.1); background: #e74c3c; }
     .music-label { position: fixed; bottom: 28px; right: 80px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 5px 10px; border-radius: 20px; z-index: 1000; font-family: 'Jost', sans-serif; white-space: nowrap; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .music-label.show { opacity: 1; }
-
     @keyframes sway { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-4px); } }
     @keyframes flicker { 0%,100% { opacity:1; transform: scaleY(1); } 50% { opacity:0.7; transform: scaleY(0.85); } }
     @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } }
@@ -179,7 +153,7 @@
       <div onclick="openLightbox('Photo_9_10.jpg','Photo 9 10')" class="photo-btn">🏅 #9 and #10</div>
       <div onclick="openLightbox('Photo6.jpg','Photo 6')" class="photo-btn">💻 Person of the Year in Tech Moment</div>
       <div onclick="openLightbox('Photo7.jpg','Photo 7')" class="photo-btn">🤖 People of the Year in AI</div>
-      <div onclick="openLightbox('Photo8.jpg','Photo 8')" class="photo-btn">🏰 Most Beautify Ivy on The Planet</div>
+      <div onclick="openLightbox('Photo8.jpg','Photo 8')" class="photo-btn">🏰 #1 Ivy on The Planet</div>
     </div>
   </div>
   <div style="display:flex;justify-content:center;margin-top:8px;">
@@ -208,6 +182,14 @@
         <label>Your wish / message</label>
         <textarea id="msg-text" placeholder="Happy birthday! Wishing you all the best..."></textarea>
       </div>
+      <div class="field">
+        <label>Add photos (optional)</label>
+        <div id="photo-upload-area" onclick="document.getElementById('photo-file').click()" style="border:1px dashed var(--border);border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:var(--cream);transition:border-color 0.2s;">
+          <span id="photo-upload-label" style="font-size:13px;color:var(--text-light);">📷 Click to choose photos (up to 4)</span>
+        </div>
+        <div id="photo-previews" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
+        <input type="file" id="photo-file" accept="image/*" multiple style="display:none;">
+      </div>
       <button class="submit-btn" id="go-btn">Submit wish 🎉</button>
       <div class="form-status" id="form-status"></div>
     </div>
@@ -232,11 +214,10 @@
 <audio id="bg-music" loop muted>
   <source src="Dad Bday 2023.mp3" type="audio/mpeg">
 </audio>
-<button class="music-btn" id="music-btn" onclick="toggleMusic()" title="Play/Pause music">⏸</button>
+<button class="music-btn" id="music-btn" title="Play/Pause music">🎵</button>
 <div class="music-label" id="music-label">Dad Bday 2023</div>
 
 <script>
-  // Firebase
   document.getElementById('header-name-em').textContent = BIRTHDAY_PERSON;
   var db, firebaseReady = false;
   try {
@@ -253,7 +234,6 @@
     console.error('Firebase init error:', e);
   }
 
-  // Stars
   var rating = 5;
   document.getElementById('stars').addEventListener('click', function(e) {
     var btn = e.target.closest('.star-btn');
@@ -264,7 +244,26 @@
     });
   });
 
-  // Submit
+  // Photo preview (multiple)
+  var selectedPhotos = [];
+  document.getElementById('photo-file').addEventListener('change', function() {
+    var files = Array.from(this.files).slice(0, 4);
+    selectedPhotos = [];
+    var previews = document.getElementById('photo-previews');
+    previews.innerHTML = '';
+    document.getElementById('photo-upload-label').textContent = files.length ? '✓ ' + files.length + ' photo(s) selected' : '📷 Click to choose photos (up to 4)';
+    files.forEach(function(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.cssText = 'width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--border);';
+        previews.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
   document.getElementById('go-btn').addEventListener('click', function() {
     var name = document.getElementById('uname').value.trim();
     var text = document.getElementById('msg-text').value.trim();
@@ -275,23 +274,58 @@
     if (!firebaseReady) { status.className = 'form-status error'; status.textContent = 'Firebase not set up yet.'; return; }
     var btn = document.getElementById('go-btn');
     btn.disabled = true; btn.textContent = 'Saving...';
-    db.collection('wishes').add({ name: name, text: text, stars: rating, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
-    .then(function() {
-      document.getElementById('uname').value = '';
-      document.getElementById('msg-text').value = '';
-      rating = 5;
-      document.querySelectorAll('.star-btn').forEach(function(s) { s.classList.add('on'); });
-      status.textContent = '🎉 Wish saved! Everyone can now see it.';
-      btn.disabled = false; btn.textContent = 'Submit wish 🎉';
-      launchConfetti();
-    }).catch(function(err) {
-      status.className = 'form-status error';
-      status.textContent = 'Error: ' + err.message;
-      btn.disabled = false; btn.textContent = 'Submit wish 🎉';
-    });
+
+    function saveWish(photos) {
+      var wish = { name: name, text: text, stars: rating, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+      if (photos && photos.length) wish.photos = photos;
+      db.collection('wishes').add(wish).then(function() {
+        document.getElementById('uname').value = '';
+        document.getElementById('msg-text').value = '';
+        document.getElementById('photo-file').value = '';
+        document.getElementById('photo-previews').innerHTML = '';
+        document.getElementById('photo-upload-label').textContent = '📷 Click to choose photos (up to 4)';
+        selectedPhotos = [];
+        rating = 5;
+        document.querySelectorAll('.star-btn').forEach(function(s) { s.classList.add('on'); });
+        status.textContent = '🎉 Wish saved! Everyone can now see it.';
+        btn.disabled = false; btn.textContent = 'Submit wish 🎉';
+        launchConfetti();
+      }).catch(function(err) {
+        status.className = 'form-status error';
+        status.textContent = 'Error: ' + err.message;
+        btn.disabled = false; btn.textContent = 'Submit wish 🎉';
+      });
+    }
+
+    var files = Array.from(document.getElementById('photo-file').files).slice(0, 4);
+    if (files.length) {
+      btn.textContent = 'Uploading...';
+      var compressed = [];
+      var done = 0;
+      files.forEach(function(file, idx) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var img = new Image();
+          img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var maxW = 600, maxH = 600, w = img.width, h = img.height;
+            if (w > h) { if (w > maxW) { h = h * maxW / w; w = maxW; } }
+            else { if (h > maxH) { w = w * maxH / h; h = maxH; } }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            compressed[idx] = canvas.toDataURL('image/jpeg', 0.6);
+            done++;
+            if (done === files.length) saveWish(compressed);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    } else {
+      saveWish([]);
+    }
   });
 
-  // Load wishes
   function loadWishes() {
     db.collection('wishes').orderBy('timestamp', 'desc').onSnapshot(function(snapshot) {
       var list = document.getElementById('wishes-list');
@@ -302,7 +336,15 @@
         var w = doc.data();
         var stars = '⭐'.repeat(w.stars || 5);
         var date = w.timestamp ? w.timestamp.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Just now';
-        return '<div class="wish-card"><div class="wish-top"><span class="wish-name">' + esc(w.name) + '</span><span class="wish-stars">' + stars + '</span></div><div class="wish-text">' + esc(w.text) + '</div><div class="wish-date">' + date + '</div></div>';
+        var photoHtml = '';
+        if (w.photos && w.photos.length) {
+          photoHtml = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">' + w.photos.map(function(p) {
+            return '<img src="' + p + '" onclick="openLightbox(this.src,\'Photo\')" style="width:80px;height:80px;object-fit:cover;border-radius:6px;cursor:pointer;border:1px solid var(--border);">';
+          }).join('') + '</div>';
+        } else if (w.photo) {
+          photoHtml = '<img src="' + w.photo + '" onclick="openLightbox(this.src,\'Photo\')" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:8px;cursor:pointer;object-fit:cover;display:block;">';
+        }
+        return '<div class="wish-card"><div class="wish-top"><span class="wish-name">' + esc(w.name) + '</span><span class="wish-stars">' + stars + '</span></div><div class="wish-text">' + esc(w.text) + photoHtml + '</div><div class="wish-date">' + date + '</div></div>';
       }).join('');
     }, function(err) {
       document.getElementById('wishes-list').innerHTML = '<div class="empty-state">Could not load wishes: ' + err.message + '</div>';
@@ -311,14 +353,12 @@
 
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  // Collapsible wishes
   document.addEventListener('click', function(e) {
     var name = e.target.closest('.wish-name');
     if (!name) return;
     name.closest('.wish-card').classList.toggle('open');
   });
 
-  // Lightbox
   function openLightbox(src, alt) {
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox-img').alt = alt;
@@ -327,7 +367,6 @@
   function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-  // Confetti
   function launchConfetti() {
     var wrap = document.getElementById('confetti-wrap');
     var colors = ['#FAC775','#F0997B','#9FE1CB','#c9a96e','#F4C0D1','#AFA9EC'];
@@ -346,12 +385,11 @@
     }
   }
 
-  // Music — starts on first click anywhere
+  // Music
   var music = document.getElementById('bg-music');
   var musicBtn = document.getElementById('music-btn');
   var playing = false;
   music.volume = 0.4;
-  musicBtn.textContent = '🎵';
 
   document.addEventListener('click', function startMusic() {
     music.muted = false;
@@ -362,7 +400,18 @@
     document.removeEventListener('click', startMusic);
   }, { once: true });
 
-  // Festive background animation
+  musicBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    toggleMusic();
+  });
+
+  function toggleMusic() {
+    if (playing) { music.pause(); musicBtn.textContent = '🎵'; }
+    else { music.muted = false; music.play(); musicBtn.textContent = '⏸'; }
+    playing = !playing;
+  }
+
+  // Festive background
   (function() {
     var canvas = document.getElementById('bg-canvas');
     var ctx = canvas.getContext('2d');
@@ -370,64 +419,26 @@
     function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
     resize();
     window.addEventListener('resize', resize);
-
     var colors = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6','#e91e8c','#ff6b9d'];
-
-    // Floating confetti dots
     var dots = Array.from({length: 35}, function() {
-      return {
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        r: Math.random() * 5 + 3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        opacity: Math.random() * 0.4 + 0.1,
-        shape: Math.random() > 0.5 ? 'circle' : 'rect',
-        rot: Math.random() * Math.PI * 2,
-        vr: (Math.random() - 0.5) * 0.02
-      };
+      return { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, r: Math.random() * 5 + 3, color: colors[Math.floor(Math.random() * colors.length)], vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4, opacity: Math.random() * 0.4 + 0.1, shape: Math.random() > 0.5 ? 'circle' : 'rect', rot: Math.random() * Math.PI * 2, vr: (Math.random() - 0.5) * 0.02 };
     });
-
-    var streamers = [];
-
     function draw() {
       ctx.clearRect(0, 0, W, H);
-
-      // Draw dots
       dots.forEach(function(d) {
         d.x += d.vx; d.y += d.vy; d.rot += d.vr;
-        if (d.x < -10) d.x = W + 10;
-        if (d.x > W + 10) d.x = -10;
-        if (d.y < -10) d.y = H + 10;
-        if (d.y > H + 10) d.y = -10;
-        ctx.save();
-        ctx.globalAlpha = d.opacity;
-        ctx.fillStyle = d.color;
-        ctx.translate(d.x, d.y);
-        ctx.rotate(d.rot);
-        if (d.shape === 'circle') {
-          ctx.beginPath();
-          ctx.arc(0, 0, d.r, 0, Math.PI * 2);
-          ctx.fill();
-        } else {
-          ctx.fillRect(-d.r, -d.r * 0.6, d.r * 2, d.r * 1.2);
-        }
+        if (d.x < -10) d.x = W + 10; if (d.x > W + 10) d.x = -10;
+        if (d.y < -10) d.y = H + 10; if (d.y > H + 10) d.y = -10;
+        ctx.save(); ctx.globalAlpha = d.opacity; ctx.fillStyle = d.color;
+        ctx.translate(d.x, d.y); ctx.rotate(d.rot);
+        if (d.shape === 'circle') { ctx.beginPath(); ctx.arc(0, 0, d.r, 0, Math.PI * 2); ctx.fill(); }
+        else { ctx.fillRect(-d.r, -d.r * 0.6, d.r * 2, d.r * 1.2); }
         ctx.restore();
       });
-
-
-
       requestAnimationFrame(draw);
     }
     draw();
   })();
-
-  function toggleMusic() {
-    if (playing) { music.pause(); musicBtn.textContent = '🎵'; }
-    else { music.muted = false; music.play(); musicBtn.textContent = '⏸'; }
-    playing = !playing;
-  }
 </script>
 </body>
 </html>
