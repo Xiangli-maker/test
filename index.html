@@ -722,9 +722,33 @@ function renderJobs() {
   results.innerHTML = html;
 }
 
+function getAgeBadge(dateStr) {
+  if (!dateStr) return '';
+  const d = parseDateLabel(dateStr);
+  if (!d) return '';
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (days < 0) return '';
+
+  let label, color, bg, border;
+  if (days === 0) {
+    label = 'today'; color = '#00FF87'; bg = 'rgba(0,255,135,.12)'; border = 'rgba(0,255,135,.3)';
+  } else if (days === 1) {
+    label = '1d old'; color = '#00FF87'; bg = 'rgba(0,255,135,.1)'; border = 'rgba(0,255,135,.25)';
+  } else if (days <= 7) {
+    label = days + 'd old'; color = '#00FF87'; bg = 'rgba(0,255,135,.08)'; border = 'rgba(0,255,135,.2)';
+  } else if (days <= 21) {
+    label = days + 'd old'; color = '#FFB800'; bg = 'rgba(255,184,0,.1)'; border = 'rgba(255,184,0,.25)';
+  } else if (days <= 60) {
+    label = Math.round(days/7) + 'w old'; color = '#FF8C42'; bg = 'rgba(255,140,66,.1)'; border = 'rgba(255,140,66,.25)';
+  } else {
+    const months = Math.round(days/30);
+    label = months + 'mo old'; color = '#FF5A5A'; bg = 'rgba(255,90,90,.1)'; border = 'rgba(255,90,90,.25)';
+  }
+  return `<span class="tag" style="color:${color};background:${bg};border-color:${border};font-variant-numeric:tabular-nums">⏱ ${label}</span>`;
+}
+
 function jobRowHTML(j) {
   const liLink = 'https://www.linkedin.com/jobs/search/?keywords=' + encodeURIComponent(j.company + ' ' + j.role) + '&f_JT=I';
-  const timeLabel = getTimeLabel(j.dateAdded);
   const safeCompany = j.company.replace(/'/g, "\\'").replace(/"/g, '&quot;');
   const safeRole = j.role.replace(/'/g, "\\'").replace(/"/g, '&quot;');
   const safeLocation = j.location.replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -733,6 +757,7 @@ function jobRowHTML(j) {
   let tagsHTML = '';
   if (j.isNew) tagsHTML += '<span class="tag new">✦ recently added</span>';
   if (j.hasSimplify) tagsHTML += '<span class="tag sponsored">⚡ Simplify apply</span>';
+  tagsHTML += getAgeBadge(j.dateAdded);
   if (j.isRemote) tagsHTML += '<span class="tag">🌐 remote</span>';
   if (j.location && !j.isRemote) tagsHTML += '<span class="tag">📍 ' + j.location.slice(0, 30) + '</span>';
 
@@ -748,7 +773,6 @@ function jobRowHTML(j) {
         <button class="apply-btn blue" onclick='quickTrack("${safeCompany}","${safeRole}","${safeLocation}","${safeUrl}")'>+ Track</button>
         <a class="apply-btn secondary" href="${liLink}" target="_blank">LinkedIn ↗</a>
       </div>
-      ${timeLabel ? `<div class="job-date">${timeLabel}</div>` : ''}
     </div>
   </div>`;
 }
