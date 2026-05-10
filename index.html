@@ -463,12 +463,14 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
       </div>
       <div class="form-group">
         <label>Excitement (1–5)</label>
-        <input type="range" id="f-excitement" min="1" max="5" step="1" value="3"
-          style="accent-color:var(--green);width:100%;margin-top:6px"
-          oninput="document.getElementById('f-excitement-val').textContent = this.value">
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <input type="range" id="f-excitement" min="0" max="5" step="1" value="0"
+            style="accent-color:var(--green);flex:1"
+            oninput="document.getElementById('f-excitement-val').textContent = this.value == 0 ? '—' : this.value">
+          <span id="f-excitement-val" style="font-size:11px;color:var(--green);font-weight:700;min-width:16px;text-align:center">—</span>
+        </div>
         <div style="display:flex;justify-content:space-between;margin-top:2px">
-          <span style="font-size:9px;color:var(--muted)">meh</span>
-          <span id="f-excitement-val" style="font-size:11px;color:var(--green);font-weight:700">3</span>
+          <span style="font-size:9px;color:var(--muted)">not set</span>
           <span style="font-size:9px;color:var(--muted)">dream job</span>
         </div>
       </div>
@@ -1053,11 +1055,11 @@ function renderApps() {
     const dateUpdated = a.dateUpdated ? formatDate(a.dateUpdated) : '—';
     const urlHtml = a.url ? `<a href="${escHtml(a.url)}" target="_blank" style="color:var(--green);text-decoration:none;">↗</a> ` : '';
     const rank = parseInt(a.rank) || 0;
-    const excitement = parseInt(a.excitement) || 0;
+    const excitement = (a.excitement !== undefined && a.excitement !== null && a.excitement !== '') ? parseInt(a.excitement) : 0;
     const starsHtml = rank
       ? Array.from({length:5},(_,i)=>`<span class="${i<rank?'rank-star-filled':'rank-star-empty'}">★</span>`).join('')
       : '<span style="color:var(--border);font-size:10px">—</span>';
-    const exciteHtml = excitement
+    const exciteHtml = excitement > 0
       ? `<span style="font-size:9px;color:var(--muted);margin-left:4px" title="Excitement: ${excitement}/5">🔥${excitement}</span>`
       : '';
     return `<tr>
@@ -1107,8 +1109,8 @@ function openAddModal(prefill) {
   document.getElementById('f-updated').value = new Date().toISOString().slice(0,10);
   document.getElementById('f-notes').value = '';
   setRank(0);
-  document.getElementById('f-excitement').value = 3;
-  document.getElementById('f-excitement-val').textContent = '3';
+  document.getElementById('f-excitement').value = 0;
+  document.getElementById('f-excitement-val').textContent = '—';
   document.getElementById('app-modal').classList.add('open');
 }
 
@@ -1127,9 +1129,9 @@ function openEditModal(id) {
   document.getElementById('f-updated').value = a.dateUpdated || '';
   document.getElementById('f-notes').value = a.notes || '';
   setRank(parseInt(a.rank) || 0);
-  const exc = parseInt(a.excitement) || 3;
+  const exc = (a.excitement !== undefined && a.excitement !== null) ? parseInt(a.excitement) : 0;
   document.getElementById('f-excitement').value = exc;
-  document.getElementById('f-excitement-val').textContent = exc;
+  document.getElementById('f-excitement-val').textContent = exc === 0 ? '—' : exc;
   document.getElementById('app-modal').classList.add('open');
 }
 
@@ -1151,6 +1153,7 @@ function saveApp() {
   const apps = loadApps();
   const editId = document.getElementById('edit-id').value;
 
+  const checkedRank = document.querySelector('input[name="f-rank"]:checked');
   const entry = {
     id: editId || genId(),
     company,
@@ -1158,8 +1161,8 @@ function saveApp() {
     location: document.getElementById('f-location').value.trim(),
     url: document.getElementById('f-url').value.trim(),
     status: document.getElementById('f-status').value,
-    rank: parseInt(document.querySelector('input[name="f-rank"]:checked')?.value) || 0,
-    excitement: parseInt(document.getElementById('f-excitement').value) || 3,
+    rank: checkedRank ? parseInt(checkedRank.value) : 0,
+    excitement: parseInt(document.getElementById('f-excitement').value) || 0,
     dateApplied: document.getElementById('f-date').value,
     dateUpdated: document.getElementById('f-updated').value,
     notes: document.getElementById('f-notes').value.trim(),
