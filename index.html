@@ -236,7 +236,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
   <div class="stats-row">
     <div class="stat"><span class="stat-num" id="stat-count">—</span><span class="stat-label">openings found</span></div>
     <div class="stat"><span class="stat-num" id="stat-companies">—</span><span class="stat-label">companies</span></div>
-    <div class="stat"><span class="stat-num" id="stat-new">—</span><span class="stat-label">posted last 7d</span></div>
+    <div class="stat"><span class="stat-num" id="stat-new">—</span><span class="stat-label">recently added</span></div>
     <span class="last-check" id="last-check"></span>
   </div>
 </header>
@@ -254,7 +254,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
     </div>
     <div class="pills">
       <div class="pill active" data-filter="all">All</div>
-      <div class="pill" data-filter="new">Last 7 days</div>
+      <div class="pill" data-filter="new">Recently added</div>
       <div class="pill" data-filter="sponsored">Simplify apply</div>
       <div class="pill" data-filter="remote">Remote</div>
     </div>
@@ -342,9 +342,9 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 
     <!-- Summary stat cards -->
     <div class="stats-grid" style="margin-bottom:20px">
-      <div class="stat-card green"><div class="num" id="alert-new-count">—</div><div class="lbl">Last 7 days</div></div>
-      <div class="stat-card blue"><div class="num" id="alert-today-count" style="color:var(--blue)">—</div><div class="lbl">Today</div></div>
-      <div class="stat-card amber"><div class="num" id="alert-yesterday-count" style="color:var(--amber)">—</div><div class="lbl">Yesterday</div></div>
+      <div class="stat-card green"><div class="num" id="alert-new-count">—</div><div class="lbl">Last 7 days in list</div></div>
+      <div class="stat-card blue"><div class="num" id="alert-today-count" style="color:var(--blue)">—</div><div class="lbl">Newest date</div></div>
+      <div class="stat-card amber"><div class="num" id="alert-yesterday-count" style="color:var(--amber)">—</div><div class="lbl">Day before</div></div>
       <div class="stat-card purple"><div class="num" id="alert-simplify-count" style="color:var(--purple)">—</div><div class="lbl">Simplify apply</div></div>
       <div class="stat-card"><div class="num" id="alert-remote-count" style="color:var(--green)">—</div><div class="lbl">Remote</div></div>
     </div>
@@ -633,20 +633,38 @@ async function loadOpenings() {
   results.innerHTML = '<div class="state"><div class="spinner"></div><div class="state-title">Fetching from SimplifyJobs GitHub...</div><div style="font-size:11px;color:var(--muted);margin-top:8px;">Parsing internship table...</div></div>';
   try {
     const result = await fetchWithCORS();
-    allJobs = result.type === 'json' ? parseJsonListings(result.data) : parseReadme(result.data);
-    console.log('[loadOpenings] parsed jobs:', allJobs.length);
+    const raw = result.type === 'json' ? parseJsonListings(result.data) : parseReadme(result.data);
+    console.log('[loadOpenings] parsed jobs:', raw.length);
+
+    // Find the newest date in the dataset and mark "recent" = within 7 days of that date
+    // This handles bulk-seeded repos where all entries share an old date
+    const allDates = raw.map(j => parseDateLabel(j.dateAdded)).filter(Boolean);
+    const newestDate = allDates.length ? new Date(Math.max(...allDates.map(d => d.getTime()))) : null;
+    const recentCutoff = newestDate ? new Date(newestDate.getTime() - 7 * 86400000) : null;
+
+    allJobs = raw.map(j => {
+      const d = parseDateLabel(j.dateAdded);
+      const isNew = d && recentCutoff ? d >= recentCutoff : false;
+      return { ...j, isNew };
+    });
+
     const newCount = allJobs.filter(j => j.isNew).length;
     const companies = new Set(allJobs.map(j => j.company)).size;
     document.getElementById('stat-count').textContent = allJobs.length;
     document.getElementById('stat-companies').textContent = companies;
     document.getElementById('stat-new').textContent = newCount;
-    document.getElementById('last-check').textContent = 'Updated: ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+
+    // Show what "recent" means in the label
+    const recentLabel = newestDate
+      ? 'newest: ' + newestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : '';
+    document.getElementById('last-check').textContent = 'Updated: ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + (recentLabel ? '  ·  ' + recentLabel : '');
+
     if (allJobs.length === 0) {
       results.innerHTML = `<div class="state">
         <span class="state-icon">⚠</span>
         <div class="state-title">Fetched but could not parse jobs</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:16px;line-height:1.7">
-          Got ${text.length} bytes but 0 rows matched.<br>
           The README format may have changed. Check console for debug info.<br><br>
           <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" style="color:var(--green)">View raw list on GitHub ↗</a>
         </div>
@@ -687,7 +705,7 @@ function renderJobs() {
   const otherJobs = filtered.filter(j => !j.isNew);
   let html = '';
   if (newJobs.length) {
-    html += `<div class="section-head">Added this week — ${newJobs.length} openings</div>`;
+    html += `<div class="section-head">Recently added — ${newJobs.length} openings</div>`;
     html += '<div class="job-list">';
     for (const j of newJobs) html += jobRowHTML(j);
     html += '</div>';
@@ -710,7 +728,7 @@ function jobRowHTML(j) {
   const safeUrl = j.appLink ? j.appLink.replace(/"/g, '&quot;') : '';
 
   let tagsHTML = '';
-  if (j.isNew) tagsHTML += '<span class="tag new">✦ new this week</span>';
+  if (j.isNew) tagsHTML += '<span class="tag new">✦ recently added</span>';
   if (j.hasSimplify) tagsHTML += '<span class="tag sponsored">⚡ Simplify apply</span>';
   if (j.isRemote) tagsHTML += '<span class="tag">🌐 remote</span>';
   if (j.location && !j.isRemote) tagsHTML += '<span class="tag">📍 ' + j.location.slice(0, 30) + '</span>';
@@ -1036,13 +1054,13 @@ async function runAlertScan() {
     }
   }
 
-  // Build last-7-days window
-  const now = new Date();
-  const cutoff = new Date(now);
-  cutoff.setDate(cutoff.getDate() - 7);
-  const cutoffISO = cutoff.toISOString().slice(0, 10);
-  const todayISO = now.toISOString().slice(0, 10);
-  const yesterdayISO = new Date(now - 86400000).toISOString().slice(0, 10);
+  // Build window: newest date in dataset ± 7 days back
+  const allParsedDates = jobs.map(j => parseDateStr(j.dateAdded)).filter(Boolean).sort();
+  const newestISO = allParsedDates.length ? allParsedDates[allParsedDates.length - 1] : new Date().toISOString().slice(0,10);
+  const newestMs = new Date(newestISO + 'T00:00:00').getTime();
+  const cutoffISO = new Date(newestMs - 7 * 86400000).toISOString().slice(0, 10);
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const yesterdayISO = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
 
   // Attach parsed ISO date to each job
   const dated = jobs
@@ -1051,16 +1069,17 @@ async function runAlertScan() {
 
   alertJobs = dated;
 
-  // Stats
+  // Stats — anchor to dataset's newest date
+  const newestLabel = new Date(newestISO + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   document.getElementById('alert-new-count').textContent = dated.length;
-  document.getElementById('alert-today-count').textContent = dated.filter(j => j.isoDate === todayISO).length;
-  document.getElementById('alert-yesterday-count').textContent = dated.filter(j => j.isoDate === yesterdayISO).length;
+  document.getElementById('alert-today-count').textContent = dated.filter(j => j.isoDate === newestISO).length;
+  document.getElementById('alert-yesterday-count').textContent = dated.filter(j => j.isoDate === new Date(newestMs - 86400000).toISOString().slice(0,10)).length;
   document.getElementById('alert-simplify-count').textContent = dated.filter(j => j.hasSimplify).length;
   document.getElementById('alert-remote-count').textContent = dated.filter(j => j.isRemote).length;
-  document.getElementById('alert-last-scan').textContent = 'Loaded: ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('alert-last-scan').textContent = `Newest in dataset: ${newestLabel}`;
 
   // Build bar chart
-  buildAlertChart(dated, cutoffISO, todayISO);
+  buildAlertChart(dated, cutoffISO, newestISO);
 
   // Day filter pills
   const days = [...new Set(dated.map(j => j.isoDate))].sort().reverse();
@@ -1073,13 +1092,12 @@ async function runAlertScan() {
   btn.disabled = false;
 }
 
-function buildAlertChart(dated, cutoffISO, todayISO) {
-  // Generate all 7 days
+function buildAlertChart(dated, cutoffISO, newestISO) {
+  // Generate the 7 days ending at newestISO
+  const newestMs = new Date(newestISO + 'T00:00:00').getTime();
   const days = [];
   for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    days.push(d.toISOString().slice(0, 10));
+    days.push(new Date(newestMs - i * 86400000).toISOString().slice(0, 10));
   }
   const counts = {};
   for (const d of days) counts[d] = 0;
@@ -1092,8 +1110,8 @@ function buildAlertChart(dated, cutoffISO, todayISO) {
 
   chartEl.innerHTML = days.map(d => {
     const h = Math.max(4, Math.round((counts[d] / max) * 64));
-    const isToday = d === todayISO;
-    const color = isToday ? 'var(--green)' : 'rgba(0,255,135,.3)';
+    const isNewest = d === newestISO;
+    const color = isNewest ? 'var(--green)' : 'rgba(0,255,135,.3)';
     return `<div title="${dayLabel(d)}: ${counts[d]} openings" onclick="setAlertDay('${d}', null)"
       style="width:${barW};height:${h}px;background:${color};border-radius:3px 3px 0 0;cursor:pointer;transition:opacity .15s;flex-shrink:0"
       onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
@@ -1101,9 +1119,9 @@ function buildAlertChart(dated, cutoffISO, todayISO) {
   }).join('');
 
   labelEl.innerHTML = days.map(d => {
-    const isToday = d === todayISO;
-    const lbl = isToday ? 'Today' : new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'short'});
-    return `<div style="width:${barW};text-align:center;font-size:9px;color:${isToday?'var(--green)':'var(--muted)'};flex-shrink:0;overflow:hidden;white-space:nowrap">${lbl}</div>`;
+    const isNewest = d === newestISO;
+    const lbl = isNewest ? 'Newest' : new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'short'});
+    return `<div style="width:${barW};text-align:center;font-size:9px;color:${isNewest?'var(--green)':'var(--muted)'};flex-shrink:0;overflow:hidden;white-space:nowrap">${lbl}</div>`;
   }).join('');
 
   document.getElementById('alert-chart-wrap').style.display = 'block';
@@ -1138,16 +1156,17 @@ function renderAlerts() {
     byDay[j.isoDate].push(j);
   }
   const sortedDays = Object.keys(byDay).sort().reverse();
+  const dataNewest = sortedDays[0]; // most recent date in this filtered set
 
   let html = '';
   for (const day of sortedDays) {
     const dayJobs = byDay[day];
     const lbl = dayLabel(day);
-    const isToday = day === new Date().toISOString().slice(0,10);
+    const isNewest = day === dataNewest;
     html += `<div class="section-head" style="margin-top:${html?'24':'0'}px;margin-bottom:10px">
-      <span style="color:${isToday?'var(--green)':'inherit'}">${lbl}</span>
+      <span style="color:${isNewest?'var(--green)':'inherit'}">${lbl}</span>
       <span style="margin-left:8px;font-size:9px;color:var(--muted)">${dayJobs.length} opening${dayJobs.length!==1?'s':''}</span>
-      ${isToday ? '<span style="margin-left:6px;font-size:9px;padding:1px 6px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);border-radius:3px">latest</span>' : ''}
+      ${isNewest ? '<span style="margin-left:6px;font-size:9px;padding:1px 6px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);border-radius:3px">newest</span>' : ''}
     </div>
     <div class="job-list">`;
     for (const j of dayJobs) html += jobRowHTML(j);
