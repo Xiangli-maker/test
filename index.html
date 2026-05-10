@@ -154,6 +154,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 .app-search input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 11px; padding: 7px 10px 7px 28px; border-radius: 4px; outline: none; }
 .app-search input:focus { border-color: var(--green-border); }
 .status-pill { font-size: 10px; padding: 4px 9px; border-radius: 3px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all .15s; white-space: nowrap; }
+.status-pill[data-status="to_apply"].active { color: #00D2FF; border-color: rgba(0,210,255,.3); background: rgba(0,210,255,.1); }
 .status-pill[data-status="all"].active { color: var(--green); border-color: var(--green-border); background: var(--green-dim); }
 .status-pill[data-status="applied"].active { color: var(--blue); border-color: var(--blue-border); background: var(--blue-dim); }
 .status-pill[data-status="oa"].active { color: var(--purple); border-color: var(--purple-border); background: var(--purple-dim); }
@@ -171,7 +172,8 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 .app-table .company-cell { font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text); }
 .app-table .role-cell { color: var(--muted); font-size: 10px; margin-top: 2px; }
 .status-badge { display: inline-block; font-size: 9px; padding: 2px 7px; border-radius: 3px; letter-spacing: .06em; white-space: nowrap; }
-.badge-applied { background: var(--blue-dim); border: 1px solid var(--blue-border); color: var(--blue); }
+.badge-to-apply { background: rgba(0,210,255,.1); border: 1px solid rgba(0,210,255,.3); color: #00D2FF; }
+.dot-to-apply { background: #00D2FF; }
 .badge-oa { background: var(--purple-dim); border: 1px solid var(--purple-border); color: var(--purple); }
 .badge-interview { background: rgba(255,184,0,.1); border: 1px solid rgba(255,184,0,.3); color: var(--amber); }
 .badge-offer { background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
@@ -290,6 +292,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
       </div>
       <div class="pills" id="status-filters">
         <button class="status-pill active" data-status="all">All</button>
+        <button class="status-pill" data-status="to_apply">To Apply</button>
         <button class="status-pill" data-status="applied">Applied</button>
         <button class="status-pill" data-status="oa">OA</button>
         <button class="status-pill" data-status="interview">Interview</button>
@@ -385,6 +388,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
       <div class="form-group">
         <label>Status</label>
         <select id="f-status">
+          <option value="to_apply">To Apply</option>
           <option value="applied">Applied</option>
           <option value="oa">OA / Assessment</option>
           <option value="interview">Interview</option>
@@ -854,6 +858,7 @@ function genId() {
 }
 
 const STATUS_CONFIG = {
+  to_apply:  { label: 'To Apply',   cls: 'badge-to-apply',  dot: 'dot-to-apply' },
   applied:   { label: 'Applied',    cls: 'badge-applied',   dot: 'dot-applied' },
   oa:        { label: 'OA',         cls: 'badge-oa',        dot: 'dot-oa' },
   interview: { label: 'Interview',  cls: 'badge-interview', dot: 'dot-interview' },
@@ -869,10 +874,11 @@ function renderStats() {
   const counts = {};
   for (const s of Object.keys(STATUS_CONFIG)) counts[s] = 0;
   for (const a of apps) counts[a.status] = (counts[a.status] || 0) + 1;
-  const respRate = total > 0 ? Math.round(((counts.oa + counts.interview + counts.offer) / total) * 100) : 0;
+  const respRate = total > 0 ? Math.round(((counts.oa + counts.interview + counts.offer) / (total - (counts.to_apply||0) || 1)) * 100) : 0;
 
   document.getElementById('summary-stats').innerHTML = `
-    <div class="stat-card"><div class="num">${total}</div><div class="lbl">Total Applied</div></div>
+    <div class="stat-card"><div class="num" style="color:#00D2FF">${counts.to_apply||0}</div><div class="lbl">To Apply</div></div>
+    <div class="stat-card"><div class="num">${total}</div><div class="lbl">Total Tracked</div></div>
     <div class="stat-card blue"><div class="num" style="color:var(--blue)">${counts.applied}</div><div class="lbl">In Review</div></div>
     <div class="stat-card purple"><div class="num" style="color:var(--purple)">${counts.oa}</div><div class="lbl">OA / Assessment</div></div>
     <div class="stat-card amber"><div class="num" style="color:var(--amber)">${counts.interview}</div><div class="lbl">Interviews</div></div>
@@ -961,7 +967,7 @@ function openAddModal(prefill) {
   document.getElementById('f-role').value = prefill?.role || '';
   document.getElementById('f-location').value = prefill?.location || '';
   document.getElementById('f-url').value = prefill?.url || '';
-  document.getElementById('f-status').value = 'applied';
+  document.getElementById('f-status').value = prefill ? 'to_apply' : 'applied';
   document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('f-updated').value = new Date().toISOString().slice(0,10);
   document.getElementById('f-notes').value = '';
