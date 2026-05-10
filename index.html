@@ -213,7 +213,22 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 .dot-ghosted { background: var(--muted); }
 .dot-withdrawn { background: #806030; }
 
-/* Empty state */
+/* Star ranking */
+.star-input { display: flex; gap: 3px; align-items: center; }
+.star-input input[type=radio] { display: none; }
+.star-input label { font-size: 16px; cursor: pointer; color: var(--border); transition: color .1s; line-height: 1; }
+.star-input label:hover,
+.star-input label:hover ~ label { color: var(--border); }
+.star-input input[type=radio]:checked ~ label { color: var(--border); }
+.star-input label:hover,
+.star-input input[type=radio]:checked + label,
+.star-input input[type=radio]:checked + label ~ label { color: var(--amber) !important; }
+/* Reverse trick for RTL star fill */
+.star-input { flex-direction: row-reverse; justify-content: flex-end; }
+.star-input label:hover ~ label { color: var(--amber) !important; }
+.rank-badge { display: inline-flex; gap: 1px; font-size: 11px; white-space: nowrap; }
+.rank-star-filled { color: var(--amber); }
+.rank-star-empty  { color: var(--border); }
 .empty-apps { text-align: center; padding: 48px 20px; color: var(--muted); }
 .empty-apps .big { font-family: var(--font-head); font-size: 16px; color: var(--text); margin-bottom: 8px; margin-top: 12px; }
 
@@ -342,6 +357,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
         <thead>
           <tr>
             <th>Company / Role</th>
+            <th>Rank</th>
             <th>Status</th>
             <th>Applied</th>
             <th>Last Update</th>
@@ -432,6 +448,29 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
           <option value="withdrawn">Withdrawn</option>
           <option value="not_interested">Reviewed / Not Interested</option>
         </select>
+      </div>
+    </div>
+    <div class="form-row wide">
+      <div class="form-group">
+        <label>Priority / Ranking</label>
+        <div class="star-input" id="f-rank-wrap">
+          <input type="radio" name="f-rank" id="f-rank-5" value="5"><label for="f-rank-5">★</label>
+          <input type="radio" name="f-rank" id="f-rank-4" value="4"><label for="f-rank-4">★</label>
+          <input type="radio" name="f-rank" id="f-rank-3" value="3"><label for="f-rank-3">★</label>
+          <input type="radio" name="f-rank" id="f-rank-2" value="2"><label for="f-rank-2">★</label>
+          <input type="radio" name="f-rank" id="f-rank-1" value="1"><label for="f-rank-1">★</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Excitement (1–5)</label>
+        <input type="range" id="f-excitement" min="1" max="5" step="1" value="3"
+          style="accent-color:var(--green);width:100%;margin-top:6px"
+          oninput="document.getElementById('f-excitement-val').textContent = this.value">
+        <div style="display:flex;justify-content:space-between;margin-top:2px">
+          <span style="font-size:9px;color:var(--muted)">meh</span>
+          <span id="f-excitement-val" style="font-size:11px;color:var(--green);font-weight:700">3</span>
+          <span style="font-size:9px;color:var(--muted)">dream job</span>
+        </div>
       </div>
     </div>
     <div class="form-row wide">
@@ -989,8 +1028,8 @@ function renderApps() {
     return matchQ && matchS;
   });
 
-  // Sort: newest applied first
-  filtered.sort((a, b) => (b.dateApplied || '').localeCompare(a.dateApplied || '') || b.id.localeCompare(a.id));
+  // Sort: highest rank first, then newest applied
+  filtered.sort((a, b) => (b.rank || 0) - (a.rank || 0) || (b.dateApplied || '').localeCompare(a.dateApplied || '') || b.id.localeCompare(a.id));
 
   if (!filtered.length) {
     tbody.innerHTML = '';
@@ -1013,11 +1052,20 @@ function renderApps() {
     const dateApplied = a.dateApplied ? formatDate(a.dateApplied) : '—';
     const dateUpdated = a.dateUpdated ? formatDate(a.dateUpdated) : '—';
     const urlHtml = a.url ? `<a href="${escHtml(a.url)}" target="_blank" style="color:var(--green);text-decoration:none;">↗</a> ` : '';
+    const rank = parseInt(a.rank) || 0;
+    const excitement = parseInt(a.excitement) || 0;
+    const starsHtml = rank
+      ? Array.from({length:5},(_,i)=>`<span class="${i<rank?'rank-star-filled':'rank-star-empty'}">★</span>`).join('')
+      : '<span style="color:var(--border);font-size:10px">—</span>';
+    const exciteHtml = excitement
+      ? `<span style="font-size:9px;color:var(--muted);margin-left:4px" title="Excitement: ${excitement}/5">🔥${excitement}</span>`
+      : '';
     return `<tr>
       <td>
         <div class="company-cell">${urlHtml}${escHtml(a.company)}</div>
         <div class="role-cell">${escHtml(a.role)}</div>
       </td>
+      <td><span class="rank-badge">${starsHtml}</span>${exciteHtml}</td>
       <td><span class="status-badge ${sc.cls}">${sc.label}</span></td>
       <td style="white-space:nowrap;color:var(--muted);font-size:10px">${dateApplied}</td>
       <td style="white-space:nowrap;color:var(--muted);font-size:10px">${dateUpdated}</td>
@@ -1058,6 +1106,9 @@ function openAddModal(prefill) {
   document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('f-updated').value = new Date().toISOString().slice(0,10);
   document.getElementById('f-notes').value = '';
+  setRank(0);
+  document.getElementById('f-excitement').value = 3;
+  document.getElementById('f-excitement-val').textContent = '3';
   document.getElementById('app-modal').classList.add('open');
 }
 
@@ -1075,11 +1126,21 @@ function openEditModal(id) {
   document.getElementById('f-date').value = a.dateApplied || '';
   document.getElementById('f-updated').value = a.dateUpdated || '';
   document.getElementById('f-notes').value = a.notes || '';
+  setRank(parseInt(a.rank) || 0);
+  const exc = parseInt(a.excitement) || 3;
+  document.getElementById('f-excitement').value = exc;
+  document.getElementById('f-excitement-val').textContent = exc;
   document.getElementById('app-modal').classList.add('open');
 }
 
 function closeModal() {
   document.getElementById('app-modal').classList.remove('open');
+}
+
+function setRank(val) {
+  document.querySelectorAll('input[name="f-rank"]').forEach(r => {
+    r.checked = parseInt(r.value) === val;
+  });
 }
 
 function saveApp() {
@@ -1097,6 +1158,8 @@ function saveApp() {
     location: document.getElementById('f-location').value.trim(),
     url: document.getElementById('f-url').value.trim(),
     status: document.getElementById('f-status').value,
+    rank: parseInt(document.querySelector('input[name="f-rank"]:checked')?.value) || 0,
+    excitement: parseInt(document.getElementById('f-excitement').value) || 3,
     dateApplied: document.getElementById('f-date').value,
     dateUpdated: document.getElementById('f-updated').value,
     notes: document.getElementById('f-notes').value.trim(),
@@ -1130,9 +1193,9 @@ function quickTrack(company, role, location, url) {
 function exportCSV() {
   const apps = loadApps();
   if (!apps.length) { alert('No applications to export.'); return; }
-  const headers = ['Company','Role','Status','Date Applied','Last Update','Location','URL','Notes'];
+  const headers = ['Company','Role','Rank','Excitement','Status','Date Applied','Last Update','Location','URL','Notes'];
   const rows = apps.map(a => [
-    a.company, a.role, a.status, a.dateApplied, a.dateUpdated, a.location, a.url, a.notes
+    a.company, a.role, a.rank||0, a.excitement||'', a.status, a.dateApplied, a.dateUpdated, a.location, a.url, a.notes
   ].map(v => '"' + String(v || '').replace(/"/g, '""') + '"'));
   const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
