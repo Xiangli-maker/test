@@ -440,17 +440,17 @@ function parseReadme(text) {
   const jobs = [];
   const lines = text.split('\n');
 
-  // The SimplifyJobs README wraps closed roles in <details> blocks and has
-  // multiple table sections. We scan ALL lines for pipe-delimited rows and
-  // skip separator / header lines — no state machine needed.
+  // IMPORTANT: SimplifyJobs README has multiple table sections separated by
+  // <details> blocks, blank lines, and HTML. We must NEVER reset headerSeen
+  // on non-pipe lines — once a header row is found, keep scanning everything.
   let headerSeen = false;
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     const line = raw.trim();
 
-    // Must be a pipe row
-    if (!line.startsWith('|')) { headerSeen = false; continue; }
+    // Skip non-pipe lines but DO NOT reset headerSeen
+    if (!line.startsWith('|')) continue;
 
     // Separator row  |---|---|
     if (/^\|[\s\-|]+\|$/.test(line) || line.replace(/[|\-\s]/g,'') === '') continue;
@@ -512,8 +512,11 @@ function parseReadme(text) {
     jobs.push({ company, role, location, appLink, hasSimplify, dateAdded, isNew, isRemote });
   }
 
-  // Debug: log first 3 parsed and total to console
-  console.log('[parseReadme] total rows:', jobs.length, '| sample:', jobs.slice(0,3).map(j=>j.company+' – '+j.role));
+  // Debug: log date distribution
+  const dateCounts = {};
+  for (const j of jobs) dateCounts[j.dateAdded || '(none)'] = (dateCounts[j.dateAdded || '(none)'] || 0) + 1;
+  const topDates = Object.entries(dateCounts).sort((a,b) => b[1]-a[1]).slice(0, 8);
+  console.log('[parseReadme] total:', jobs.length, '| top dates:', topDates);
   return jobs;
 }
 
