@@ -478,15 +478,21 @@ function parseReadme(text) {
 
     // --- Company ---
     const companyRaw = cells[0];
-    // Handle continuation rows like "↳" or " ↳ Role Name" (same company, different role)
     let company = '';
+    let companyUrl = '';
     let isContinuation = false;
     if (companyRaw.includes('↳') || companyRaw === '') {
       isContinuation = true;
       company = jobs.length ? jobs[jobs.length - 1].company : '';
+      companyUrl = jobs.length ? jobs[jobs.length - 1].companyUrl : '';
     } else {
-      const linkMatch = companyRaw.match(/\[([^\]]+)\]/);
-      company = linkMatch ? linkMatch[1] : companyRaw.replace(/[*_[\]]/g, '').trim();
+      const linkMatch = companyRaw.match(/\[([^\]]+)\]\(([^)]+)\)/);
+      if (linkMatch) {
+        company = linkMatch[1];
+        companyUrl = linkMatch[2];
+      } else {
+        company = companyRaw.replace(/[*_[\]]/g, '').trim();
+      }
     }
     if (!company) continue;
 
@@ -517,7 +523,7 @@ function parseReadme(text) {
     const dObj = parseDateLabel(dateAdded);
     const dateMs = dObj ? dObj.getTime() : null;
 
-    jobs.push({ company, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew, isRemote });
+    jobs.push({ company, companyUrl, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew, isRemote });
   }
 
   // Debug: log date distribution
@@ -643,6 +649,7 @@ function parseJsonListings(data) {
     .filter(j => j.active !== false)
     .map(j => {
       const company = j.company_name || j.company || '';
+      const companyUrl = j.company_url || j.company_website || j.website || '';
       const role = j.title || j.role || '';
       const location = Array.isArray(j.locations) ? j.locations.join(', ') : (j.location || '');
       const appLink = j.url || j.apply_url || '';
@@ -667,7 +674,7 @@ function parseJsonListings(data) {
         : '';
       const isRemote = location.toLowerCase().includes('remote');
 
-      return { company, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew: false };
+      return { company, companyUrl, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew: false, isRemote };
     })
     .filter(j => j.company && j.role);
 }
@@ -799,6 +806,7 @@ function getAgeBadge(dateAdded, dateMs) {
 
 function jobRowHTML(j) {
   const liLink = 'https://www.linkedin.com/jobs/search/?keywords=' + encodeURIComponent(j.company + ' ' + j.role) + '&f_JT=I';
+  const webLink = j.companyUrl || ('https://www.google.com/search?q=' + encodeURIComponent(j.company + ' careers'));
   const safeCompany = j.company.replace(/'/g, "\\'").replace(/"/g, '&quot;');
   const safeRole = j.role.replace(/'/g, "\\'").replace(/"/g, '&quot;');
   const safeLocation = j.location.replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -818,9 +826,10 @@ function jobRowHTML(j) {
       <div class="job-tags">${tagsHTML}</div>
     </div>
     <div class="job-right">
-      <div style="display:flex;gap:6px;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
         ${j.appLink ? `<a class="apply-btn" href="${j.appLink}" target="_blank">Apply ↗</a>` : ''}
         <button class="apply-btn blue" onclick='quickTrack("${safeCompany}","${safeRole}","${safeLocation}","${safeUrl}")'>+ Track</button>
+        <a class="apply-btn secondary" href="${webLink}" target="_blank" title="${j.companyUrl ? 'Company website' : 'Search company'}">🌐 Website</a>
         <a class="apply-btn secondary" href="${liLink}" target="_blank">LinkedIn ↗</a>
       </div>
     </div>
