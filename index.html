@@ -46,6 +46,22 @@ header { position: relative; z-index: 10; padding: 32px 48px 24px; border-bottom
 /* Controls */
 .controls { position: sticky; top: 0; z-index: 20; background: rgba(5,5,8,.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 48px; }
 .controls-inner { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* Multi-field search */
+.search-fields { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; flex-wrap: wrap; }
+.search-field { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color .2s; flex: 1; min-width: 120px; }
+.search-field:focus-within { border-color: var(--green-border); }
+.field-label { font-size: 9px; color: var(--muted); letter-spacing: .08em; padding: 0 6px; white-space: nowrap; border-right: 1px solid var(--border); height: 100%; display: flex; align-items: center; min-height: 32px; }
+.search-field input { flex: 1; background: transparent; border: none; color: var(--text); font-family: var(--font-mono); font-size: 11px; padding: 7px 6px; outline: none; min-width: 60px; }
+.search-field input::placeholder { color: var(--muted); }
+.field-clear { background: transparent; border: none; color: var(--muted); font-size: 10px; padding: 0 7px; cursor: pointer; opacity: 0; transition: opacity .15s, color .15s; line-height: 1; height: 100%; }
+.field-clear.visible { opacity: 1; }
+.field-clear:hover { color: var(--green); }
+.search-field-sep { font-size: 9px; color: var(--muted); letter-spacing: .1em; white-space: nowrap; padding: 0 2px; }
+.active-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; padding: 3px 8px; border-radius: 3px; background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
+.active-chip .chip-field { opacity: .6; font-size: 9px; }
+.active-chip button { background: none; border: none; color: var(--green); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; }
+.controls-inner { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .search-box { flex: 1; min-width: 200px; position: relative; }
 .search-box::before { content: '⌕'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
 .search-box input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 12px; padding: 8px 10px 8px 30px; border-radius: 4px; outline: none; transition: border-color .2s; }
@@ -251,8 +267,24 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 
 <div class="controls" id="openings-controls">
   <div class="controls-inner">
-    <div class="search-box">
-      <input type="text" id="search" placeholder="Search company, role, location...">
+    <div class="search-fields">
+      <div class="search-field">
+        <span class="field-label">CO</span>
+        <input type="text" id="search-company" placeholder="Company..." oninput="onSearchInput()">
+        <button class="field-clear" id="clear-company" onclick="clearField('company')" title="Clear">✕</button>
+      </div>
+      <div class="search-field-sep">AND</div>
+      <div class="search-field">
+        <span class="field-label">ROLE</span>
+        <input type="text" id="search-role" placeholder="Role / title..." oninput="onSearchInput()">
+        <button class="field-clear" id="clear-role" onclick="clearField('role')" title="Clear">✕</button>
+      </div>
+      <div class="search-field-sep">AND</div>
+      <div class="search-field">
+        <span class="field-label">LOC</span>
+        <input type="text" id="search-location" placeholder="Location..." oninput="onSearchInput()">
+        <button class="field-clear" id="clear-location" onclick="clearField('location')" title="Clear">✕</button>
+      </div>
     </div>
     <div class="pills">
       <div class="pill active" data-filter="all">All</div>
@@ -262,6 +294,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
     </div>
     <button class="refresh-btn" id="refresh-btn" onclick="loadOpenings()">⟳ Refresh</button>
   </div>
+  <div id="active-filters" style="display:none;padding:6px 0 2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
 </div>
 
 <main>
@@ -440,7 +473,48 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 =========================== */
 let allJobs = [];
 let activeFilter = 'all';
-let searchQ = '';
+let searchCompany = '', searchRole = '', searchLocation = '';
+
+function onSearchInput() {
+  searchCompany  = (document.getElementById('search-company').value  || '').trim().toLowerCase();
+  searchRole     = (document.getElementById('search-role').value     || '').trim().toLowerCase();
+  searchLocation = (document.getElementById('search-location').value || '').trim().toLowerCase();
+  // Show/hide clear buttons
+  ['company','role','location'].forEach(f => {
+    const val = f === 'company' ? searchCompany : f === 'role' ? searchRole : searchLocation;
+    document.getElementById('clear-' + f).classList.toggle('visible', val.length > 0);
+  });
+  updateActiveFiltersBar();
+  renderJobs();
+}
+
+function clearField(field) {
+  document.getElementById('search-' + field).value = '';
+  onSearchInput();
+  document.getElementById('search-' + field).focus();
+}
+
+function updateActiveFiltersBar() {
+  const bar = document.getElementById('active-filters');
+  const chips = [];
+  if (searchCompany)  chips.push({ field: 'CO',   value: searchCompany,  key: 'company' });
+  if (searchRole)     chips.push({ field: 'ROLE',  value: searchRole,     key: 'role' });
+  if (searchLocation) chips.push({ field: 'LOC',   value: searchLocation, key: 'location' });
+  if (!chips.length) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  bar.innerHTML = '<span style="font-size:9px;color:var(--muted);letter-spacing:.08em;margin-right:2px">FILTERING:</span>' +
+    chips.map(c => `<span class="active-chip"><span class="chip-field">${c.field}</span> ${escHtml(c.value)} <button onclick="clearField('${c.key}')" title="Remove">✕</button></span>`).join(
+      '<span style="font-size:9px;color:var(--muted);padding:0 2px">AND</span>'
+    ) +
+    `<button onclick="clearAllSearch()" style="font-size:9px;color:var(--muted);background:none;border:none;cursor:pointer;margin-left:4px;font-family:var(--font-mono)">clear all</button>`;
+}
+
+function clearAllSearch() {
+  ['company','role','location'].forEach(f => {
+    document.getElementById('search-' + f).value = '';
+  });
+  onSearchInput();
+}
 
 function parseReadme(text) {
   const jobs = [];
@@ -737,19 +811,24 @@ async function loadOpenings() {
 
 function renderJobs() {
   const results = document.getElementById('results');
-  const q = searchQ.toLowerCase();
   let filtered = allJobs.filter(j => {
-    const matchSearch = !q || j.company.toLowerCase().includes(q) || j.role.toLowerCase().includes(q) || j.location.toLowerCase().includes(q);
+    const co  = j.company.toLowerCase();
+    const ro  = j.role.toLowerCase();
+    const loc = j.location.toLowerCase();
+    const matchCompany   = !searchCompany  || co.includes(searchCompany);
+    const matchRole      = !searchRole     || ro.includes(searchRole);
+    const matchLocation  = !searchLocation || loc.includes(searchLocation);
     const matchFilter =
-      activeFilter === 'all' ? true :
-      activeFilter === 'new' ? j.isNew :
+      activeFilter === 'all'       ? true :
+      activeFilter === 'new'       ? j.isNew :
       activeFilter === 'sponsored' ? j.hasSimplify :
-      activeFilter === 'remote' ? j.isRemote : true;
-    return matchSearch && matchFilter;
+      activeFilter === 'remote'    ? j.isRemote : true;
+    return matchCompany && matchRole && matchLocation && matchFilter;
   });
 
   if (!filtered.length) {
-    results.innerHTML = '<div class="state"><span class="state-icon">🔍</span><div class="state-title">No results</div><div>Try a different filter or search term</div></div>';
+    const activeFilters = [searchCompany && `company: "${searchCompany}"`, searchRole && `role: "${searchRole}"`, searchLocation && `location: "${searchLocation}"`].filter(Boolean).join(' AND ');
+    results.innerHTML = `<div class="state"><span class="state-icon">🔍</span><div class="state-title">No results</div><div style="font-size:11px;margin-top:4px">${activeFilters || 'Try a different filter'}</div></div>`;
     return;
   }
 
@@ -843,11 +922,6 @@ document.querySelectorAll('.pill').forEach(p => {
     activeFilter = p.dataset.filter;
     renderJobs();
   });
-});
-
-document.getElementById('search').addEventListener('input', e => {
-  searchQ = e.target.value;
-  renderJobs();
 });
 
 /* ===========================
