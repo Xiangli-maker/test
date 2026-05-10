@@ -236,7 +236,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
   <div class="stats-row">
     <div class="stat"><span class="stat-num" id="stat-count">—</span><span class="stat-label">openings found</span></div>
     <div class="stat"><span class="stat-num" id="stat-companies">—</span><span class="stat-label">companies</span></div>
-    <div class="stat"><span class="stat-num" id="stat-new">—</span><span class="stat-label">added this week</span></div>
+    <div class="stat"><span class="stat-num" id="stat-new">—</span><span class="stat-label">posted last 7d</span></div>
     <span class="last-check" id="last-check"></span>
   </div>
 </header>
@@ -254,7 +254,7 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
     </div>
     <div class="pills">
       <div class="pill active" data-filter="all">All</div>
-      <div class="pill" data-filter="new">This week</div>
+      <div class="pill" data-filter="new">Last 7 days</div>
       <div class="pill" data-filter="sponsored">Simplify apply</div>
       <div class="pill" data-filter="remote">Remote</div>
     </div>
@@ -517,28 +517,38 @@ function parseReadme(text) {
   return jobs;
 }
 
-function isThisWeek(dateStr) {
+// Parse "Jan 21", "May 7" etc. to a Date, choosing the most recent past occurrence
+function parseDateLabel(dateStr) {
+  if (!dateStr) return null;
   try {
     const now = new Date();
-    const d = new Date(dateStr + ' ' + now.getFullYear());
-    const diff = now - d;
-    return diff >= 0 && diff < 7 * 86400000;
-  } catch { return false; }
+    let d = new Date(dateStr + ' ' + now.getFullYear());
+    if (isNaN(d)) return null;
+    // If the date is in the future, it belongs to last year
+    if (d > now) d = new Date(dateStr + ' ' + (now.getFullYear() - 1));
+    return d;
+  } catch { return null; }
+}
+
+function isThisWeek(dateStr) {
+  const d = parseDateLabel(dateStr);
+  if (!d) return false;
+  const diff = Date.now() - d.getTime();
+  return diff >= 0 && diff < 7 * 86400000;
 }
 
 function getTimeLabel(dateStr) {
   if (!dateStr) return '';
-  try {
-    const now = new Date();
-    const d = new Date(dateStr + ' ' + now.getFullYear());
-    const diff = now - d;
-    if (diff < 0) return dateStr;
-    const days = Math.floor(diff / 86400000);
-    if (days === 0) return 'today';
-    if (days === 1) return 'yesterday';
-    if (days < 7) return days + 'd ago';
-    return dateStr;
-  } catch { return dateStr; }
+  const d = parseDateLabel(dateStr);
+  if (!d) return dateStr;
+  const diff = Date.now() - d.getTime();
+  if (diff < 0) return dateStr;
+  const days = Math.floor(diff / 86400000);
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 7) return days + 'd ago';
+  // Show month/day for older dates
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 const RAW_URL = 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md';
@@ -987,17 +997,13 @@ function initAlerts() {
   if (alertJobs.length) renderAlerts();
 }
 
-// Parse a date string like "May 7", "Apr 30", etc. → "YYYY-MM-DD" or null
+// Parse a date string like "May 7", "Apr 30", ISO "2025-05-07" → "YYYY-MM-DD" or null
 function parseDateStr(dateStr) {
   if (!dateStr) return null;
   try {
-    const now = new Date();
-    // Try formats: "May 7", "May 07", ISO "2025-05-07"
     if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return dateStr.slice(0, 10);
-    const d = new Date(dateStr + ' ' + now.getFullYear());
-    if (isNaN(d)) return null;
-    // If the parsed date is in the future (e.g. Dec parsed in Jan), subtract a year
-    if (d > now) d.setFullYear(d.getFullYear() - 1);
+    const d = parseDateLabel(dateStr);
+    if (!d) return null;
     return d.toISOString().slice(0, 10);
   } catch { return null; }
 }
