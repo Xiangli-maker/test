@@ -508,8 +508,10 @@ function parseReadme(text) {
     const dateAdded = dateMatch ? dateMatch[1] : '';
     const isNew = dateAdded ? isThisWeek(dateAdded) : false;
     const isRemote = location.toLowerCase().includes('remote');
+    const dObj = parseDateLabel(dateAdded);
+    const dateMs = dObj ? dObj.getTime() : null;
 
-    jobs.push({ company, role, location, appLink, hasSimplify, dateAdded, isNew, isRemote });
+    jobs.push({ company, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew, isRemote });
   }
 
   // Debug: log date distribution
@@ -557,8 +559,24 @@ function getTimeLabel(dateStr) {
 const RAW_URL = 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md';
 const JSON_URL = 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json';
 
+// Try to extract a real posted date from the Simplify apply URL
+// Simplify URLs contain a job ID; the listing JSON at simplify.jobs/<id> has date_posted
+// As a fallback, extract any date-like params from the URL
+function extractDateFromSimplifyUrl(url) {
+  if (!url) return '';
+  try {
+    // Simplify URLs look like: https://simplify.jobs/p/<uuid>?...
+    // The UUID maps to their internal job, but we can't fetch it cross-origin.
+    // Instead check for ?date= or ?posted= params
+    const u = new URL(url);
+    const d = u.searchParams.get('date') || u.searchParams.get('posted') || u.searchParams.get('date_posted');
+    if (d) return d;
+  } catch {}
+  return '';
+}
+
 async function fetchWithCORS() {
-  // Try JSON first — more reliable than parsing markdown
+  // Priority 1: JSON listings file (has real date_posted unix timestamps)
   const jsonSources = [
     JSON_URL,
     'https://api.allorigins.win/raw?url=' + encodeURIComponent(JSON_URL),
@@ -570,13 +588,13 @@ async function fetchWithCORS() {
       if (!r.ok) continue;
       const data = await r.json();
       if (Array.isArray(data) && data.length > 0) {
-        console.log('[fetch] got JSON listings:', data.length, 'entries');
+        console.log('[fetch] got JSON listings:', data.length, '| sample keys:', Object.keys(data[0]).slice(0,10));
         return { type: 'json', data };
       }
     } catch {}
   }
 
-  // Try markdown README via multiple proxies
+  // Priority 2: markdown README
   const mdSources = [
     RAW_URL,
     'https://api.allorigins.win/raw?url=' + encodeURIComponent(RAW_URL),
@@ -594,7 +612,7 @@ async function fetchWithCORS() {
     } catch {}
   }
 
-  // GitHub API base64
+  // Priority 3: GitHub Contents API (base64)
   try {
     const r = await fetch('https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/contents/README.md', {
       headers: { 'Accept': 'application/vnd.github.v3+json' }
@@ -612,6 +630,9 @@ async function fetchWithCORS() {
 }
 
 function parseJsonListings(data) {
+  // Log the first entry's keys so we can see what date fields are available
+  if (data[0]) console.log('[JSON keys]', Object.keys(data[0]));
+
   return data
     .filter(j => j.active !== false)
     .map(j => {
@@ -619,12 +640,28 @@ function parseJsonListings(data) {
       const role = j.title || j.role || '';
       const location = Array.isArray(j.locations) ? j.locations.join(', ') : (j.location || '');
       const appLink = j.url || j.apply_url || '';
-      const hasSimplify = appLink.includes('simplify.jobs');
-      const dateAdded = j.date_posted || j.posted || '';
-      const dateStr = dateAdded ? new Date(dateAdded).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
-      const isNew = dateAdded ? isThisWeek(dateStr) : false;
+      const hasSimplify = !!(appLink && appLink.includes('simplify.jobs'));
+
+      // Try every possible date field, including unix timestamps
+      let dateMs = null;
+      const rawDate = j.date_posted || j.posted_date || j.created_at || j.date_added
+                    || j.posted || j.timestamp || j.date || '';
+      if (rawDate) {
+        // Unix timestamp (seconds)?
+        if (typeof rawDate === 'number') {
+          dateMs = rawDate > 1e10 ? rawDate : rawDate * 1000;
+        } else {
+          const d = new Date(rawDate);
+          if (!isNaN(d)) dateMs = d.getTime();
+        }
+      }
+
+      const dateAdded = dateMs
+        ? new Date(dateMs).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        : '';
       const isRemote = location.toLowerCase().includes('remote');
-      return { company, role, location, appLink, hasSimplify, dateAdded: dateStr, isNew, isRemote };
+
+      return { company, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew: false };
     })
     .filter(j => j.company && j.role);
 }
@@ -640,14 +677,13 @@ async function loadOpenings() {
     console.log('[loadOpenings] parsed jobs:', raw.length);
 
     // Find the newest date in the dataset and mark "recent" = within 7 days of that date
-    // This handles bulk-seeded repos where all entries share an old date
-    const allDates = raw.map(j => parseDateLabel(j.dateAdded)).filter(Boolean);
-    const newestDate = allDates.length ? new Date(Math.max(...allDates.map(d => d.getTime()))) : null;
+    const allDates = raw.map(j => j.dateMs || (parseDateLabel(j.dateAdded) || {getTime:()=>null}).getTime()).filter(Boolean);
+    const newestDate = allDates.length ? new Date(Math.max(...allDates)) : null;
     const recentCutoff = newestDate ? new Date(newestDate.getTime() - 7 * 86400000) : null;
 
     allJobs = raw.map(j => {
-      const d = parseDateLabel(j.dateAdded);
-      const isNew = d && recentCutoff ? d >= recentCutoff : false;
+      const ms = j.dateMs || (parseDateLabel(j.dateAdded) || {getTime:()=>null}).getTime();
+      const isNew = ms && recentCutoff ? ms >= recentCutoff.getTime() : false;
       return { ...j, isNew };
     });
 
@@ -722,22 +758,27 @@ function renderJobs() {
   results.innerHTML = html;
 }
 
-function getAgeBadge(dateStr) {
-  if (!dateStr) return '';
-  const d = parseDateLabel(dateStr);
-  if (!d) return '';
-  const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+function getAgeBadge(dateAdded, dateMs) {
+  // Use precise ms timestamp if available, otherwise parse the string
+  let ms = dateMs || null;
+  if (!ms && dateAdded) {
+    const d = parseDateLabel(dateAdded);
+    if (d) ms = d.getTime();
+  }
+  if (!ms) return '';
+
+  const days = Math.floor((Date.now() - ms) / 86400000);
   if (days < 0) return '';
 
   let label, color, bg, border;
   if (days === 0) {
-    label = 'today'; color = '#00FF87'; bg = 'rgba(0,255,135,.12)'; border = 'rgba(0,255,135,.3)';
+    label = 'today';     color = '#00FF87'; bg = 'rgba(0,255,135,.12)'; border = 'rgba(0,255,135,.3)';
   } else if (days === 1) {
-    label = '1d old'; color = '#00FF87'; bg = 'rgba(0,255,135,.1)'; border = 'rgba(0,255,135,.25)';
+    label = '1d old';    color = '#00FF87'; bg = 'rgba(0,255,135,.1)';  border = 'rgba(0,255,135,.25)';
   } else if (days <= 7) {
     label = days + 'd old'; color = '#00FF87'; bg = 'rgba(0,255,135,.08)'; border = 'rgba(0,255,135,.2)';
   } else if (days <= 21) {
-    label = days + 'd old'; color = '#FFB800'; bg = 'rgba(255,184,0,.1)'; border = 'rgba(255,184,0,.25)';
+    label = days + 'd old'; color = '#FFB800'; bg = 'rgba(255,184,0,.1)';  border = 'rgba(255,184,0,.25)';
   } else if (days <= 60) {
     label = Math.round(days/7) + 'w old'; color = '#FF8C42'; bg = 'rgba(255,140,66,.1)'; border = 'rgba(255,140,66,.25)';
   } else {
@@ -757,7 +798,7 @@ function jobRowHTML(j) {
   let tagsHTML = '';
   if (j.isNew) tagsHTML += '<span class="tag new">✦ recently added</span>';
   if (j.hasSimplify) tagsHTML += '<span class="tag sponsored">⚡ Simplify apply</span>';
-  tagsHTML += getAgeBadge(j.dateAdded);
+  tagsHTML += getAgeBadge(j.dateAdded, j.dateMs);
   if (j.isRemote) tagsHTML += '<span class="tag">🌐 remote</span>';
   if (j.location && !j.isRemote) tagsHTML += '<span class="tag">📍 ' + j.location.slice(0, 30) + '</span>';
 
@@ -1081,31 +1122,50 @@ async function runAlertScan() {
     }
   }
 
-  // Build window: newest date in dataset ± 7 days back
-  const allParsedDates = jobs.map(j => parseDateStr(j.dateAdded)).filter(Boolean).sort();
-  const newestISO = allParsedDates.length ? allParsedDates[allParsedDates.length - 1] : new Date().toISOString().slice(0,10);
-  const newestMs = new Date(newestISO + 'T00:00:00').getTime();
-  const cutoffISO = new Date(newestMs - 7 * 86400000).toISOString().slice(0, 10);
-  const todayISO = new Date().toISOString().slice(0, 10);
-  const yesterdayISO = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  // Resolve a ms timestamp for every job — prefer dateMs, fall back to parsing dateAdded string
+  const withMs = jobs.map(j => {
+    let ms = j.dateMs || null;
+    if (!ms && j.dateAdded) {
+      const d = parseDateLabel(j.dateAdded);
+      if (d) ms = d.getTime();
+    }
+    return { ...j, _ms: ms };
+  }).filter(j => j._ms); // only jobs with a known date
 
-  // Attach parsed ISO date to each job
-  const dated = jobs
-    .map(j => ({ ...j, isoDate: parseDateStr(j.dateAdded) }))
-    .filter(j => j.isoDate && j.isoDate >= cutoffISO);
+  console.log('[alerts] jobs with dates:', withMs.length, 'of', jobs.length);
+
+  if (!withMs.length) {
+    el.innerHTML = `<div class="state"><span class="state-icon">⚠</span><div class="state-title">No date info available</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">The fetched data has no parseable dates. Check console for details.</div></div>`;
+    btn.disabled = false;
+    return;
+  }
+
+  // Anchor to the NEWEST date in the dataset (not today), go back 7 days from there
+  const newestMs = Math.max(...withMs.map(j => j._ms));
+  const cutoffMs  = newestMs - 7 * 86400000;
+  const newestISO = new Date(newestMs).toISOString().slice(0, 10);
+  const cutoffISO = new Date(cutoffMs).toISOString().slice(0, 10);
+
+  // Filter to the 7-day window and attach isoDate
+  const dated = withMs
+    .filter(j => j._ms >= cutoffMs)
+    .map(j => ({ ...j, isoDate: new Date(j._ms).toISOString().slice(0, 10) }));
+
+  console.log('[alerts] jobs in 7-day window:', dated.length, '| newest:', newestISO, '| cutoff:', cutoffISO);
 
   alertJobs = dated;
 
-  // Stats — anchor to dataset's newest date
-  const newestLabel = new Date(newestISO + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  // Stats
+  const dayBeforeISO = new Date(newestMs - 86400000).toISOString().slice(0, 10);
+  const newestLabel = new Date(newestMs).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   document.getElementById('alert-new-count').textContent = dated.length;
   document.getElementById('alert-today-count').textContent = dated.filter(j => j.isoDate === newestISO).length;
-  document.getElementById('alert-yesterday-count').textContent = dated.filter(j => j.isoDate === new Date(newestMs - 86400000).toISOString().slice(0,10)).length;
+  document.getElementById('alert-yesterday-count').textContent = dated.filter(j => j.isoDate === dayBeforeISO).length;
   document.getElementById('alert-simplify-count').textContent = dated.filter(j => j.hasSimplify).length;
   document.getElementById('alert-remote-count').textContent = dated.filter(j => j.isRemote).length;
   document.getElementById('alert-last-scan').textContent = `Newest in dataset: ${newestLabel}`;
 
-  // Build bar chart
   buildAlertChart(dated, cutoffISO, newestISO);
 
   // Day filter pills
