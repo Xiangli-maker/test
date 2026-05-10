@@ -740,6 +740,9 @@ function renderJobs() {
     return;
   }
 
+  // Sort newest first
+  filtered.sort((a, b) => (b.dateMs || 0) - (a.dateMs || 0));
+
   const newJobs = filtered.filter(j => j.isNew);
   const otherJobs = filtered.filter(j => !j.isNew);
   let html = '';
