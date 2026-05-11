@@ -43,12 +43,6 @@ header { position: relative; z-index: 10; padding: 32px 48px 24px; border-bottom
 .stat-label { font-size: 11px; color: var(--muted); }
 .last-check { font-size: 10px; color: var(--muted); margin-left: auto; }
 
-/* Source toggles */
-.source-toggle { font-family: var(--font-mono); font-size: 10px; padding: 4px 10px; border-radius: 3px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all .15s; white-space: nowrap; }
-.source-toggle.active { border-color: var(--sc, var(--green-border)); color: var(--sc, var(--green)); background: color-mix(in srgb, var(--sc, var(--green)) 10%, transparent); }
-.source-toggle:hover { border-color: var(--sc, var(--green-border)); color: var(--sc, var(--green)); }
-.source-badge { font-size: 9px; padding: 1px 6px; border-radius: 3px; border: 1px solid; opacity: .75; white-space: nowrap; }
-
 /* Controls */
 .controls { position: sticky; top: 0; z-index: 20; background: rgba(5,5,8,.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 48px; }
 .controls-inner { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -315,22 +309,14 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
     </div>
     <button class="refresh-btn" id="refresh-btn" onclick="loadOpenings()">⟳ Refresh</button>
   </div>
-  <!-- Source selector row -->
-  <div style="display:flex;gap:6px;align-items:center;padding:8px 0 2px;flex-wrap:wrap">
-    <span style="font-size:9px;color:var(--muted);letter-spacing:.1em;white-space:nowrap">SOURCES:</span>
-    <button class="source-toggle active" data-src="simplify" onclick="toggleSource('simplify')" style="--sc:#00FF87">SimplifyJobs 2026</button>
-    <button class="source-toggle" data-src="cvrve" onclick="toggleSource('cvrve')" style="--sc:#4DA6FF">Cvrve 2026</button>
-    <button class="source-toggle" data-src="ouckah" onclick="toggleSource('ouckah')" style="--sc:#B97FFF">Ouckah 2026</button>
-    <button class="source-toggle" data-src="newgrad" onclick="toggleSource('newgrad')" style="--sc:#FFB800">New Grad</button>
-  </div>
-  <div id="active-filters" style="display:none;padding:4px 0 2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
+  <div id="active-filters" style="display:none;padding:6px 0 2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
 </div>
 
 <main>
   <!-- OPENINGS TAB -->
   <div id="tab-openings" class="tab-pane active">
-    <div class="disclaimer" id="source-disclaimer">
-      ⚠ Openings are pulled from community-maintained GitHub repos updated daily. Always verify on the company's careers page before applying. Closed roles may take 24–48h to be removed.
+    <div class="disclaimer">
+      ⚠ Openings are pulled from the <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" style="color:var(--amber)">SimplifyJobs Summer 2026 GitHub repo</a> — a community-maintained list updated daily. Always verify on the company's careers page before applying. Closed roles may take 24–48h to be removed.
     </div>
     <div id="results">
       <div class="state"><div class="spinner"></div><div class="state-title">Loading openings...</div></div>
@@ -684,111 +670,77 @@ function getTimeLabel(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-const SOURCES = {
-  simplify: {
-    id: 'simplify',
-    label: 'SimplifyJobs 2026',
-    color: '#00FF87',
-    candidates: [
-      { type: 'json', url: 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json' },
-      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md' },
-      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/main/README.md' },
-    ],
-    ghRepo: 'SimplifyJobs/Summer2026-Internships',
-  },
-  cvrve: {
-    id: 'cvrve',
-    label: 'Cvrve 2026',
-    color: '#4DA6FF',
-    candidates: [
-      { type: 'md', url: 'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/dev/README.md' },
-      { type: 'md', url: 'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/main/README.md' },
-      { type: 'md', url: 'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/master/README.md' },
-    ],
-    ghRepo: 'cvrve/Summer2026-Internships',
-  },
-  ouckah: {
-    id: 'ouckah',
-    label: 'Ouckah 2026',
-    color: '#B97FFF',
-    candidates: [
-      { type: 'md', url: 'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/main/README.md' },
-      { type: 'md', url: 'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/dev/README.md' },
-      { type: 'md', url: 'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/master/README.md' },
-    ],
-    ghRepo: 'Ouckah/Summer2026-Internships',
-  },
-  newgrad: {
-    id: 'newgrad',
-    label: 'New Grad',
-    color: '#FFB800',
-    candidates: [
-      { type: 'json', url: 'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/.github/scripts/listings.json' },
-      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md' },
-      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/main/README.md' },
-    ],
-    ghRepo: 'SimplifyJobs/New-Grad-Positions',
-  },
-};
+const RAW_URL = 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md';
+const JSON_URL = 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json';
 
-let activeSources = new Set(['simplify']);
+// Try to extract a real posted date from the Simplify apply URL
+// Simplify URLs contain a job ID; the listing JSON at simplify.jobs/<id> has date_posted
+// As a fallback, extract any date-like params from the URL
+function extractDateFromSimplifyUrl(url) {
+  if (!url) return '';
+  try {
+    // Simplify URLs look like: https://simplify.jobs/p/<uuid>?...
+    // The UUID maps to their internal job, but we can't fetch it cross-origin.
+    // Instead check for ?date= or ?posted= params
+    const u = new URL(url);
+    const d = u.searchParams.get('date') || u.searchParams.get('posted') || u.searchParams.get('date_posted');
+    if (d) return d;
+  } catch {}
+  return '';
+}
 
-const PROXIES = [
-  url => url,
-  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-  url => 'https://corsproxy.io/?' + encodeURIComponent(url),
-  url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
-];
-
-async function fetchSource(src) {
-  // Try every candidate URL × every proxy until one works
-  for (const candidate of src.candidates) {
-    for (const makeProxy of PROXIES) {
-      const proxyUrl = makeProxy(candidate.url);
-      try {
-        const r = await fetch(proxyUrl, { cache: 'no-cache' });
-        if (!r.ok) continue;
-
-        if (candidate.type === 'json') {
-          const data = await r.json();
-          if (Array.isArray(data) && data.length > 10) {
-            console.log(`[${src.id}] ✓ JSON via ${proxyUrl.slice(0,50)}:`, data.length);
-            return { type: 'json', data };
-          }
-        } else {
-          const t = await r.text();
-          if (t.length > 1000 && t.includes('|') && t.includes('---')) {
-            console.log(`[${src.id}] ✓ MD via ${proxyUrl.slice(0,50)}, len:`, t.length);
-            return { type: 'md', data: t };
-          }
-        }
-      } catch {}
-    }
+async function fetchWithCORS() {
+  // Priority 1: JSON listings file (has real date_posted unix timestamps)
+  const jsonSources = [
+    JSON_URL,
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(JSON_URL),
+    'https://corsproxy.io/?' + encodeURIComponent(JSON_URL),
+  ];
+  for (const url of jsonSources) {
+    try {
+      const r = await fetch(url, { cache: 'no-cache' });
+      if (!r.ok) continue;
+      const data = await r.json();
+      if (Array.isArray(data) && data.length > 0) {
+        console.log('[fetch] got JSON listings:', data.length, '| sample keys:', Object.keys(data[0]).slice(0,10));
+        return { type: 'json', data };
+      }
+    } catch {}
   }
 
-  // Last resort: GitHub Contents API (works in browser even when raw is CORS-blocked)
+  // Priority 2: markdown README
+  const mdSources = [
+    RAW_URL,
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(RAW_URL),
+    'https://corsproxy.io/?' + encodeURIComponent(RAW_URL),
+  ];
+  for (const url of mdSources) {
+    try {
+      const r = await fetch(url, { cache: 'no-cache' });
+      if (!r.ok) continue;
+      const t = await r.text();
+      if (t.length > 1000 && t.includes('|')) {
+        console.log('[fetch] got markdown, length:', t.length);
+        return { type: 'md', data: t };
+      }
+    } catch {}
+  }
+
+  // Priority 3: GitHub Contents API (base64)
   try {
-    const branch = src.candidates[0].url.match(/githubusercontent\.com\/[^/]+\/[^/]+\/([^/]+)\//)?.[1] || 'main';
-    const r = await fetch(`https://api.github.com/repos/${src.ghRepo}/contents/README.md?ref=${branch}`, {
-      headers: { Accept: 'application/vnd.github.v3+json' }
+    const r = await fetch('https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/contents/README.md', {
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
     });
     if (r.ok) {
       const json = await r.json();
       if (json.content) {
         const t = atob(json.content.replace(/\n/g, ''));
-        if (t.length > 1000) {
-          console.log(`[${src.id}] ✓ GitHub API fallback, len:`, t.length);
-          return { type: 'md', data: t };
-        }
+        if (t.length > 1000) return { type: 'md', data: t };
       }
     }
   } catch {}
 
-  throw new Error(`${src.label}: all fetch attempts failed`);
-}
-
-async function fetchWithCORS() {
-  return fetchSource(SOURCES.simplify);
+  throw new Error('Could not reach GitHub. Check your internet connection or <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" style="color:var(--green)">view the list directly ↗</a>');
 }
 
 function parseJsonListings(data) {
@@ -833,45 +785,13 @@ async function loadOpenings() {
   const btn = document.getElementById('refresh-btn');
   const results = document.getElementById('results');
   btn.disabled = true;
-
-  const srcList = [...activeSources].map(id => SOURCES[id]).filter(Boolean);
-  const srcLabels = srcList.map(s => s.label).join(' + ');
-  results.innerHTML = `<div class="state"><div class="spinner"></div><div class="state-title">Fetching from ${srcLabels}…</div></div>`;
-
+  results.innerHTML = '<div class="state"><div class="spinner"></div><div class="state-title">Fetching from SimplifyJobs GitHub...</div><div style="font-size:11px;color:var(--muted);margin-top:8px;">Parsing internship table...</div></div>';
   try {
-    // Fetch all sources in parallel, collect results
-    const settled = await Promise.allSettled(srcList.map(src => fetchSource(src)));
+    const result = await fetchWithCORS();
+    const raw = result.type === 'json' ? parseJsonListings(result.data) : parseReadme(result.data);
+    console.log('[loadOpenings] parsed jobs:', raw.length);
 
-    let raw = [];
-    const errors = [];
-    for (let i = 0; i < srcList.length; i++) {
-      const src = srcList[i];
-      const res = settled[i];
-      if (res.status === 'fulfilled') {
-        const jobs = res.value.type === 'json'
-          ? parseJsonListings(res.value.data)
-          : parseReadme(res.value.data);
-        // Tag each job with its source
-        raw.push(...jobs.map(j => ({ ...j, _source: src.id, _sourceLabel: src.label, _sourceColor: src.color })));
-        console.log(`[${src.id}] parsed:`, jobs.length);
-      } else {
-        errors.push(src.label + ': ' + res.reason?.message);
-        console.warn(`[${src.id}] failed:`, res.reason);
-      }
-    }
-
-    // Deduplicate across sources: key = company + role (case-insensitive)
-    if (srcList.length > 1) {
-      const seen = new Set();
-      raw = raw.filter(j => {
-        const key = (j.company + '||' + j.role).toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-    }
-
-    // Find the newest date and mark "recently added"
+    // Find the newest date in the dataset and mark "recent" = within 7 days of that date
     const allDates = raw.map(j => j.dateMs || (parseDateLabel(j.dateAdded) || {getTime:()=>null}).getTime()).filter(Boolean);
     const newestDate = allDates.length ? new Date(Math.max(...allDates)) : null;
     const recentCutoff = newestDate ? new Date(newestDate.getTime() - 7 * 86400000) : null;
@@ -888,26 +808,31 @@ async function loadOpenings() {
     document.getElementById('stat-companies').textContent = companies;
     document.getElementById('stat-new').textContent = newCount;
 
+    // Show what "recent" means in the label
     const recentLabel = newestDate
       ? 'newest: ' + newestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       : '';
-    const errNote = errors.length ? `  ·  ⚠ failed: ${errors.map(e=>e.split(':')[0]).join(', ')}` : '';
-    document.getElementById('last-check').textContent = 'Updated: ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + (recentLabel ? '  ·  ' + recentLabel : '') + errNote;
+    document.getElementById('last-check').textContent = 'Updated: ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + (recentLabel ? '  ·  ' + recentLabel : '');
 
     if (allJobs.length === 0) {
-      const errList = errors.map(e => `<div style="color:var(--red)">✗ ${e}</div>`).join('');
-      results.innerHTML = `<div class="state"><span class="state-icon">⚠</span><div class="state-title">No jobs parsed</div>
-        <div style="font-size:11px;color:var(--muted);line-height:1.9;margin-top:8px">${errList || 'Unknown error — check console'}</div></div>`;
+      results.innerHTML = `<div class="state">
+        <span class="state-icon">⚠</span>
+        <div class="state-title">Fetched but could not parse jobs</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:16px;line-height:1.7">
+          The README format may have changed. Check console for debug info.<br><br>
+          <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" style="color:var(--green)">View raw list on GitHub ↗</a>
+        </div>
+      </div>`;
     } else {
-      // Show a per-source breakdown in console
-      const bySource = {};
-      allJobs.forEach(j => bySource[j._sourceLabel||'unknown'] = (bySource[j._sourceLabel||'unknown']||0)+1);
-      console.log('[sources loaded]', bySource);
       renderJobs();
     }
   } catch(err) {
-    results.innerHTML = `<div class="state"><span class="state-icon">⚠</span><div class="state-title">Could not load openings</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:16px">${err.message}</div></div>`;
+    results.innerHTML = `<div class="state">
+      <span class="state-icon">⚠</span>
+      <div class="state-title">Could not load openings</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:16px;line-height:1.6">${err.message}</div>
+      <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" class="apply-btn">View on GitHub directly ↗</a>
+    </div>`;
   }
   btn.disabled = false;
 }
@@ -998,7 +923,6 @@ function jobRowHTML(j) {
   if (j.isNew) tagsHTML += '<span class="tag new">✦ recently added</span>';
   if (j.hasSimplify) tagsHTML += '<span class="tag sponsored">⚡ Simplify apply</span>';
   tagsHTML += getAgeBadge(j.dateAdded, j.dateMs);
-  if (j._sourceLabel && activeSources.size > 1) tagsHTML += `<span class="source-badge" style="color:${j._sourceColor};border-color:${j._sourceColor}">${j._sourceLabel}</span>`;
   if (j.isRemote) tagsHTML += '<span class="tag">🌐 remote</span>';
   if (j.location && !j.isRemote) tagsHTML += '<span class="tag">📍 ' + j.location.slice(0, 30) + '</span>';
 
@@ -1017,19 +941,6 @@ function jobRowHTML(j) {
       </div>
     </div>
   </div>`;
-}
-
-function toggleSource(id) {
-  if (activeSources.has(id) && activeSources.size === 1) return; // keep at least one
-  if (activeSources.has(id)) {
-    activeSources.delete(id);
-  } else {
-    activeSources.add(id);
-  }
-  document.querySelectorAll('.source-toggle').forEach(btn => {
-    btn.classList.toggle('active', activeSources.has(btn.dataset.src));
-  });
-  loadOpenings();
 }
 
 document.querySelectorAll('.pill').forEach(p => {
