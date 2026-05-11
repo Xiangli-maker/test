@@ -254,11 +254,8 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
     <button class="refresh-btn" id="refresh-btn" onclick="loadOpenings()">⟳ Refresh</button>
   </div>
   <div class="source-row">
-    <span class="source-label-txt">SOURCES:</span>
+    <span class="source-label-txt">SOURCE:</span>
     <button class="source-toggle active" data-src="simplify" style="--sc:#00FF87" onclick="toggleSource('simplify')">SimplifyJobs 2026</button>
-    <button class="source-toggle" data-src="cvrve"   style="--sc:#4DA6FF" onclick="toggleSource('cvrve')">Cvrve 2026</button>
-    <button class="source-toggle" data-src="ouckah"  style="--sc:#B97FFF" onclick="toggleSource('ouckah')">Ouckah 2026</button>
-    <button class="source-toggle" data-src="newgrad" style="--sc:#FFB800" onclick="toggleSource('newgrad')">New Grad</button>
   </div>
   <div id="active-filters" style="display:none;padding:4px 0 2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
 </div>
@@ -413,33 +410,6 @@ const SOURCES = {
       {type:'json', url:'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json'},
       {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md'},
       {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/main/README.md'},
-    ]
-  },
-  cvrve: {
-    id:'cvrve', label:'Cvrve 2026', color:'#4DA6FF',
-    ghRepo:'cvrve/Summer2026-Internships',
-    candidates:[
-      {type:'md', url:'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/dev/README.md'},
-      {type:'md', url:'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/main/README.md'},
-      {type:'md', url:'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/master/README.md'},
-    ]
-  },
-  ouckah: {
-    id:'ouckah', label:'Ouckah 2026', color:'#B97FFF',
-    ghRepo:'Ouckah/Summer2026-Internships',
-    candidates:[
-      {type:'md', url:'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/main/README.md'},
-      {type:'md', url:'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/dev/README.md'},
-      {type:'md', url:'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/master/README.md'},
-    ]
-  },
-  newgrad: {
-    id:'newgrad', label:'New Grad', color:'#FFB800',
-    ghRepo:'SimplifyJobs/New-Grad-Positions',
-    candidates:[
-      {type:'json', url:'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/.github/scripts/listings.json'},
-      {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md'},
-      {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/main/README.md'},
     ]
   },
 };
