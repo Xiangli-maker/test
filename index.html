@@ -25,8 +25,6 @@ body::before {
   background-image: linear-gradient(rgba(0,255,135,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,135,.03) 1px, transparent 1px);
   background-size: 32px 32px; pointer-events: none; z-index: 0;
 }
-
-/* Header */
 header { position: relative; z-index: 10; padding: 32px 48px 24px; border-bottom: 1px solid var(--border); }
 .header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
 .logo { display: flex; align-items: center; gap: 10px; }
@@ -43,11 +41,8 @@ header { position: relative; z-index: 10; padding: 32px 48px 24px; border-bottom
 .stat-label { font-size: 11px; color: var(--muted); }
 .last-check { font-size: 10px; color: var(--muted); margin-left: auto; }
 
-/* Controls */
 .controls { position: sticky; top: 0; z-index: 20; background: rgba(5,5,8,.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 48px; }
 .controls-inner { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
-/* Multi-field search */
 .search-fields { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; flex-wrap: wrap; }
 .search-field { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color .2s; flex: 1; min-width: 120px; }
 .search-field:focus-within { border-color: var(--green-border); }
@@ -61,11 +56,6 @@ header { position: relative; z-index: 10; padding: 32px 48px 24px; border-bottom
 .active-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; padding: 3px 8px; border-radius: 3px; background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
 .active-chip .chip-field { opacity: .6; font-size: 9px; }
 .active-chip button { background: none; border: none; color: var(--green); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; }
-.controls-inner { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.search-box { flex: 1; min-width: 200px; position: relative; }
-.search-box::before { content: '⌕'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-.search-box input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 12px; padding: 8px 10px 8px 30px; border-radius: 4px; outline: none; transition: border-color .2s; }
-.search-box input:focus { border-color: var(--green-border); }
 .pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .pill { font-size: 10px; padding: 5px 10px; border-radius: 3px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all .15s; white-space: nowrap; }
 .pill.active, .pill:hover { border-color: var(--green-border); color: var(--green); background: var(--green-dim); }
@@ -73,7 +63,14 @@ header { position: relative; z-index: 10; padding: 32px 48px 24px; border-bottom
 .refresh-btn:hover { background: var(--green); color: #000; }
 .refresh-btn:disabled { opacity: .4; cursor: not-allowed; }
 
-/* Tabs */
+/* Source toggles */
+.source-row { display: flex; gap: 6px; align-items: center; padding: 8px 0 2px; flex-wrap: wrap; }
+.source-label-txt { font-size: 9px; color: var(--muted); letter-spacing: .1em; white-space: nowrap; }
+.source-toggle { font-family: var(--font-mono); font-size: 10px; padding: 4px 10px; border-radius: 3px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all .15s; white-space: nowrap; }
+.source-toggle.active { border-color: var(--sc,var(--green-border)); color: var(--sc,var(--green)); background: color-mix(in srgb, var(--sc,var(--green)) 10%, transparent); }
+.source-toggle:hover:not(.active) { border-color: rgba(255,255,255,.15); color: var(--text); }
+.source-badge { font-size: 9px; padding: 1px 6px; border-radius: 3px; border: 1px solid; opacity: .8; white-space: nowrap; }
+
 .tabs-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 48px; background: rgba(5,5,8,.95); position: sticky; top: 53px; z-index: 19; }
 .tab-btn { font-family: var(--font-mono); font-size: 11px; padding: 10px 16px; cursor: pointer; border: none; background: transparent; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; letter-spacing: .05em; }
 .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
@@ -81,19 +78,9 @@ header { position: relative; z-index: 10; padding: 32px 48px 24px; border-bottom
 .tab-pane { display: none; }
 .tab-pane.active { display: block; }
 
-/* Main */
 main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 24px 48px 80px; }
-
-/* Job rows */
 .job-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
-.job-row {
-  background: var(--card); border: 1px solid var(--border); border-radius: 6px;
-  padding: 14px 18px; display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px; align-items: center;
-  transition: border-color .15s;
-  animation: fadeIn .25s ease both;
-}
+.job-row { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; transition: border-color .15s; animation: fadeIn .25s ease both; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 .job-row:hover { border-color: var(--green-border); }
 .job-left { min-width: 0; }
@@ -110,75 +97,50 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 .apply-btn.secondary:hover { border-color: var(--green-border); color: var(--green); }
 .apply-btn.blue { background: var(--blue-dim); border-color: var(--blue-border); color: var(--blue); }
 .apply-btn.blue:hover { background: var(--blue); color: #000; }
-.job-date { font-size: 10px; color: var(--muted); }
-
-/* Section */
 .section-head { font-size: 10px; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; padding: 8px 0 10px; border-bottom: 1px solid var(--border); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 .section-head::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
-
-/* State */
 .state { text-align: center; padding: 60px 20px; color: var(--muted); }
 .state-icon { font-size: 36px; display: block; margin-bottom: 12px; opacity: .4; }
 .state-title { font-family: var(--font-head); font-size: 18px; color: var(--text); margin-bottom: 8px; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* Disclaimer */
 .disclaimer { background: rgba(255,184,0,.06); border: 1px solid rgba(255,184,0,.2); border-radius: 6px; padding: 12px 16px; font-size: 11px; color: #a08040; margin-bottom: 20px; line-height: 1.6; }
 
-/* ===== SUMMARY TAB ===== */
+/* Summary tab */
 .summary-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
 .summary-header h2 { font-family: var(--font-head); font-size: 18px; font-weight: 600; }
-
-/* Stats grid */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 24px; }
 .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; }
 .stat-card .num { font-family: var(--font-head); font-size: 28px; font-weight: 700; margin-bottom: 2px; }
 .stat-card .lbl { font-size: 10px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
-.stat-card.green .num { color: var(--green); }
-.stat-card.amber .num { color: var(--amber); }
-.stat-card.blue .num { color: var(--blue); }
-.stat-card.red .num { color: var(--red); }
-.stat-card.purple .num { color: var(--purple); }
-
-/* Add form */
-.add-form { background: var(--card); border: 1px solid var(--green-border); border-radius: 6px; padding: 16px 18px; margin-bottom: 20px; }
-.add-form-title { font-size: 11px; color: var(--green); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .form-row.wide { grid-template-columns: 1fr 1fr; }
 .form-row.single { grid-template-columns: 1fr; }
 .form-group { display: flex; flex-direction: column; gap: 4px; }
 .form-group label { font-size: 10px; color: var(--muted); letter-spacing: .05em; }
-.form-group input, .form-group select, .form-group textarea {
-  background: var(--surface); border: 1px solid var(--border); color: var(--text);
-  font-family: var(--font-mono); font-size: 11px; padding: 7px 10px; border-radius: 4px;
-  outline: none; transition: border-color .2s; width: 100%;
-}
+.form-group input, .form-group select, .form-group textarea { background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 11px; padding: 7px 10px; border-radius: 4px; outline: none; transition: border-color .2s; width: 100%; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--green-border); }
 .form-group select option { background: var(--surface); }
 .form-group textarea { resize: vertical; min-height: 56px; }
 .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
-.btn-cancel { font-family: var(--font-mono); font-size: 11px; padding: 6px 14px; border-radius: 3px; background: transparent; border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all .15s; }
-.btn-cancel:hover { border-color: var(--border); color: var(--text); }
-.btn-add { font-family: var(--font-mono); font-size: 11px; padding: 6px 14px; border-radius: 3px; background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); cursor: pointer; transition: all .15s; }
+.btn-cancel { font-family: var(--font-mono); font-size: 11px; padding: 6px 14px; border-radius: 3px; background: transparent; border: 1px solid var(--border); color: var(--muted); cursor: pointer; }
+.btn-add { font-family: var(--font-mono); font-size: 11px; padding: 6px 14px; border-radius: 3px; background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); cursor: pointer; }
 .btn-add:hover { background: var(--green); color: #000; }
-
-/* App table */
 .app-controls { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
 .app-search { flex: 1; min-width: 160px; position: relative; }
 .app-search::before { content: '⌕'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: 13px; }
 .app-search input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 11px; padding: 7px 10px 7px 28px; border-radius: 4px; outline: none; }
 .app-search input:focus { border-color: var(--green-border); }
 .status-pill { font-size: 10px; padding: 4px 9px; border-radius: 3px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all .15s; white-space: nowrap; }
-.status-pill[data-status="to_apply"].active { color: #00D2FF; border-color: rgba(0,210,255,.3); background: rgba(0,210,255,.1); }
-.status-pill[data-status="all"].active { color: var(--green); border-color: var(--green-border); background: var(--green-dim); }
-.status-pill[data-status="applied"].active { color: var(--blue); border-color: var(--blue-border); background: var(--blue-dim); }
-.status-pill[data-status="oa"].active { color: var(--purple); border-color: var(--purple-border); background: var(--purple-dim); }
-.status-pill[data-status="interview"].active { color: var(--amber); border-color: rgba(255,184,0,.3); background: rgba(255,184,0,.1); }
-.status-pill[data-status="offer"].active { color: var(--green); border-color: var(--green-border); background: var(--green-dim); }
-.status-pill[data-status="rejected"].active { color: var(--red); border-color: var(--red-border); background: var(--red-dim); }
+.status-pill[data-status="all"].active       { color: var(--green);  border-color: var(--green-border); background: var(--green-dim); }
+.status-pill[data-status="to_apply"].active  { color: #00D2FF; border-color: rgba(0,210,255,.3); background: rgba(0,210,255,.1); }
+.status-pill[data-status="applied"].active   { color: var(--blue);   border-color: var(--blue-border);  background: var(--blue-dim); }
+.status-pill[data-status="oa"].active        { color: var(--purple); border-color: var(--purple-border);background: var(--purple-dim); }
+.status-pill[data-status="interview"].active { color: var(--amber);  border-color: rgba(255,184,0,.3);  background: rgba(255,184,0,.1); }
+.status-pill[data-status="offer"].active     { color: var(--green);  border-color: var(--green-border); background: var(--green-dim); }
+.status-pill[data-status="rejected"].active  { color: var(--red);    border-color: var(--red-border);   background: var(--red-dim); }
+.status-pill[data-status="ghosted"].active   { color: var(--muted);  border-color: var(--border);       background: rgba(255,255,255,.04); }
 .status-pill[data-status="not_interested"].active { color: #7a7a8e; border-color: rgba(90,90,110,.35); background: rgba(90,90,110,.15); }
-
 .app-table-wrap { overflow-x: auto; }
 .app-table { width: 100%; border-collapse: collapse; font-size: 11px; }
 .app-table th { text-align: left; font-size: 9px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -188,62 +150,43 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 .app-table .company-cell { font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text); }
 .app-table .role-cell { color: var(--muted); font-size: 10px; margin-top: 2px; }
 .status-badge { display: inline-block; font-size: 9px; padding: 2px 7px; border-radius: 3px; letter-spacing: .06em; white-space: nowrap; }
+.badge-to-apply       { background: rgba(0,210,255,.1);  border: 1px solid rgba(0,210,255,.3);  color: #00D2FF; }
+.badge-applied        { background: var(--blue-dim);     border: 1px solid var(--blue-border);  color: var(--blue); }
+.badge-oa             { background: var(--purple-dim);   border: 1px solid var(--purple-border);color: var(--purple); }
+.badge-interview      { background: rgba(255,184,0,.1);  border: 1px solid rgba(255,184,0,.3);  color: var(--amber); }
+.badge-offer          { background: var(--green-dim);    border: 1px solid var(--green-border); color: var(--green); }
+.badge-rejected       { background: var(--red-dim);      border: 1px solid var(--red-border);   color: var(--red); }
+.badge-ghosted        { background: rgba(255,255,255,.04);border: 1px solid var(--border);      color: var(--muted); }
+.badge-withdrawn      { background: rgba(255,184,0,.06); border: 1px solid rgba(255,184,0,.15); color: #806030; }
 .badge-not-interested { background: rgba(90,90,110,.15); border: 1px solid rgba(90,90,110,.35); color: #7a7a8e; }
-.dot-not-interested { background: #7a7a8e; }
-.badge-oa { background: var(--purple-dim); border: 1px solid var(--purple-border); color: var(--purple); }
-.badge-interview { background: rgba(255,184,0,.1); border: 1px solid rgba(255,184,0,.3); color: var(--amber); }
-.badge-offer { background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
-.badge-rejected { background: var(--red-dim); border: 1px solid var(--red-border); color: var(--red); }
-.badge-ghosted { background: rgba(255,255,255,.04); border: 1px solid var(--border); color: var(--muted); }
-.badge-withdrawn { background: rgba(255,184,0,.06); border: 1px solid rgba(255,184,0,.15); color: #806030; }
-
 .notes-cell { color: var(--muted); font-size: 10px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .action-btns { display: flex; gap: 6px; }
 .icon-btn { font-family: var(--font-mono); font-size: 10px; padding: 4px 8px; border-radius: 3px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all .15s; }
 .icon-btn:hover { color: var(--text); border-color: var(--green-border); }
 .icon-btn.del:hover { color: var(--red); border-color: var(--red-border); }
-
-/* Timeline dots */
-.timeline-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
-.dot-applied { background: var(--blue); }
-.dot-oa { background: var(--purple); }
-.dot-interview { background: var(--amber); }
-.dot-offer { background: var(--green); }
-.dot-rejected { background: var(--red); }
-.dot-ghosted { background: var(--muted); }
-.dot-withdrawn { background: #806030; }
-
-/* Star ranking */
-.star-input { display: flex; gap: 3px; align-items: center; }
+.star-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 3px; align-items: center; }
 .star-input input[type=radio] { display: none; }
 .star-input label { font-size: 16px; cursor: pointer; color: var(--border); transition: color .1s; line-height: 1; }
-.star-input label:hover,
-.star-input label:hover ~ label { color: var(--border); }
-.star-input input[type=radio]:checked ~ label { color: var(--border); }
-.star-input label:hover,
 .star-input input[type=radio]:checked + label,
 .star-input input[type=radio]:checked + label ~ label { color: var(--amber) !important; }
-/* Reverse trick for RTL star fill */
-.star-input { flex-direction: row-reverse; justify-content: flex-end; }
-.star-input label:hover ~ label { color: var(--amber) !important; }
+.star-input label:hover, .star-input label:hover ~ label { color: var(--amber) !important; }
 .rank-badge { display: inline-flex; gap: 1px; font-size: 11px; white-space: nowrap; }
 .rank-star-filled { color: var(--amber); }
 .rank-star-empty  { color: var(--border); }
 .empty-apps { text-align: center; padding: 48px 20px; color: var(--muted); }
 .empty-apps .big { font-family: var(--font-head); font-size: 16px; color: var(--text); margin-bottom: 8px; margin-top: 12px; }
-
-/* Modal overlay */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 100; align-items: center; justify-content: center; }
 .modal-overlay.open { display: flex; }
 .modal { background: var(--card); border: 1px solid var(--green-border); border-radius: 8px; padding: 20px 24px; width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
 .modal-title { font-family: var(--font-head); font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--green); }
 .modal-close { float: right; cursor: pointer; color: var(--muted); font-size: 18px; background: none; border: none; font-family: var(--font-mono); line-height: 1; }
+.age-tag { font-size: 10px; padding: 2px 7px; border-radius: 3px; border: 1px solid; font-variant-numeric: tabular-nums; }
 
 @media (max-width: 600px) {
   header, .controls, main { padding-left: 20px; padding-right: 20px; }
   .tabs-bar { padding: 0 20px; }
   .job-row { grid-template-columns: 1fr; }
-  .job-right { flex-direction: row; align-items: center; }
+  .job-right { flex-direction: row; align-items: center; flex-wrap: wrap; }
   .form-row { grid-template-columns: 1fr; }
   .form-row.wide { grid-template-columns: 1fr; }
 }
@@ -257,13 +200,13 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
       <div class="logo-dot"></div>
       <div>
         <div class="logo-text">Intern Openings</div>
-        <div class="logo-sub">LIVE BOARD // SIMPLIFYJOBS + GITHUB</div>
+        <div class="logo-sub" id="logo-sub">LIVE BOARD // SIMPLIFYJOBS + GITHUB</div>
       </div>
     </div>
     <div class="nav-links">
       <a class="nav-link" href="index.html">← Tracker</a>
       <button class="nav-link" onclick="switchTab('alerts')">Daily Alerts</button>
-      <button class="nav-link active" id="nav-openings" onclick="switchTab('openings')">Openings</button>
+      <button class="nav-link active" onclick="switchTab('openings')">Openings</button>
     </div>
   </div>
   <div class="stats-row">
@@ -306,34 +249,36 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
       <div class="pill" data-filter="new">Recently added</div>
       <div class="pill" data-filter="sponsored">Simplify apply</div>
       <div class="pill" data-filter="remote">Remote</div>
+      <div class="pill" id="pill-hide-tracked" data-filter="hide-tracked">Hide tracked</div>
     </div>
     <button class="refresh-btn" id="refresh-btn" onclick="loadOpenings()">⟳ Refresh</button>
   </div>
-  <div id="active-filters" style="display:none;padding:6px 0 2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
+  <div class="source-row">
+    <span class="source-label-txt">SOURCES:</span>
+    <button class="source-toggle active" data-src="simplify" style="--sc:#00FF87" onclick="toggleSource('simplify')">SimplifyJobs 2026</button>
+    <button class="source-toggle" data-src="cvrve"   style="--sc:#4DA6FF" onclick="toggleSource('cvrve')">Cvrve 2026</button>
+    <button class="source-toggle" data-src="ouckah"  style="--sc:#B97FFF" onclick="toggleSource('ouckah')">Ouckah 2026</button>
+    <button class="source-toggle" data-src="newgrad" style="--sc:#FFB800" onclick="toggleSource('newgrad')">New Grad</button>
+  </div>
+  <div id="active-filters" style="display:none;padding:4px 0 2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
 </div>
 
 <main>
-  <!-- OPENINGS TAB -->
   <div id="tab-openings" class="tab-pane active">
-    <div class="disclaimer">
-      ⚠ Openings are pulled from the <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" style="color:var(--amber)">SimplifyJobs Summer 2026 GitHub repo</a> — a community-maintained list updated daily. Always verify on the company's careers page before applying. Closed roles may take 24–48h to be removed.
+    <div class="disclaimer" id="source-disclaimer">
+      ⚠ Openings are pulled from community-maintained GitHub repos updated daily. Always verify on the company's careers page before applying.
     </div>
     <div id="results">
       <div class="state"><div class="spinner"></div><div class="state-title">Loading openings...</div></div>
     </div>
   </div>
 
-  <!-- SUMMARY TAB -->
   <div id="tab-summary" class="tab-pane">
     <div class="summary-header">
       <h2>Application Tracker</h2>
-      <button class="apply-btn" id="open-add-btn" onclick="openAddModal()">+ Add Application</button>
+      <button class="apply-btn" onclick="openAddModal()">+ Add Application</button>
     </div>
-
-    <!-- Stats -->
     <div class="stats-grid" id="summary-stats"></div>
-
-    <!-- Filter bar -->
     <div class="app-controls">
       <div class="app-search">
         <input type="text" id="app-search" placeholder="Search company or role..." oninput="renderApps()">
@@ -349,21 +294,14 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
         <button class="status-pill" data-status="ghosted">Ghosted</button>
         <button class="status-pill" data-status="not_interested">Not Interested</button>
       </div>
-      <button class="btn-cancel" onclick="exportCSV()" title="Export to CSV">↓ Export</button>
+      <button class="btn-cancel" onclick="exportCSV()">↓ Export</button>
     </div>
-
     <div class="app-table-wrap">
-      <table class="app-table" id="app-table">
+      <table class="app-table">
         <thead>
           <tr>
-            <th>Company / Role</th>
-            <th>Rank</th>
-            <th>Status</th>
-            <th>Applied</th>
-            <th>Last Update</th>
-            <th>Location</th>
-            <th>Notes</th>
-            <th></th>
+            <th>Company / Role</th><th>Rank</th><th>Status</th>
+            <th>Applied</th><th>Last Update</th><th>Location</th><th>Notes</th><th></th>
           </tr>
         </thead>
         <tbody id="app-tbody"></tbody>
@@ -372,44 +310,35 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
     <div id="empty-apps" class="empty-apps" style="display:none">
       <div style="font-size:32px;opacity:.3">◎</div>
       <div class="big">No applications yet</div>
-      <div style="font-size:11px;margin-bottom:16px">Track every role you apply to — add one above or click "Track" on any opening.</div>
+      <div style="font-size:11px;margin-bottom:16px">Track every role — add one above or click "+ Track" on any opening.</div>
     </div>
   </div>
-  <!-- ALERTS TAB -->
+
   <div id="tab-alerts" class="tab-pane">
     <div class="summary-header" style="margin-bottom:8px">
       <h2>Daily Alerts</h2>
       <span style="font-size:11px;color:var(--muted)">Openings posted in the last 7 days</span>
     </div>
-
     <div class="disclaimer" style="margin-bottom:16px">
-      ℹ Jobs are grouped by the date posted in the SimplifyJobs list. Dates are based on the <code style="color:var(--amber);font-size:10px">dateAdded</code> field — only roles with a known post date appear here.
+      ℹ Jobs grouped by date posted. Only roles with a known post date appear here.
     </div>
-
-    <!-- Top controls row -->
     <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
       <button class="refresh-btn" id="alert-scan-btn" onclick="runAlertScan()">⟳ Load Last 7 Days</button>
       <div class="pills" id="alert-day-pills" style="flex:1;min-width:0"></div>
       <span id="alert-last-scan" style="font-size:10px;color:var(--muted);white-space:nowrap"></span>
     </div>
-
-    <!-- Summary stat cards -->
     <div class="stats-grid" style="margin-bottom:20px">
-      <div class="stat-card green"><div class="num" id="alert-new-count">—</div><div class="lbl">Last 7 days in list</div></div>
-      <div class="stat-card blue"><div class="num" id="alert-today-count" style="color:var(--blue)">—</div><div class="lbl">Newest date</div></div>
-      <div class="stat-card amber"><div class="num" id="alert-yesterday-count" style="color:var(--amber)">—</div><div class="lbl">Day before</div></div>
-      <div class="stat-card purple"><div class="num" id="alert-simplify-count" style="color:var(--purple)">—</div><div class="lbl">Simplify apply</div></div>
-      <div class="stat-card"><div class="num" id="alert-remote-count" style="color:var(--green)">—</div><div class="lbl">Remote</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--green)"  id="alert-new-count">—</div><div class="lbl">Last 7 days</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--blue)"   id="alert-today-count">—</div><div class="lbl">Newest date</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--amber)"  id="alert-yesterday-count">—</div><div class="lbl">Day before</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--purple)" id="alert-simplify-count">—</div><div class="lbl">Simplify apply</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--green)"  id="alert-remote-count">—</div><div class="lbl">Remote</div></div>
     </div>
-
-    <!-- Activity bar chart -->
     <div id="alert-chart-wrap" style="display:none;margin-bottom:20px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:16px 18px">
       <div style="font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px">Openings per day — last 7 days</div>
       <div id="alert-bar-chart" style="display:flex;align-items:flex-end;gap:6px;height:64px"></div>
       <div id="alert-bar-labels" style="display:flex;gap:6px;margin-top:6px"></div>
     </div>
-
-    <!-- Results grouped by day -->
     <div id="alert-results">
       <div class="state" style="padding:40px 20px">
         <div style="font-size:28px;opacity:.3;margin-bottom:12px">⌖</div>
@@ -420,23 +349,15 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
   </div>
 </main>
 
-<!-- Add/Edit Modal -->
 <div class="modal-overlay" id="app-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title" id="modal-title">Add Application</div>
     <input type="hidden" id="edit-id">
     <div class="form-row">
-      <div class="form-group">
-        <label>Company *</label>
-        <input type="text" id="f-company" placeholder="e.g. Stripe" autocomplete="off">
-      </div>
-      <div class="form-group">
-        <label>Role *</label>
-        <input type="text" id="f-role" placeholder="e.g. Software Engineer Intern">
-      </div>
-      <div class="form-group">
-        <label>Status</label>
+      <div class="form-group"><label>Company *</label><input type="text" id="f-company" placeholder="e.g. Stripe" autocomplete="off"></div>
+      <div class="form-group"><label>Role *</label><input type="text" id="f-role" placeholder="e.g. Software Engineer Intern"></div>
+      <div class="form-group"><label>Status</label>
         <select id="f-status">
           <option value="to_apply">To Apply</option>
           <option value="applied">Applied</option>
@@ -461,32 +382,17 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
           <input type="radio" name="f-rank" id="f-rank-1" value="1"><label for="f-rank-1">★</label>
         </div>
       </div>
+      <div class="form-group"><label>Date Applied</label><input type="date" id="f-date"></div>
     </div>
     <div class="form-row wide">
-      <div class="form-group">
-        <label>Date Applied</label>
-        <input type="date" id="f-date">
-      </div>
-      <div class="form-group">
-        <label>Last Activity</label>
-        <input type="date" id="f-updated">
-      </div>
-    </div>
-    <div class="form-row wide">
-      <div class="form-group">
-        <label>Location</label>
-        <input type="text" id="f-location" placeholder="e.g. San Francisco, CA">
-      </div>
-      <div class="form-group">
-        <label>Application URL</label>
-        <input type="text" id="f-url" placeholder="https://...">
-      </div>
+      <div class="form-group"><label>Last Activity</label><input type="date" id="f-updated"></div>
+      <div class="form-group"><label>Location</label><input type="text" id="f-location" placeholder="e.g. San Francisco, CA"></div>
     </div>
     <div class="form-row single">
-      <div class="form-group">
-        <label>Notes</label>
-        <textarea id="f-notes" placeholder="Referral, recruiter name, interview rounds, etc."></textarea>
-      </div>
+      <div class="form-group"><label>Application URL</label><input type="text" id="f-url" placeholder="https://..."></div>
+    </div>
+    <div class="form-row single">
+      <div class="form-group"><label>Notes</label><textarea id="f-notes" placeholder="Referral, recruiter name, interview rounds, etc."></textarea></div>
     </div>
     <div class="form-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -497,918 +403,634 @@ main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; paddin
 
 <script>
 /* ===========================
+   SOURCES CONFIG
+=========================== */
+const SOURCES = {
+  simplify: {
+    id:'simplify', label:'SimplifyJobs 2026', color:'#00FF87',
+    ghRepo:'SimplifyJobs/Summer2026-Internships',
+    candidates:[
+      {type:'json', url:'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json'},
+      {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md'},
+      {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/main/README.md'},
+    ]
+  },
+  cvrve: {
+    id:'cvrve', label:'Cvrve 2026', color:'#4DA6FF',
+    ghRepo:'cvrve/Summer2026-Internships',
+    candidates:[
+      {type:'md', url:'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/dev/README.md'},
+      {type:'md', url:'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/main/README.md'},
+      {type:'md', url:'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/master/README.md'},
+    ]
+  },
+  ouckah: {
+    id:'ouckah', label:'Ouckah 2026', color:'#B97FFF',
+    ghRepo:'Ouckah/Summer2026-Internships',
+    candidates:[
+      {type:'md', url:'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/main/README.md'},
+      {type:'md', url:'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/dev/README.md'},
+      {type:'md', url:'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/master/README.md'},
+    ]
+  },
+  newgrad: {
+    id:'newgrad', label:'New Grad', color:'#FFB800',
+    ghRepo:'SimplifyJobs/New-Grad-Positions',
+    candidates:[
+      {type:'json', url:'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/.github/scripts/listings.json'},
+      {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md'},
+      {type:'md',   url:'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/main/README.md'},
+    ]
+  },
+};
+
+const PROXIES = [
+  u => u,
+  u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+  u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+  u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
+];
+
+let activeSources = new Set(['simplify']);
+
+async function fetchSource(src) {
+  for (const candidate of src.candidates) {
+    for (const proxy of PROXIES) {
+      try {
+        const r = await fetch(proxy(candidate.url), { cache: 'no-cache' });
+        if (!r.ok) continue;
+        if (candidate.type === 'json') {
+          const data = await r.json();
+          if (Array.isArray(data) && data.length > 10) {
+            console.log(`[${src.id}] ✓ JSON ${data.length}`);
+            return { type:'json', data };
+          }
+        } else {
+          const t = await r.text();
+          if (t.length > 1000 && t.includes('|') && t.includes('---')) {
+            console.log(`[${src.id}] ✓ MD ${t.length}b`);
+            return { type:'md', data:t };
+          }
+        }
+      } catch {}
+    }
+  }
+  // GitHub Contents API last resort
+  try {
+    const branch = src.candidates[0].url.match(/githubusercontent\.com\/[^/]+\/[^/]+\/([^/]+)\//)?.[1] || 'main';
+    const r = await fetch(`https://api.github.com/repos/${src.ghRepo}/contents/README.md?ref=${branch}`, {
+      headers: { Accept:'application/vnd.github.v3+json' }
+    });
+    if (r.ok) {
+      const json = await r.json();
+      if (json.content) {
+        const t = atob(json.content.replace(/\n/g,''));
+        if (t.length > 1000) { console.log(`[${src.id}] ✓ GH API`); return { type:'md', data:t }; }
+      }
+    }
+  } catch {}
+  throw new Error(`${src.label}: all fetch attempts failed`);
+}
+
+async function fetchWithCORS() { return fetchSource(SOURCES.simplify); }
+
+function toggleSource(id) {
+  if (activeSources.has(id) && activeSources.size === 1) return;
+  activeSources.has(id) ? activeSources.delete(id) : activeSources.add(id);
+  document.querySelectorAll('.source-toggle').forEach(b =>
+    b.classList.toggle('active', activeSources.has(b.dataset.src))
+  );
+  loadOpenings();
+}
+
+/* ===========================
    OPENINGS TAB
 =========================== */
-let allJobs = [];
-let activeFilter = 'all';
+let allJobs = [], activeFilter = 'all';
 let searchCompany = '', searchRole = '', searchLocation = '';
 
 function onSearchInput() {
   searchCompany  = (document.getElementById('search-company').value  || '').trim().toLowerCase();
   searchRole     = (document.getElementById('search-role').value     || '').trim().toLowerCase();
   searchLocation = (document.getElementById('search-location').value || '').trim().toLowerCase();
-  // Show/hide clear buttons
   ['company','role','location'].forEach(f => {
-    const val = f === 'company' ? searchCompany : f === 'role' ? searchRole : searchLocation;
-    document.getElementById('clear-' + f).classList.toggle('visible', val.length > 0);
+    const v = f==='company'?searchCompany : f==='role'?searchRole : searchLocation;
+    document.getElementById('clear-'+f).classList.toggle('visible', v.length > 0);
   });
   updateActiveFiltersBar();
   renderJobs();
 }
 
-function clearField(field) {
-  document.getElementById('search-' + field).value = '';
+function clearField(f) {
+  document.getElementById('search-'+f).value = '';
   onSearchInput();
-  document.getElementById('search-' + field).focus();
+  document.getElementById('search-'+f).focus();
 }
 
 function updateActiveFiltersBar() {
   const bar = document.getElementById('active-filters');
   const chips = [];
-  if (searchCompany)  chips.push({ field: 'CO',   value: searchCompany,  key: 'company' });
-  if (searchRole)     chips.push({ field: 'ROLE',  value: searchRole,     key: 'role' });
-  if (searchLocation) chips.push({ field: 'LOC',   value: searchLocation, key: 'location' });
-  if (!chips.length) { bar.style.display = 'none'; return; }
+  if (searchCompany)  chips.push({field:'CO',  value:searchCompany,  key:'company'});
+  if (searchRole)     chips.push({field:'ROLE', value:searchRole,     key:'role'});
+  if (searchLocation) chips.push({field:'LOC',  value:searchLocation, key:'location'});
+  if (!chips.length) { bar.style.display='none'; return; }
   bar.style.display = 'flex';
   bar.innerHTML = '<span style="font-size:9px;color:var(--muted);letter-spacing:.08em;margin-right:2px">FILTERING:</span>' +
-    chips.map(c => `<span class="active-chip"><span class="chip-field">${c.field}</span> ${escHtml(c.value)} <button onclick="clearField('${c.key}')" title="Remove">✕</button></span>`).join(
+    chips.map(c=>`<span class="active-chip"><span class="chip-field">${c.field}</span> ${escHtml(c.value)} <button onclick="clearField('${c.key}')">✕</button></span>`).join(
       '<span style="font-size:9px;color:var(--muted);padding:0 2px">AND</span>'
     ) +
     `<button onclick="clearAllSearch()" style="font-size:9px;color:var(--muted);background:none;border:none;cursor:pointer;margin-left:4px;font-family:var(--font-mono)">clear all</button>`;
 }
 
 function clearAllSearch() {
-  ['company','role','location'].forEach(f => {
-    document.getElementById('search-' + f).value = '';
-  });
+  ['company','role','location'].forEach(f => { document.getElementById('search-'+f).value=''; });
   onSearchInput();
 }
 
 function parseReadme(text) {
   const jobs = [];
   const lines = text.split('\n');
-
-  // IMPORTANT: SimplifyJobs README has multiple table sections separated by
-  // <details> blocks, blank lines, and HTML. We must NEVER reset headerSeen
-  // on non-pipe lines — once a header row is found, keep scanning everything.
   let headerSeen = false;
-
-  for (let i = 0; i < lines.length; i++) {
-    const raw = lines[i];
+  for (const raw of lines) {
     const line = raw.trim();
-
-    // Skip non-pipe lines but DO NOT reset headerSeen
     if (!line.startsWith('|')) continue;
-
-    // Separator row  |---|---|
     if (/^\|[\s\-|]+\|$/.test(line) || line.replace(/[|\-\s]/g,'') === '') continue;
-
-    // Header row — detect by presence of "company" and ("role" or "position")
     const lower = line.toLowerCase();
-    if (lower.includes('company') && (lower.includes('role') || lower.includes('position'))) {
-      headerSeen = true;
-      continue;
-    }
-
+    if (lower.includes('company') && (lower.includes('role') || lower.includes('position'))) { headerSeen=true; continue; }
     if (!headerSeen) continue;
-
-    // Split on pipe — keep inner cells only
-    const cols = line.split('|');
-    // cols[0] is empty (before first |), cols[last] is empty (after last |)
-    const cells = cols.slice(1, cols.length - 1).map(c => c.trim());
+    const cells = line.split('|').slice(1,-1).map(c=>c.trim());
     if (cells.length < 4) continue;
 
-    // --- Company ---
     const companyRaw = cells[0];
-    let company = '';
-    let companyUrl = '';
-    let isContinuation = false;
-    if (companyRaw.includes('↳') || companyRaw === '') {
-      isContinuation = true;
-      company = jobs.length ? jobs[jobs.length - 1].company : '';
-      companyUrl = jobs.length ? jobs[jobs.length - 1].companyUrl : '';
+    let company='', companyUrl='';
+    if (companyRaw.includes('↳') || companyRaw==='') {
+      company    = jobs.length ? jobs[jobs.length-1].company    : '';
+      companyUrl = jobs.length ? jobs[jobs.length-1].companyUrl : '';
     } else {
-      const linkMatch = companyRaw.match(/\[([^\]]+)\]\(([^)]+)\)/);
-      if (linkMatch) {
-        company = linkMatch[1];
-        companyUrl = linkMatch[2];
-      } else {
-        company = companyRaw.replace(/[*_[\]]/g, '').trim();
-      }
+      const m = companyRaw.match(/\[([^\]]+)\]\(([^)]+)\)/);
+      if (m) { company=m[1]; companyUrl=m[2]; }
+      else company = companyRaw.replace(/[*_[\]]/g,'').trim();
     }
     if (!company) continue;
 
-    // --- Role ---
-    let role = cells[1].replace(/[*_`]/g, '').trim();
-    // Strip markdown links in role
-    role = role.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim();
+    let role = cells[1].replace(/[*_`]/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').trim();
     if (!role) continue;
-
-    // --- Location ---
-    let location = cells[2].replace(/<[^>]+>/g, '').replace(/[*_`]/g, '').trim();
-    location = location.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim();
-
-    // --- Application link (cells[3] or the whole remaining cols) ---
-    // Join remaining cells in case link text contains pipes
+    let location = cells[2].replace(/<[^>]+>/g,'').replace(/[*_`]/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').trim();
     const remainder = cells.slice(3).join(' ');
-    const simplifyMatch = remainder.match(/href="(https?:\/\/simplify\.jobs[^"]+)"/i);
-    const genericMatch = remainder.match(/href="(https?:\/\/[^"]+)"/i);
-    const appLink = simplifyMatch ? simplifyMatch[1] : (genericMatch ? genericMatch[1] : '');
-    const hasSimplify = !!simplifyMatch;
-
-    // --- Date (last cell) ---
-    const lastCell = cells[cells.length - 1];
-    const dateMatch = lastCell.match(/([A-Z][a-z]{2}\s+\d{1,2})/);
-    const dateAdded = dateMatch ? dateMatch[1] : '';
-    const isNew = dateAdded ? isThisWeek(dateAdded) : false;
-    const isRemote = location.toLowerCase().includes('remote');
+    const sm = remainder.match(/href="(https?:\/\/simplify\.jobs[^"]+)"/i);
+    const gm = remainder.match(/href="(https?:\/\/[^"]+)"/i);
+    const appLink = sm ? sm[1] : (gm ? gm[1] : '');
+    const hasSimplify = !!sm;
+    const dm = cells[cells.length-1].match(/([A-Z][a-z]{2}\s+\d{1,2})/);
+    const dateAdded = dm ? dm[1] : '';
     const dObj = parseDateLabel(dateAdded);
     const dateMs = dObj ? dObj.getTime() : null;
-
-    jobs.push({ company, companyUrl, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew, isRemote });
+    const isRemote = location.toLowerCase().includes('remote');
+    jobs.push({ company, companyUrl, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew:false, isRemote });
   }
-
-  // Debug: log date distribution
-  const dateCounts = {};
-  for (const j of jobs) dateCounts[j.dateAdded || '(none)'] = (dateCounts[j.dateAdded || '(none)'] || 0) + 1;
-  const topDates = Object.entries(dateCounts).sort((a,b) => b[1]-a[1]).slice(0, 8);
-  console.log('[parseReadme] total:', jobs.length, '| top dates:', topDates);
+  const dc={};
+  jobs.forEach(j=>{ dc[j.dateAdded||'(none)']=(dc[j.dateAdded||'(none)']||0)+1; });
+  console.log('[parseReadme] total:', jobs.length, '| top dates:', Object.entries(dc).sort((a,b)=>b[1]-a[1]).slice(0,5));
   return jobs;
 }
 
-// Parse "Jan 21", "May 7" etc. to a Date, choosing the most recent past occurrence
+function parseJsonListings(data) {
+  if (data[0]) console.log('[JSON keys]', Object.keys(data[0]).slice(0,10));
+  return data.filter(j=>j.active!==false).map(j => {
+    const company    = j.company_name || j.company || '';
+    const companyUrl = j.company_url  || j.company_website || j.website || '';
+    const role       = j.title || j.role || '';
+    const location   = Array.isArray(j.locations) ? j.locations.join(', ') : (j.location||'');
+    const appLink    = j.url || j.apply_url || '';
+    const hasSimplify= !!(appLink && appLink.includes('simplify.jobs'));
+    let dateMs = null;
+    const raw = j.date_posted||j.posted_date||j.created_at||j.date_added||j.posted||j.timestamp||j.date||'';
+    if (raw) {
+      if (typeof raw==='number') dateMs = raw>1e10?raw:raw*1000;
+      else { const d=new Date(raw); if(!isNaN(d)) dateMs=d.getTime(); }
+    }
+    const dateAdded = dateMs ? new Date(dateMs).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    const isRemote  = location.toLowerCase().includes('remote');
+    return { company, companyUrl, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew:false, isRemote };
+  }).filter(j=>j.company&&j.role);
+}
+
 function parseDateLabel(dateStr) {
   if (!dateStr) return null;
   try {
     const now = new Date();
-    let d = new Date(dateStr + ' ' + now.getFullYear());
+    let d = new Date(dateStr+' '+now.getFullYear());
     if (isNaN(d)) return null;
-    // If the date is in the future, it belongs to last year
-    if (d > now) d = new Date(dateStr + ' ' + (now.getFullYear() - 1));
+    if (d > now) d = new Date(dateStr+' '+(now.getFullYear()-1));
     return d;
   } catch { return null; }
 }
 
 function isThisWeek(dateStr) {
-  const d = parseDateLabel(dateStr);
-  if (!d) return false;
-  const diff = Date.now() - d.getTime();
-  return diff >= 0 && diff < 7 * 86400000;
-}
-
-function getTimeLabel(dateStr) {
-  if (!dateStr) return '';
-  const d = parseDateLabel(dateStr);
-  if (!d) return dateStr;
-  const diff = Date.now() - d.getTime();
-  if (diff < 0) return dateStr;
-  const days = Math.floor(diff / 86400000);
-  if (days === 0) return 'today';
-  if (days === 1) return 'yesterday';
-  if (days < 7) return days + 'd ago';
-  // Show month/day for older dates
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-const RAW_URL = 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md';
-const JSON_URL = 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json';
-
-// Try to extract a real posted date from the Simplify apply URL
-// Simplify URLs contain a job ID; the listing JSON at simplify.jobs/<id> has date_posted
-// As a fallback, extract any date-like params from the URL
-function extractDateFromSimplifyUrl(url) {
-  if (!url) return '';
-  try {
-    // Simplify URLs look like: https://simplify.jobs/p/<uuid>?...
-    // The UUID maps to their internal job, but we can't fetch it cross-origin.
-    // Instead check for ?date= or ?posted= params
-    const u = new URL(url);
-    const d = u.searchParams.get('date') || u.searchParams.get('posted') || u.searchParams.get('date_posted');
-    if (d) return d;
-  } catch {}
-  return '';
-}
-
-async function fetchWithCORS() {
-  // Priority 1: JSON listings file (has real date_posted unix timestamps)
-  const jsonSources = [
-    JSON_URL,
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(JSON_URL),
-    'https://corsproxy.io/?' + encodeURIComponent(JSON_URL),
-  ];
-  for (const url of jsonSources) {
-    try {
-      const r = await fetch(url, { cache: 'no-cache' });
-      if (!r.ok) continue;
-      const data = await r.json();
-      if (Array.isArray(data) && data.length > 0) {
-        console.log('[fetch] got JSON listings:', data.length, '| sample keys:', Object.keys(data[0]).slice(0,10));
-        return { type: 'json', data };
-      }
-    } catch {}
-  }
-
-  // Priority 2: markdown README
-  const mdSources = [
-    RAW_URL,
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(RAW_URL),
-    'https://corsproxy.io/?' + encodeURIComponent(RAW_URL),
-  ];
-  for (const url of mdSources) {
-    try {
-      const r = await fetch(url, { cache: 'no-cache' });
-      if (!r.ok) continue;
-      const t = await r.text();
-      if (t.length > 1000 && t.includes('|')) {
-        console.log('[fetch] got markdown, length:', t.length);
-        return { type: 'md', data: t };
-      }
-    } catch {}
-  }
-
-  // Priority 3: GitHub Contents API (base64)
-  try {
-    const r = await fetch('https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/contents/README.md', {
-      headers: { 'Accept': 'application/vnd.github.v3+json' }
-    });
-    if (r.ok) {
-      const json = await r.json();
-      if (json.content) {
-        const t = atob(json.content.replace(/\n/g, ''));
-        if (t.length > 1000) return { type: 'md', data: t };
-      }
-    }
-  } catch {}
-
-  throw new Error('Could not reach GitHub. Check your internet connection or <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" style="color:var(--green)">view the list directly ↗</a>');
-}
-
-function parseJsonListings(data) {
-  // Log the first entry's keys so we can see what date fields are available
-  if (data[0]) console.log('[JSON keys]', Object.keys(data[0]));
-
-  return data
-    .filter(j => j.active !== false)
-    .map(j => {
-      const company = j.company_name || j.company || '';
-      const companyUrl = j.company_url || j.company_website || j.website || '';
-      const role = j.title || j.role || '';
-      const location = Array.isArray(j.locations) ? j.locations.join(', ') : (j.location || '');
-      const appLink = j.url || j.apply_url || '';
-      const hasSimplify = !!(appLink && appLink.includes('simplify.jobs'));
-
-      // Try every possible date field, including unix timestamps
-      let dateMs = null;
-      const rawDate = j.date_posted || j.posted_date || j.created_at || j.date_added
-                    || j.posted || j.timestamp || j.date || '';
-      if (rawDate) {
-        // Unix timestamp (seconds)?
-        if (typeof rawDate === 'number') {
-          dateMs = rawDate > 1e10 ? rawDate : rawDate * 1000;
-        } else {
-          const d = new Date(rawDate);
-          if (!isNaN(d)) dateMs = d.getTime();
-        }
-      }
-
-      const dateAdded = dateMs
-        ? new Date(dateMs).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-        : '';
-      const isRemote = location.toLowerCase().includes('remote');
-
-      return { company, companyUrl, role, location, appLink, hasSimplify, dateAdded, dateMs, isNew: false, isRemote };
-    })
-    .filter(j => j.company && j.role);
-}
-
-async function loadOpenings() {
-  const btn = document.getElementById('refresh-btn');
-  const results = document.getElementById('results');
-  btn.disabled = true;
-  results.innerHTML = '<div class="state"><div class="spinner"></div><div class="state-title">Fetching from SimplifyJobs GitHub...</div><div style="font-size:11px;color:var(--muted);margin-top:8px;">Parsing internship table...</div></div>';
-  try {
-    const result = await fetchWithCORS();
-    const raw = result.type === 'json' ? parseJsonListings(result.data) : parseReadme(result.data);
-    console.log('[loadOpenings] parsed jobs:', raw.length);
-
-    // Find the newest date in the dataset and mark "recent" = within 7 days of that date
-    const allDates = raw.map(j => j.dateMs || (parseDateLabel(j.dateAdded) || {getTime:()=>null}).getTime()).filter(Boolean);
-    const newestDate = allDates.length ? new Date(Math.max(...allDates)) : null;
-    const recentCutoff = newestDate ? new Date(newestDate.getTime() - 7 * 86400000) : null;
-
-    allJobs = raw.map(j => {
-      const ms = j.dateMs || (parseDateLabel(j.dateAdded) || {getTime:()=>null}).getTime();
-      const isNew = ms && recentCutoff ? ms >= recentCutoff.getTime() : false;
-      return { ...j, isNew };
-    });
-
-    const newCount = allJobs.filter(j => j.isNew).length;
-    const companies = new Set(allJobs.map(j => j.company)).size;
-    document.getElementById('stat-count').textContent = allJobs.length;
-    document.getElementById('stat-companies').textContent = companies;
-    document.getElementById('stat-new').textContent = newCount;
-
-    // Show what "recent" means in the label
-    const recentLabel = newestDate
-      ? 'newest: ' + newestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      : '';
-    document.getElementById('last-check').textContent = 'Updated: ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + (recentLabel ? '  ·  ' + recentLabel : '');
-
-    if (allJobs.length === 0) {
-      results.innerHTML = `<div class="state">
-        <span class="state-icon">⚠</span>
-        <div class="state-title">Fetched but could not parse jobs</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:16px;line-height:1.7">
-          The README format may have changed. Check console for debug info.<br><br>
-          <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" style="color:var(--green)">View raw list on GitHub ↗</a>
-        </div>
-      </div>`;
-    } else {
-      renderJobs();
-    }
-  } catch(err) {
-    results.innerHTML = `<div class="state">
-      <span class="state-icon">⚠</span>
-      <div class="state-title">Could not load openings</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:16px;line-height:1.6">${err.message}</div>
-      <a href="https://github.com/SimplifyJobs/Summer2026-Internships" target="_blank" class="apply-btn">View on GitHub directly ↗</a>
-    </div>`;
-  }
-  btn.disabled = false;
-}
-
-function renderJobs() {
-  const results = document.getElementById('results');
-  let filtered = allJobs.filter(j => {
-    const co  = j.company.toLowerCase();
-    const ro  = j.role.toLowerCase();
-    const loc = j.location.toLowerCase();
-    const matchCompany   = !searchCompany  || co.includes(searchCompany);
-    const matchRole      = !searchRole     || ro.includes(searchRole);
-    const matchLocation  = !searchLocation || loc.includes(searchLocation);
-    const matchFilter =
-      activeFilter === 'all'       ? true :
-      activeFilter === 'new'       ? j.isNew :
-      activeFilter === 'sponsored' ? j.hasSimplify :
-      activeFilter === 'remote'    ? j.isRemote : true;
-    return matchCompany && matchRole && matchLocation && matchFilter;
-  });
-
-  if (!filtered.length) {
-    const activeFilters = [searchCompany && `company: "${searchCompany}"`, searchRole && `role: "${searchRole}"`, searchLocation && `location: "${searchLocation}"`].filter(Boolean).join(' AND ');
-    results.innerHTML = `<div class="state"><span class="state-icon">🔍</span><div class="state-title">No results</div><div style="font-size:11px;margin-top:4px">${activeFilters || 'Try a different filter'}</div></div>`;
-    return;
-  }
-
-  // Sort newest first
-  filtered.sort((a, b) => (b.dateMs || 0) - (a.dateMs || 0));
-
-  const newJobs = filtered.filter(j => j.isNew);
-  const otherJobs = filtered.filter(j => !j.isNew);
-  let html = '';
-  if (newJobs.length) {
-    html += `<div class="section-head">Recently added — ${newJobs.length} openings</div>`;
-    html += '<div class="job-list">';
-    for (const j of newJobs) html += jobRowHTML(j);
-    html += '</div>';
-  }
-  if (otherJobs.length) {
-    html += `<div class="section-head" style="margin-top:${newJobs.length ? 24 : 0}px">All open internships — ${otherJobs.length} openings</div>`;
-    html += '<div class="job-list">';
-    for (const j of otherJobs) html += jobRowHTML(j);
-    html += '</div>';
-  }
-  results.innerHTML = html;
+  const d = parseDateLabel(dateStr); if (!d) return false;
+  const diff = Date.now()-d.getTime();
+  return diff>=0 && diff<7*86400000;
 }
 
 function getAgeBadge(dateAdded, dateMs) {
-  // Use precise ms timestamp if available, otherwise parse the string
-  let ms = dateMs || null;
-  if (!ms && dateAdded) {
-    const d = parseDateLabel(dateAdded);
-    if (d) ms = d.getTime();
-  }
+  let ms = dateMs||null;
+  if (!ms && dateAdded) { const d=parseDateLabel(dateAdded); if(d) ms=d.getTime(); }
   if (!ms) return '';
+  const days = Math.floor((Date.now()-ms)/86400000);
+  if (days<0) return '';
+  let label,color,bg,border;
+  if (days===0)      { label='today';                  color='#00FF87'; bg='rgba(0,255,135,.12)'; border='rgba(0,255,135,.3)'; }
+  else if (days===1) { label='1d old';                 color='#00FF87'; bg='rgba(0,255,135,.1)';  border='rgba(0,255,135,.25)'; }
+  else if (days<=7)  { label=days+'d old';             color='#00FF87'; bg='rgba(0,255,135,.08)'; border='rgba(0,255,135,.2)'; }
+  else if (days<=21) { label=days+'d old';             color='#FFB800'; bg='rgba(255,184,0,.1)';  border='rgba(255,184,0,.25)'; }
+  else if (days<=60) { label=Math.round(days/7)+'w old'; color='#FF8C42'; bg='rgba(255,140,66,.1)'; border='rgba(255,140,66,.25)'; }
+  else               { label=Math.round(days/30)+'mo old'; color='#FF5A5A'; bg='rgba(255,90,90,.1)'; border='rgba(255,90,90,.25)'; }
+  return `<span class="age-tag" style="color:${color};background:${bg};border-color:${border}">⏱ ${label}</span>`;
+}
 
-  const days = Math.floor((Date.now() - ms) / 86400000);
-  if (days < 0) return '';
-
-  let label, color, bg, border;
-  if (days === 0) {
-    label = 'today';     color = '#00FF87'; bg = 'rgba(0,255,135,.12)'; border = 'rgba(0,255,135,.3)';
-  } else if (days === 1) {
-    label = '1d old';    color = '#00FF87'; bg = 'rgba(0,255,135,.1)';  border = 'rgba(0,255,135,.25)';
-  } else if (days <= 7) {
-    label = days + 'd old'; color = '#00FF87'; bg = 'rgba(0,255,135,.08)'; border = 'rgba(0,255,135,.2)';
-  } else if (days <= 21) {
-    label = days + 'd old'; color = '#FFB800'; bg = 'rgba(255,184,0,.1)';  border = 'rgba(255,184,0,.25)';
-  } else if (days <= 60) {
-    label = Math.round(days/7) + 'w old'; color = '#FF8C42'; bg = 'rgba(255,140,66,.1)'; border = 'rgba(255,140,66,.25)';
-  } else {
-    const months = Math.round(days/30);
-    label = months + 'mo old'; color = '#FF5A5A'; bg = 'rgba(255,90,90,.1)'; border = 'rgba(255,90,90,.25)';
+async function loadOpenings() {
+  const btn=document.getElementById('refresh-btn'), results=document.getElementById('results');
+  btn.disabled=true;
+  const srcList=[...activeSources].map(id=>SOURCES[id]).filter(Boolean);
+  results.innerHTML=`<div class="state"><div class="spinner"></div><div class="state-title">Fetching from ${srcList.map(s=>s.label).join(' + ')}…</div></div>`;
+  try {
+    const settled = await Promise.allSettled(srcList.map(s=>fetchSource(s)));
+    let raw=[], errors=[];
+    for (let i=0;i<srcList.length;i++) {
+      const src=srcList[i], res=settled[i];
+      if (res.status==='fulfilled') {
+        const jobs = res.value.type==='json' ? parseJsonListings(res.value.data) : parseReadme(res.value.data);
+        raw.push(...jobs.map(j=>({...j,_source:src.id,_sourceLabel:src.label,_sourceColor:src.color})));
+      } else { errors.push(src.label); console.warn(`[${src.id}] failed:`,res.reason?.message); }
+    }
+    if (srcList.length>1) {
+      const seen=new Set();
+      raw=raw.filter(j=>{ const k=(j.company+'||'+j.role).toLowerCase(); if(seen.has(k)) return false; seen.add(k); return true; });
+    }
+    const allMs = raw.map(j=>j.dateMs||(parseDateLabel(j.dateAdded)||{getTime:()=>null}).getTime()).filter(Boolean);
+    const newestDate = allMs.length ? new Date(Math.max(...allMs)) : null;
+    const cutoff     = newestDate ? new Date(newestDate.getTime()-7*86400000) : null;
+    allJobs = raw.map(j => {
+      const ms = j.dateMs||(parseDateLabel(j.dateAdded)||{getTime:()=>null}).getTime();
+      return {...j, isNew: ms&&cutoff ? ms>=cutoff.getTime() : false };
+    });
+    document.getElementById('stat-count').textContent    = allJobs.length;
+    document.getElementById('stat-companies').textContent = new Set(allJobs.map(j=>j.company)).size;
+    document.getElementById('stat-new').textContent       = allJobs.filter(j=>j.isNew).length;
+    document.getElementById('last-check').textContent     = 'Updated: '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+(newestDate?'  ·  newest: '+newestDate.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'')+( errors.length?'  ·  ⚠ failed: '+errors.join(', '):'');
+    document.getElementById('logo-sub').textContent       = 'LIVE BOARD // '+srcList.map(s=>s.label.toUpperCase()).join(' + ');
+    document.getElementById('source-disclaimer').innerHTML= '⚠ Sources: '+srcList.map(s=>`<a href="https://github.com/${s.ghRepo}" target="_blank" style="color:var(--amber)">${s.label}</a>`).join(', ')+'. Community-maintained — always verify on the company\'s careers page.';
+    allJobs.length===0
+      ? results.innerHTML=`<div class="state"><span class="state-icon">⚠</span><div class="state-title">No jobs parsed</div><div style="font-size:11px;color:var(--muted);margin-top:8px">${errors.map(e=>'✗ '+e).join('<br>')||'Unknown error'}</div></div>`
+      : renderJobs();
+  } catch(err) {
+    results.innerHTML=`<div class="state"><span class="state-icon">⚠</span><div class="state-title">Could not load</div><div style="font-size:11px;color:var(--muted)">${err.message}</div></div>`;
   }
-  return `<span class="tag" style="color:${color};background:${bg};border-color:${border};font-variant-numeric:tabular-nums">⏱ ${label}</span>`;
+  btn.disabled=false;
+}
+
+// Build a set of "company||role" keys from tracked applications
+function getTrackedSet() {
+  const apps = loadApps();
+  return new Set(apps.map(a => (a.company + '||' + a.role).toLowerCase()));
+}
+
+function renderJobs() {
+  const results=document.getElementById('results');
+  const trackedSet = getTrackedSet();
+  const hideTracked = activeFilter === 'hide-tracked';
+
+  let filtered=allJobs.filter(j => {
+    const ok_co  = !searchCompany  || j.company.toLowerCase().includes(searchCompany);
+    const ok_ro  = !searchRole     || j.role.toLowerCase().includes(searchRole);
+    const ok_loc = !searchLocation || j.location.toLowerCase().includes(searchLocation);
+    const isTracked = trackedSet.has((j.company+'||'+j.role).toLowerCase());
+    const ok_f =
+      activeFilter==='all'          ? true :
+      activeFilter==='new'          ? j.isNew :
+      activeFilter==='sponsored'    ? j.hasSimplify :
+      activeFilter==='remote'       ? j.isRemote :
+      activeFilter==='hide-tracked' ? !isTracked : true;
+    return ok_co&&ok_ro&&ok_loc&&ok_f;
+  }).map(j => ({
+    ...j,
+    _tracked: trackedSet.has((j.company+'||'+j.role).toLowerCase())
+  }));
+  if (!filtered.length) {
+    const af=[searchCompany&&`company:"${searchCompany}"`,searchRole&&`role:"${searchRole}"`,searchLocation&&`loc:"${searchLocation}"`].filter(Boolean).join(' AND ');
+    results.innerHTML=`<div class="state"><span class="state-icon">🔍</span><div class="state-title">No results</div><div style="font-size:11px;margin-top:4px">${af||'Try a different filter'}</div></div>`;
+    return;
+  }
+  filtered.sort((a,b)=>(b.dateMs||0)-(a.dateMs||0));
+  const newJobs=filtered.filter(j=>j.isNew), otherJobs=filtered.filter(j=>!j.isNew);
+  let html='';
+  if (newJobs.length)   { html+=`<div class="section-head">Recently added — ${newJobs.length} openings</div><div class="job-list">`; newJobs.forEach(j=>html+=jobRowHTML(j)); html+='</div>'; }
+  if (otherJobs.length) { html+=`<div class="section-head" style="margin-top:${newJobs.length?24:0}px">All open internships — ${otherJobs.length} openings</div><div class="job-list">`; otherJobs.forEach(j=>html+=jobRowHTML(j)); html+='</div>'; }
+  results.innerHTML=html;
 }
 
 function jobRowHTML(j) {
-  const liLink = 'https://www.linkedin.com/jobs/search/?keywords=' + encodeURIComponent(j.company + ' ' + j.role) + '&f_JT=I';
-  const webLink = j.companyUrl || ('https://www.google.com/search?q=' + encodeURIComponent(j.company + ' careers'));
-  const safeCompany = j.company.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-  const safeRole = j.role.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-  const safeLocation = j.location.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-  const safeUrl = j.appLink ? j.appLink.replace(/"/g, '&quot;') : '';
+  const liLink  = 'https://www.linkedin.com/jobs/search/?keywords='+encodeURIComponent(j.company+' '+j.role)+'&f_JT=I';
+  const webLink = j.companyUrl || ('https://www.google.com/search?q='+encodeURIComponent(j.company+' careers'));
+  const safeC=j.company.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  const safeR=j.role.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  const safeL=j.location.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  const safeU=j.appLink?j.appLink.replace(/"/g,'&quot;'):'';
 
-  let tagsHTML = '';
-  if (j.isNew) tagsHTML += '<span class="tag new">✦ recently added</span>';
-  if (j.hasSimplify) tagsHTML += '<span class="tag sponsored">⚡ Simplify apply</span>';
-  tagsHTML += getAgeBadge(j.dateAdded, j.dateMs);
-  if (j.isRemote) tagsHTML += '<span class="tag">🌐 remote</span>';
-  if (j.location && !j.isRemote) tagsHTML += '<span class="tag">📍 ' + j.location.slice(0, 30) + '</span>';
+  // Find the tracked app for status display
+  const trackedApp = j._tracked ? loadApps().find(a => (a.company+'||'+a.role).toLowerCase() === (j.company+'||'+j.role).toLowerCase()) : null;
+  const trackedStatus = trackedApp ? (STATUS_CONFIG[trackedApp.status]||STATUS_CONFIG.applied) : null;
 
-  return `<div class="job-row">
+  let tags='';
+  if (j._tracked) tags+=`<span class="tag" style="background:rgba(0,210,255,.1);border-color:rgba(0,210,255,.3);color:#00D2FF">✓ tracked</span>`;
+  if (j.isNew) tags+='<span class="tag new">✦ recently added</span>';
+  if (j.hasSimplify) tags+='<span class="tag sponsored">⚡ Simplify apply</span>';
+  tags+=getAgeBadge(j.dateAdded,j.dateMs);
+  if (j._sourceLabel&&activeSources.size>1) tags+=`<span class="source-badge" style="color:${j._sourceColor};border-color:${j._sourceColor}">${j._sourceLabel}</span>`;
+  if (j.isRemote) tags+='<span class="tag">🌐 remote</span>';
+  if (j.location&&!j.isRemote) tags+=`<span class="tag">📍 ${j.location.slice(0,30)}</span>`;
+
+  const trackBtn = j._tracked
+    ? `<span class="apply-btn secondary" style="cursor:default;opacity:.6" title="Status: ${trackedStatus?.label||'Tracked'}">✓ ${trackedStatus?.label||'Tracked'}</span>`
+    : `<button class="apply-btn blue" onclick='quickTrack("${safeC}","${safeR}","${safeL}","${safeU}")'>+ Track</button>`;
+
+  return `<div class="job-row" style="${j._tracked?'opacity:.55;':''}">
     <div class="job-left">
       <div class="job-company">${j.company}</div>
       <div class="job-role">${j.role}</div>
-      <div class="job-tags">${tagsHTML}</div>
+      <div class="job-tags">${tags}</div>
     </div>
     <div class="job-right">
       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
-        ${j.appLink ? `<a class="apply-btn" href="${j.appLink}" target="_blank">Apply ↗</a>` : ''}
-        <button class="apply-btn blue" onclick='quickTrack("${safeCompany}","${safeRole}","${safeLocation}","${safeUrl}")'>+ Track</button>
-        <a class="apply-btn secondary" href="${webLink}" target="_blank" title="${j.companyUrl ? 'Company website' : 'Search company'}">🌐 Website</a>
+        ${j.appLink?`<a class="apply-btn" href="${j.appLink}" target="_blank">Apply ↗</a>`:''}
+        ${trackBtn}
+        <a class="apply-btn secondary" href="${webLink}" target="_blank" title="${j.companyUrl?'Company website':'Search company'}">🌐 Website</a>
         <a class="apply-btn secondary" href="${liLink}" target="_blank">LinkedIn ↗</a>
       </div>
     </div>
   </div>`;
 }
 
-document.querySelectorAll('.pill').forEach(p => {
-  p.addEventListener('click', () => {
-    document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
-    p.classList.add('active');
-    activeFilter = p.dataset.filter;
-    renderJobs();
+document.querySelectorAll('.pill').forEach(p=>{
+  p.addEventListener('click',()=>{
+    document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active'); activeFilter=p.dataset.filter; renderJobs();
   });
 });
 
 /* ===========================
    SUMMARY / TRACKER TAB
 =========================== */
-const STORAGE_KEY = 'intern_applications_v1';
-
-function loadApps() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
-}
-
-function saveApps(apps) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
-}
-
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-}
+const STORAGE_KEY='intern_applications_v1';
+function loadApps() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY))||[]; } catch { return []; } }
+function saveApps(apps) { localStorage.setItem(STORAGE_KEY,JSON.stringify(apps)); }
+function genId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
 const STATUS_CONFIG = {
-  to_apply:      { label: 'To Apply',            cls: 'badge-to-apply',      dot: 'dot-to-apply' },
-  applied:       { label: 'Applied',             cls: 'badge-applied',       dot: 'dot-applied' },
-  oa:            { label: 'OA',                  cls: 'badge-oa',            dot: 'dot-oa' },
-  interview:     { label: 'Interview',           cls: 'badge-interview',     dot: 'dot-interview' },
-  offer:         { label: 'Offer',               cls: 'badge-offer',         dot: 'dot-offer' },
-  rejected:      { label: 'Rejected',            cls: 'badge-rejected',      dot: 'dot-rejected' },
-  ghosted:       { label: 'Ghosted',             cls: 'badge-ghosted',       dot: 'dot-ghosted' },
-  withdrawn:     { label: 'Withdrawn',           cls: 'badge-withdrawn',     dot: 'dot-withdrawn' },
-  not_interested:{ label: 'Not Interested',      cls: 'badge-not-interested',dot: 'dot-not-interested' },
+  to_apply:      {label:'To Apply',          cls:'badge-to-apply',       dot:'dot-to-apply'},
+  applied:       {label:'Applied',           cls:'badge-applied',        dot:'dot-applied'},
+  oa:            {label:'OA',                cls:'badge-oa',             dot:'dot-oa'},
+  interview:     {label:'Interview',         cls:'badge-interview',      dot:'dot-interview'},
+  offer:         {label:'Offer',             cls:'badge-offer',          dot:'dot-offer'},
+  rejected:      {label:'Rejected',          cls:'badge-rejected',       dot:'dot-rejected'},
+  ghosted:       {label:'Ghosted',           cls:'badge-ghosted',        dot:'dot-ghosted'},
+  withdrawn:     {label:'Withdrawn',         cls:'badge-withdrawn',      dot:'dot-withdrawn'},
+  not_interested:{label:'Not Interested',    cls:'badge-not-interested', dot:'dot-not-interested'},
 };
 
 function renderStats() {
-  const apps = loadApps();
-  const total = apps.length;
-  const counts = {};
-  for (const s of Object.keys(STATUS_CONFIG)) counts[s] = 0;
-  for (const a of apps) counts[a.status] = (counts[a.status] || 0) + 1;
-  const excluded = (counts.to_apply||0) + (counts.not_interested||0);
-  const respRate = total > 0 ? Math.round(((counts.oa + counts.interview + counts.offer) / (total - excluded || 1)) * 100) : 0;
-
-  document.getElementById('summary-stats').innerHTML = `
+  const apps=loadApps(), total=apps.length, counts={};
+  Object.keys(STATUS_CONFIG).forEach(s=>counts[s]=0);
+  apps.forEach(a=>counts[a.status]=(counts[a.status]||0)+1);
+  const excl=(counts.to_apply||0)+(counts.not_interested||0);
+  const rate=total>0?Math.round(((counts.oa+counts.interview+counts.offer)/(total-excl||1))*100):0;
+  document.getElementById('summary-stats').innerHTML=`
     <div class="stat-card"><div class="num" style="color:#00D2FF">${counts.to_apply||0}</div><div class="lbl">To Apply</div></div>
     <div class="stat-card"><div class="num">${total}</div><div class="lbl">Total Tracked</div></div>
-    <div class="stat-card blue"><div class="num" style="color:var(--blue)">${counts.applied}</div><div class="lbl">In Review</div></div>
-    <div class="stat-card purple"><div class="num" style="color:var(--purple)">${counts.oa}</div><div class="lbl">OA / Assessment</div></div>
-    <div class="stat-card amber"><div class="num" style="color:var(--amber)">${counts.interview}</div><div class="lbl">Interviews</div></div>
-    <div class="stat-card green"><div class="num">${counts.offer}</div><div class="lbl">Offers</div></div>
-    <div class="stat-card red"><div class="num" style="color:var(--red)">${counts.rejected}</div><div class="lbl">Rejected</div></div>
-    <div class="stat-card"><div class="num" style="color:var(--green)">${respRate}%</div><div class="lbl">Response Rate</div></div>
-  `;
+    <div class="stat-card"><div class="num" style="color:var(--blue)">${counts.applied}</div><div class="lbl">In Review</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--purple)">${counts.oa}</div><div class="lbl">OA</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--amber)">${counts.interview}</div><div class="lbl">Interviews</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--green)">${counts.offer}</div><div class="lbl">Offers</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--red)">${counts.rejected}</div><div class="lbl">Rejected</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--green)">${rate}%</div><div class="lbl">Response Rate</div></div>`;
 }
 
-let activeSummaryStatus = 'all';
-
+let activeSummaryStatus='all';
 function renderApps() {
-  const apps = loadApps();
-  const q = (document.getElementById('app-search').value || '').toLowerCase();
-  const tbody = document.getElementById('app-tbody');
-  const emptyEl = document.getElementById('empty-apps');
-
-  let filtered = apps.filter(a => {
-    const matchQ = !q || a.company.toLowerCase().includes(q) || a.role.toLowerCase().includes(q);
-    const matchS = activeSummaryStatus === 'all' || a.status === activeSummaryStatus;
-    return matchQ && matchS;
-  });
-
-  // Sort: highest rank first, then newest applied
-  filtered.sort((a, b) => (b.rank || 0) - (a.rank || 0) || (b.dateApplied || '').localeCompare(a.dateApplied || '') || b.id.localeCompare(a.id));
-
+  const apps=loadApps(), q=(document.getElementById('app-search').value||'').toLowerCase();
+  const tbody=document.getElementById('app-tbody'), emptyEl=document.getElementById('empty-apps');
+  let filtered=apps.filter(a=>(!q||a.company.toLowerCase().includes(q)||a.role.toLowerCase().includes(q))&&(activeSummaryStatus==='all'||a.status===activeSummaryStatus));
+  filtered.sort((a,b)=>(b.rank||0)-(a.rank||0)||(b.dateApplied||'').localeCompare(a.dateApplied||'')||b.id.localeCompare(a.id));
   if (!filtered.length) {
-    tbody.innerHTML = '';
-    emptyEl.style.display = apps.length === 0 ? 'block' : 'none';
-    document.querySelector('.app-table-wrap').style.display = apps.length === 0 ? 'none' : 'block';
-    if (apps.length > 0 && filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">No matches</td></tr>';
-      document.querySelector('.app-table-wrap').style.display = 'block';
-      emptyEl.style.display = 'none';
-    }
-    renderStats();
-    return;
+    tbody.innerHTML=''; emptyEl.style.display=apps.length===0?'block':'none';
+    document.querySelector('.app-table-wrap').style.display=apps.length===0?'none':'block';
+    if (apps.length>0) { tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted);">No matches</td></tr>'; document.querySelector('.app-table-wrap').style.display='block'; emptyEl.style.display='none'; }
+    renderStats(); return;
   }
-
-  emptyEl.style.display = 'none';
-  document.querySelector('.app-table-wrap').style.display = 'block';
-
-  tbody.innerHTML = filtered.map(a => {
-    const sc = STATUS_CONFIG[a.status] || STATUS_CONFIG.applied;
-    const dateApplied = a.dateApplied ? formatDate(a.dateApplied) : '—';
-    const dateUpdated = a.dateUpdated ? formatDate(a.dateUpdated) : '—';
-    const urlHtml = a.url ? `<a href="${escHtml(a.url)}" target="_blank" style="color:var(--green);text-decoration:none;">↗</a> ` : '';
-    const rank = parseInt(a.rank) || 0;
-    const starsHtml = rank
-      ? Array.from({length:5},(_,i)=>`<span class="${i<rank?'rank-star-filled':'rank-star-empty'}">★</span>`).join('')
-      : '<span style="color:var(--border);font-size:10px">—</span>';
+  emptyEl.style.display='none'; document.querySelector('.app-table-wrap').style.display='block';
+  tbody.innerHTML=filtered.map(a=>{
+    const sc=STATUS_CONFIG[a.status]||STATUS_CONFIG.applied;
+    const rank=parseInt(a.rank)||0;
+    const stars=rank?Array.from({length:5},(_,i)=>`<span class="${i<rank?'rank-star-filled':'rank-star-empty'}">★</span>`).join(''):'<span style="color:var(--border);font-size:10px">—</span>';
     return `<tr>
-      <td>
-        <div class="company-cell">${urlHtml}${escHtml(a.company)}</div>
-        <div class="role-cell">${escHtml(a.role)}</div>
-      </td>
-      <td><span class="rank-badge">${starsHtml}</span></td>
+      <td><div class="company-cell">${a.url?`<a href="${escHtml(a.url)}" target="_blank" style="color:var(--green);text-decoration:none;">↗</a> `:''}${escHtml(a.company)}</div><div class="role-cell">${escHtml(a.role)}</div></td>
+      <td><span class="rank-badge">${stars}</span></td>
       <td><span class="status-badge ${sc.cls}">${sc.label}</span></td>
-      <td style="white-space:nowrap;color:var(--muted);font-size:10px">${dateApplied}</td>
-      <td style="white-space:nowrap;color:var(--muted);font-size:10px">${dateUpdated}</td>
-      <td style="color:var(--muted);font-size:10px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(a.location || '—')}</td>
-      <td class="notes-cell" title="${escHtml(a.notes || '')}">${escHtml(a.notes || '—')}</td>
-      <td>
-        <div class="action-btns">
-          <button class="icon-btn" onclick="openEditModal('${a.id}')">edit</button>
-          <button class="icon-btn del" onclick="deleteApp('${a.id}')">del</button>
-        </div>
-      </td>
+      <td style="white-space:nowrap;color:var(--muted);font-size:10px">${a.dateApplied?formatDate(a.dateApplied):'—'}</td>
+      <td style="white-space:nowrap;color:var(--muted);font-size:10px">${a.dateUpdated?formatDate(a.dateUpdated):'—'}</td>
+      <td style="color:var(--muted);font-size:10px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(a.location||'—')}</td>
+      <td class="notes-cell" title="${escHtml(a.notes||'')}">${escHtml(a.notes||'—')}</td>
+      <td><div class="action-btns"><button class="icon-btn" onclick="openEditModal('${a.id}')">edit</button><button class="icon-btn del" onclick="deleteApp('${a.id}')">del</button></div></td>
     </tr>`;
   }).join('');
-
   renderStats();
 }
 
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '—';
-  try {
-    const d = new Date(dateStr + 'T00:00:00');
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch { return dateStr; }
-}
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function formatDate(d){try{return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch{return d;}}
 
 function openAddModal(prefill) {
-  document.getElementById('modal-title').textContent = 'Add Application';
-  document.getElementById('edit-id').value = '';
-  document.getElementById('f-company').value = prefill?.company || '';
-  document.getElementById('f-role').value = prefill?.role || '';
-  document.getElementById('f-location').value = prefill?.location || '';
-  document.getElementById('f-url').value = prefill?.url || '';
-  document.getElementById('f-status').value = prefill ? 'to_apply' : 'applied';
-  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
-  document.getElementById('f-updated').value = new Date().toISOString().slice(0,10);
-  document.getElementById('f-notes').value = '';
+  document.getElementById('modal-title').textContent='Add Application';
+  document.getElementById('edit-id').value='';
+  document.getElementById('f-company').value=prefill?.company||'';
+  document.getElementById('f-role').value=prefill?.role||'';
+  document.getElementById('f-location').value=prefill?.location||'';
+  document.getElementById('f-url').value=prefill?.url||'';
+  document.getElementById('f-status').value=prefill?'to_apply':'applied';
+  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('f-updated').value=new Date().toISOString().slice(0,10);
+  document.getElementById('f-notes').value='';
   setRank(0);
   document.getElementById('app-modal').classList.add('open');
 }
 
 function openEditModal(id) {
-  const apps = loadApps();
-  const a = apps.find(x => x.id === id);
-  if (!a) return;
-  document.getElementById('modal-title').textContent = 'Edit Application';
-  document.getElementById('edit-id').value = id;
-  document.getElementById('f-company').value = a.company || '';
-  document.getElementById('f-role').value = a.role || '';
-  document.getElementById('f-location').value = a.location || '';
-  document.getElementById('f-url').value = a.url || '';
-  document.getElementById('f-status').value = a.status || 'applied';
-  document.getElementById('f-date').value = a.dateApplied || '';
-  document.getElementById('f-updated').value = a.dateUpdated || '';
-  document.getElementById('f-notes').value = a.notes || '';
-  setRank(parseInt(a.rank) || 0);
+  const a=loadApps().find(x=>x.id===id); if (!a) return;
+  document.getElementById('modal-title').textContent='Edit Application';
+  document.getElementById('edit-id').value=id;
+  document.getElementById('f-company').value=a.company||'';
+  document.getElementById('f-role').value=a.role||'';
+  document.getElementById('f-location').value=a.location||'';
+  document.getElementById('f-url').value=a.url||'';
+  document.getElementById('f-status').value=a.status||'applied';
+  document.getElementById('f-date').value=a.dateApplied||'';
+  document.getElementById('f-updated').value=a.dateUpdated||'';
+  document.getElementById('f-notes').value=a.notes||'';
+  setRank(parseInt(a.rank)||0);
   document.getElementById('app-modal').classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('app-modal').classList.remove('open');
-}
-
-function setRank(val) {
-  document.querySelectorAll('input[name="f-rank"]').forEach(r => {
-    r.checked = parseInt(r.value) === val;
-  });
-}
+function closeModal(){document.getElementById('app-modal').classList.remove('open');}
+function setRank(val){document.querySelectorAll('input[name="f-rank"]').forEach(r=>{r.checked=parseInt(r.value)===val;});}
 
 function saveApp() {
-  const company = document.getElementById('f-company').value.trim();
-  const role = document.getElementById('f-role').value.trim();
-  if (!company || !role) { alert('Company and role are required.'); return; }
-
-  const apps = loadApps();
-  const editId = document.getElementById('edit-id').value;
-
-  const checkedRank = document.querySelector('input[name="f-rank"]:checked');
-  const entry = {
-    id: editId || genId(),
-    company,
-    role,
-    location: document.getElementById('f-location').value.trim(),
-    url: document.getElementById('f-url').value.trim(),
-    status: document.getElementById('f-status').value,
-    rank: checkedRank ? parseInt(checkedRank.value) : 0,
-    dateApplied: document.getElementById('f-date').value,
-    dateUpdated: document.getElementById('f-updated').value,
-    notes: document.getElementById('f-notes').value.trim(),
+  const company=document.getElementById('f-company').value.trim(), role=document.getElementById('f-role').value.trim();
+  if (!company||!role){alert('Company and role are required.');return;}
+  const apps=loadApps(), editId=document.getElementById('edit-id').value;
+  const checked=document.querySelector('input[name="f-rank"]:checked');
+  const entry={
+    id:editId||genId(), company, role,
+    location:document.getElementById('f-location').value.trim(),
+    url:document.getElementById('f-url').value.trim(),
+    status:document.getElementById('f-status').value,
+    rank:checked?parseInt(checked.value):0,
+    dateApplied:document.getElementById('f-date').value,
+    dateUpdated:document.getElementById('f-updated').value,
+    notes:document.getElementById('f-notes').value.trim(),
   };
-
-  if (editId) {
-    const idx = apps.findIndex(x => x.id === editId);
-    if (idx !== -1) apps[idx] = entry;
-  } else {
-    apps.push(entry);
-  }
-
-  saveApps(apps);
-  closeModal();
-  renderApps();
+  if (editId){const i=apps.findIndex(x=>x.id===editId);if(i!==-1)apps[i]=entry;}else apps.push(entry);
+  saveApps(apps); closeModal(); renderApps();
+  // Refresh openings list so tracked state updates
+  if (allJobs.length) renderJobs();
 }
 
-function deleteApp(id) {
-  if (!confirm('Remove this application?')) return;
-  const apps = loadApps().filter(x => x.id !== id);
-  saveApps(apps);
-  renderApps();
-}
-
-function quickTrack(company, role, location, url) {
-  // Switch to summary tab first
+function deleteApp(id){if(!confirm('Remove this application?'))return;saveApps(loadApps().filter(x=>x.id!==id));renderApps();}
+function quickTrack(company,role,location,url){
   switchTab('summary');
-  openAddModal({ company, role, location, url });
+  openAddModal({company,role,location,url});
 }
 
 function exportCSV() {
-  const apps = loadApps();
-  if (!apps.length) { alert('No applications to export.'); return; }
-  const headers = ['Company','Role','Rank','Status','Date Applied','Last Update','Location','URL','Notes'];
-  const rows = apps.map(a => [
-    a.company, a.role, a.rank||0, a.status, a.dateApplied, a.dateUpdated, a.location, a.url, a.notes
-  ].map(v => '"' + String(v || '').replace(/"/g, '""') + '"'));
-  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'intern_applications.csv';
-  a.click();
+  const apps=loadApps(); if(!apps.length){alert('No applications to export.');return;}
+  const headers=['Company','Role','Rank','Status','Date Applied','Last Update','Location','URL','Notes'];
+  const rows=apps.map(a=>[a.company,a.role,a.rank||0,a.status,a.dateApplied,a.dateUpdated,a.location,a.url,a.notes].map(v=>'"'+String(v||'').replace(/"/g,'""')+'"'));
+  const csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\n');
+  const el=document.createElement('a'); el.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); el.download='intern_applications.csv'; el.click();
 }
 
-// Status filter pills in summary
-document.querySelectorAll('.status-pill').forEach(p => {
-  p.addEventListener('click', () => {
-    document.querySelectorAll('.status-pill').forEach(x => x.classList.remove('active'));
-    p.classList.add('active');
-    activeSummaryStatus = p.dataset.status;
-    renderApps();
-  });
+document.querySelectorAll('.status-pill').forEach(p=>{
+  p.addEventListener('click',()=>{document.querySelectorAll('.status-pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');activeSummaryStatus=p.dataset.status;renderApps();});
 });
-
-// Close modal on overlay click
-document.getElementById('app-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('app-modal')) closeModal();
-});
+document.getElementById('app-modal').addEventListener('click',e=>{if(e.target===document.getElementById('app-modal'))closeModal();});
 
 /* ===========================
    TABS
 =========================== */
 function switchTab(tabName) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tabName));
-  document.getElementById('openings-controls').style.display = tabName === 'openings' ? 'block' : 'none';
-  if (tabName === 'summary') renderApps();
-  if (tabName === 'alerts') initAlerts();
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tabName));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tabName));
+  document.getElementById('openings-controls').style.display=tabName==='openings'?'block':'none';
+  if (tabName==='openings' && allJobs.length) renderJobs();
+  if (tabName==='summary') renderApps();
+  if (tabName==='alerts')  initAlerts();
 }
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 
 /* ===========================
-   ALERTS TAB — LAST 7 DAYS
+   ALERTS TAB
 =========================== */
+let alertJobs=[], alertDayFilter='all';
+function initAlerts(){if(alertJobs.length)renderAlerts();}
 
-let alertJobs = [];       // all jobs with a parseable date
-let alertDayFilter = 'all'; // 'all' | 'YYYY-MM-DD'
-
-function initAlerts() {
-  if (alertJobs.length) renderAlerts();
+function parseDateStr(s){
+  if(!s)return null;
+  try{if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);const d=parseDateLabel(s);return d?d.toISOString().slice(0,10):null;}catch{return null;}
 }
 
-// Parse a date string like "May 7", "Apr 30", ISO "2025-05-07" → "YYYY-MM-DD" or null
-function parseDateStr(dateStr) {
-  if (!dateStr) return null;
-  try {
-    if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return dateStr.slice(0, 10);
-    const d = parseDateLabel(dateStr);
-    if (!d) return null;
-    return d.toISOString().slice(0, 10);
-  } catch { return null; }
+function dayLabel(isoDate){
+  const d=new Date(isoDate+'T00:00:00'), diff=Math.round((new Date(new Date().toDateString())-new Date(d.toDateString()))/86400000);
+  if(diff===0)return'Today'; if(diff===1)return'Yesterday';
+  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 }
 
-function dayLabel(isoDate) {
-  const now = new Date();
-  const d = new Date(isoDate + 'T00:00:00');
-  const diff = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / 86400000);
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Yesterday';
-  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-}
-
-async function runAlertScan() {
-  const btn = document.getElementById('alert-scan-btn');
-  const el = document.getElementById('alert-results');
-  btn.disabled = true;
-  el.innerHTML = '<div class="state"><div class="spinner"></div><div class="state-title">Loading openings...</div></div>';
-
-  let jobs = allJobs;
-  if (!jobs.length) {
-    try {
-      const result = await fetchWithCORS();
-      jobs = result.type === 'json' ? parseJsonListings(result.data) : parseReadme(result.data);
-      allJobs = jobs;
-    } catch(err) {
-      el.innerHTML = `<div class="state"><span class="state-icon">⚠</span><div class="state-title">Fetch failed</div><div style="font-size:11px;color:var(--muted)">${err.message}</div></div>`;
-      btn.disabled = false;
-      return;
-    }
+async function runAlertScan(){
+  const btn=document.getElementById('alert-scan-btn'), el=document.getElementById('alert-results');
+  btn.disabled=true; el.innerHTML='<div class="state"><div class="spinner"></div><div class="state-title">Loading openings...</div></div>';
+  let jobs=allJobs;
+  if(!jobs.length){
+    try{const r=await fetchWithCORS();jobs=r.type==='json'?parseJsonListings(r.data):parseReadme(r.data);allJobs=jobs;}
+    catch(err){el.innerHTML=`<div class="state"><span class="state-icon">⚠</span><div class="state-title">Fetch failed</div><div style="font-size:11px;color:var(--muted)">${err.message}</div></div>`;btn.disabled=false;return;}
   }
-
-  // Resolve a ms timestamp for every job — prefer dateMs, fall back to parsing dateAdded string
-  const withMs = jobs.map(j => {
-    let ms = j.dateMs || null;
-    if (!ms && j.dateAdded) {
-      const d = parseDateLabel(j.dateAdded);
-      if (d) ms = d.getTime();
-    }
-    return { ...j, _ms: ms };
-  }).filter(j => j._ms); // only jobs with a known date
-
-  console.log('[alerts] jobs with dates:', withMs.length, 'of', jobs.length);
-
-  if (!withMs.length) {
-    el.innerHTML = `<div class="state"><span class="state-icon">⚠</span><div class="state-title">No date info available</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:8px">The fetched data has no parseable dates. Check console for details.</div></div>`;
-    btn.disabled = false;
-    return;
-  }
-
-  // Anchor to the NEWEST date in the dataset (not today), go back 7 days from there
-  const newestMs = Math.max(...withMs.map(j => j._ms));
-  const cutoffMs  = newestMs - 7 * 86400000;
-  const newestISO = new Date(newestMs).toISOString().slice(0, 10);
-  const cutoffISO = new Date(cutoffMs).toISOString().slice(0, 10);
-
-  // Filter to the 7-day window and attach isoDate
-  const dated = withMs
-    .filter(j => j._ms >= cutoffMs)
-    .map(j => ({ ...j, isoDate: new Date(j._ms).toISOString().slice(0, 10) }));
-
-  console.log('[alerts] jobs in 7-day window:', dated.length, '| newest:', newestISO, '| cutoff:', cutoffISO);
-
-  alertJobs = dated;
-
-  // Stats
-  const dayBeforeISO = new Date(newestMs - 86400000).toISOString().slice(0, 10);
-  const newestLabel = new Date(newestMs).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  document.getElementById('alert-new-count').textContent = dated.length;
-  document.getElementById('alert-today-count').textContent = dated.filter(j => j.isoDate === newestISO).length;
-  document.getElementById('alert-yesterday-count').textContent = dated.filter(j => j.isoDate === dayBeforeISO).length;
-  document.getElementById('alert-simplify-count').textContent = dated.filter(j => j.hasSimplify).length;
-  document.getElementById('alert-remote-count').textContent = dated.filter(j => j.isRemote).length;
-  document.getElementById('alert-last-scan').textContent = `Newest in dataset: ${newestLabel}`;
-
-  buildAlertChart(dated, cutoffISO, newestISO);
-
-  // Day filter pills
-  const days = [...new Set(dated.map(j => j.isoDate))].sort().reverse();
-  const pillsEl = document.getElementById('alert-day-pills');
-  pillsEl.innerHTML = `<button class="pill active" data-day="all" onclick="setAlertDay('all', this)">All days</button>` +
-    days.map(d => `<button class="pill" data-day="${d}" onclick="setAlertDay('${d}', this)">${dayLabel(d)} <span style="opacity:.6">(${dated.filter(j=>j.isoDate===d).length})</span></button>`).join('');
-
-  alertDayFilter = 'all';
-  renderAlerts();
-  btn.disabled = false;
+  const withMs=jobs.map(j=>{let ms=j.dateMs||null;if(!ms&&j.dateAdded){const d=parseDateLabel(j.dateAdded);if(d)ms=d.getTime();}return{...j,_ms:ms};}).filter(j=>j._ms);
+  console.log('[alerts] with dates:',withMs.length,'of',jobs.length);
+  if(!withMs.length){el.innerHTML=`<div class="state"><span class="state-icon">⚠</span><div class="state-title">No date info available</div></div>`;btn.disabled=false;return;}
+  const newestMs=Math.max(...withMs.map(j=>j._ms));
+  const cutoffMs=newestMs-7*86400000;
+  const newestISO=new Date(newestMs).toISOString().slice(0,10);
+  const dated=withMs.filter(j=>j._ms>=cutoffMs).map(j=>({...j,isoDate:new Date(j._ms).toISOString().slice(0,10)}));
+  console.log('[alerts] in window:',dated.length,'| newest:',newestISO);
+  alertJobs=dated;
+  const dayBefore=new Date(newestMs-86400000).toISOString().slice(0,10);
+  const newestLabel=new Date(newestMs).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  document.getElementById('alert-new-count').textContent      =dated.length;
+  document.getElementById('alert-today-count').textContent    =dated.filter(j=>j.isoDate===newestISO).length;
+  document.getElementById('alert-yesterday-count').textContent=dated.filter(j=>j.isoDate===dayBefore).length;
+  document.getElementById('alert-simplify-count').textContent =dated.filter(j=>j.hasSimplify).length;
+  document.getElementById('alert-remote-count').textContent   =dated.filter(j=>j.isRemote).length;
+  document.getElementById('alert-last-scan').textContent      =`Newest in dataset: ${newestLabel}`;
+  buildAlertChart(dated,cutoffMs,newestISO);
+  const days=[...new Set(dated.map(j=>j.isoDate))].sort().reverse();
+  document.getElementById('alert-day-pills').innerHTML=
+    `<button class="pill active" data-day="all" onclick="setAlertDay('all')">All days</button>`+
+    days.map(d=>`<button class="pill" data-day="${d}" onclick="setAlertDay('${d}')">${dayLabel(d)} <span style="opacity:.6">(${dated.filter(j=>j.isoDate===d).length})</span></button>`).join('');
+  alertDayFilter='all'; renderAlerts(); btn.disabled=false;
 }
 
-function buildAlertChart(dated, cutoffISO, newestISO) {
-  // Generate the 7 days ending at newestISO
-  const newestMs = new Date(newestISO + 'T00:00:00').getTime();
-  const days = [];
-  for (let i = 6; i >= 0; i--) {
-    days.push(new Date(newestMs - i * 86400000).toISOString().slice(0, 10));
-  }
-  const counts = {};
-  for (const d of days) counts[d] = 0;
-  for (const j of dated) if (counts[j.isoDate] !== undefined) counts[j.isoDate]++;
-  const max = Math.max(...Object.values(counts), 1);
-
-  const chartEl = document.getElementById('alert-bar-chart');
-  const labelEl = document.getElementById('alert-bar-labels');
-  const barW = `calc((100% - ${6*6}px) / 7)`;
-
-  chartEl.innerHTML = days.map(d => {
-    const h = Math.max(4, Math.round((counts[d] / max) * 64));
-    const isNewest = d === newestISO;
-    const color = isNewest ? 'var(--green)' : 'rgba(0,255,135,.3)';
-    return `<div title="${dayLabel(d)}: ${counts[d]} openings" onclick="setAlertDay('${d}', null)"
-      style="width:${barW};height:${h}px;background:${color};border-radius:3px 3px 0 0;cursor:pointer;transition:opacity .15s;flex-shrink:0"
-      onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-    </div>`;
+function buildAlertChart(dated,cutoffMs,newestISO){
+  const newestMs=new Date(newestISO+'T00:00:00').getTime();
+  const days=Array.from({length:7},(_,i)=>new Date(newestMs-i*86400000).toISOString().slice(0,10)).reverse();
+  const counts={}; days.forEach(d=>counts[d]=0); dated.forEach(j=>{if(counts[j.isoDate]!==undefined)counts[j.isoDate]++;});
+  const max=Math.max(...Object.values(counts),1), bw=`calc((100% - ${6*6}px) / 7)`;
+  document.getElementById('alert-bar-chart').innerHTML=days.map(d=>{
+    const h=Math.max(4,Math.round((counts[d]/max)*64)), hot=d===newestISO;
+    return `<div title="${dayLabel(d)}: ${counts[d]}" onclick="setAlertDay('${d}')"
+      style="width:${bw};height:${h}px;background:${hot?'var(--green)':'rgba(0,255,135,.3)'};border-radius:3px 3px 0 0;cursor:pointer;transition:opacity .15s;flex-shrink:0"
+      onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'"></div>`;
   }).join('');
-
-  labelEl.innerHTML = days.map(d => {
-    const isNewest = d === newestISO;
-    const lbl = isNewest ? 'Newest' : new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'short'});
-    return `<div style="width:${barW};text-align:center;font-size:9px;color:${isNewest?'var(--green)':'var(--muted)'};flex-shrink:0;overflow:hidden;white-space:nowrap">${lbl}</div>`;
+  document.getElementById('alert-bar-labels').innerHTML=days.map(d=>{
+    const hot=d===newestISO, lbl=hot?'Newest':new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'short'});
+    return `<div style="width:${bw};text-align:center;font-size:9px;color:${hot?'var(--green)':'var(--muted)'};flex-shrink:0;overflow:hidden;white-space:nowrap">${lbl}</div>`;
   }).join('');
-
-  document.getElementById('alert-chart-wrap').style.display = 'block';
+  document.getElementById('alert-chart-wrap').style.display='block';
 }
 
-function setAlertDay(day, btnEl) {
-  alertDayFilter = day;
-  // Update pills
-  document.querySelectorAll('#alert-day-pills .pill').forEach(p => {
-    p.classList.toggle('active', p.dataset.day === day);
-  });
+function setAlertDay(day){
+  alertDayFilter=day;
+  document.querySelectorAll('#alert-day-pills .pill').forEach(p=>p.classList.toggle('active',p.dataset.day===day));
   renderAlerts();
 }
 
-function renderAlerts() {
-  const el = document.getElementById('alert-results');
-  if (!alertJobs.length) return;
-
-  const filtered = alertDayFilter === 'all'
-    ? alertJobs
-    : alertJobs.filter(j => j.isoDate === alertDayFilter);
-
-  if (!filtered.length) {
-    el.innerHTML = '<div class="state" style="padding:32px"><div class="state-title">No openings on this day</div></div>';
-    return;
+function renderAlerts(){
+  const el=document.getElementById('alert-results'); if(!alertJobs.length)return;
+  const filtered=alertDayFilter==='all'?alertJobs:alertJobs.filter(j=>j.isoDate===alertDayFilter);
+  if(!filtered.length){el.innerHTML='<div class="state" style="padding:32px"><div class="state-title">No openings on this day</div></div>';return;}
+  const byDay={};
+  filtered.forEach(j=>{if(!byDay[j.isoDate])byDay[j.isoDate]=[];byDay[j.isoDate].push(j);});
+  const sortedDays=Object.keys(byDay).sort().reverse(), dataNewest=sortedDays[0];
+  let html='';
+  for (const day of sortedDays){
+    const dj=byDay[day], isNewest=day===dataNewest;
+    html+=`<div class="section-head" style="margin-top:${html?'24':'0'}px;margin-bottom:10px">
+      <span style="color:${isNewest?'var(--green)':'inherit'}">${dayLabel(day)}</span>
+      <span style="margin-left:8px;font-size:9px;color:var(--muted)">${dj.length} opening${dj.length!==1?'s':''}</span>
+      ${isNewest?'<span style="margin-left:6px;font-size:9px;padding:1px 6px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);border-radius:3px">newest</span>':''}
+    </div><div class="job-list">`;
+    dj.forEach(j=>html+=jobRowHTML(j)); html+='</div>';
   }
-
-  // Group by day
-  const byDay = {};
-  for (const j of filtered) {
-    if (!byDay[j.isoDate]) byDay[j.isoDate] = [];
-    byDay[j.isoDate].push(j);
-  }
-  const sortedDays = Object.keys(byDay).sort().reverse();
-  const dataNewest = sortedDays[0]; // most recent date in this filtered set
-
-  let html = '';
-  for (const day of sortedDays) {
-    const dayJobs = byDay[day];
-    const lbl = dayLabel(day);
-    const isNewest = day === dataNewest;
-    html += `<div class="section-head" style="margin-top:${html?'24':'0'}px;margin-bottom:10px">
-      <span style="color:${isNewest?'var(--green)':'inherit'}">${lbl}</span>
-      <span style="margin-left:8px;font-size:9px;color:var(--muted)">${dayJobs.length} opening${dayJobs.length!==1?'s':''}</span>
-      ${isNewest ? '<span style="margin-left:6px;font-size:9px;padding:1px 6px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);border-radius:3px">newest</span>' : ''}
-    </div>
-    <div class="job-list">`;
-    for (const j of dayJobs) html += jobRowHTML(j);
-    html += '</div>';
-  }
-
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
-document.querySelectorAll('.tab-btn').forEach(b => {
-  b.addEventListener('click', () => switchTab(b.dataset.tab));
-});
-
-// Boot
-loadOpenings();
-renderApps();
+loadOpenings(); renderApps();
 </script>
 </body>
 </html>
