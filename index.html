@@ -689,88 +689,104 @@ const SOURCES = {
     id: 'simplify',
     label: 'SimplifyJobs 2026',
     color: '#00FF87',
-    jsonUrl: 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json',
-    mdUrl:   'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md',
-    ghRepo:  'SimplifyJobs/Summer2026-Internships',
+    candidates: [
+      { type: 'json', url: 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json' },
+      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md' },
+      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/main/README.md' },
+    ],
+    ghRepo: 'SimplifyJobs/Summer2026-Internships',
   },
   cvrve: {
     id: 'cvrve',
     label: 'Cvrve 2026',
     color: '#4DA6FF',
-    mdUrl:  'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/dev/README.md',
+    candidates: [
+      { type: 'md', url: 'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/dev/README.md' },
+      { type: 'md', url: 'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/main/README.md' },
+      { type: 'md', url: 'https://raw.githubusercontent.com/cvrve/Summer2026-Internships/master/README.md' },
+    ],
     ghRepo: 'cvrve/Summer2026-Internships',
   },
   ouckah: {
     id: 'ouckah',
     label: 'Ouckah 2026',
     color: '#B97FFF',
-    mdUrl:  'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/main/README.md',
+    candidates: [
+      { type: 'md', url: 'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/main/README.md' },
+      { type: 'md', url: 'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/dev/README.md' },
+      { type: 'md', url: 'https://raw.githubusercontent.com/Ouckah/Summer2026-Internships/master/README.md' },
+    ],
     ghRepo: 'Ouckah/Summer2026-Internships',
   },
   newgrad: {
     id: 'newgrad',
-    label: 'New Grad Positions',
+    label: 'New Grad',
     color: '#FFB800',
-    mdUrl:  'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md',
+    candidates: [
+      { type: 'json', url: 'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/.github/scripts/listings.json' },
+      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md' },
+      { type: 'md',   url: 'https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/main/README.md' },
+    ],
     ghRepo: 'SimplifyJobs/New-Grad-Positions',
   },
 };
 
-let activeSources = new Set(['simplify']); // which sources are toggled on
+let activeSources = new Set(['simplify']);
+
+const PROXIES = [
+  url => url,
+  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+  url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+  url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
+];
 
 async function fetchSource(src) {
-  const proxies = [
-    url => url,
-    url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-    url => 'https://corsproxy.io/?' + encodeURIComponent(url),
-  ];
-
-  // Try JSON first if available
-  if (src.jsonUrl) {
-    for (const proxy of proxies) {
+  // Try every candidate URL × every proxy until one works
+  for (const candidate of src.candidates) {
+    for (const makeProxy of PROXIES) {
+      const proxyUrl = makeProxy(candidate.url);
       try {
-        const r = await fetch(proxy(src.jsonUrl), { cache: 'no-cache' });
+        const r = await fetch(proxyUrl, { cache: 'no-cache' });
         if (!r.ok) continue;
-        const data = await r.json();
-        if (Array.isArray(data) && data.length > 0) {
-          console.log(`[${src.id}] JSON ok:`, data.length);
-          return { type: 'json', data };
+
+        if (candidate.type === 'json') {
+          const data = await r.json();
+          if (Array.isArray(data) && data.length > 10) {
+            console.log(`[${src.id}] ✓ JSON via ${proxyUrl.slice(0,50)}:`, data.length);
+            return { type: 'json', data };
+          }
+        } else {
+          const t = await r.text();
+          if (t.length > 1000 && t.includes('|') && t.includes('---')) {
+            console.log(`[${src.id}] ✓ MD via ${proxyUrl.slice(0,50)}, len:`, t.length);
+            return { type: 'md', data: t };
+          }
         }
       } catch {}
     }
   }
 
-  // Markdown README
-  for (const proxy of proxies) {
-    try {
-      const r = await fetch(proxy(src.mdUrl), { cache: 'no-cache' });
-      if (!r.ok) continue;
-      const t = await r.text();
-      if (t.length > 1000 && t.includes('|')) {
-        console.log(`[${src.id}] MD ok, length:`, t.length);
-        return { type: 'md', data: t };
-      }
-    } catch {}
-  }
-
-  // GitHub Contents API fallback
+  // Last resort: GitHub Contents API (works in browser even when raw is CORS-blocked)
   try {
-    const r = await fetch(`https://api.github.com/repos/${src.ghRepo}/contents/README.md`, {
-      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    const branch = src.candidates[0].url.match(/githubusercontent\.com\/[^/]+\/[^/]+\/([^/]+)\//)?.[1] || 'main';
+    const r = await fetch(`https://api.github.com/repos/${src.ghRepo}/contents/README.md?ref=${branch}`, {
+      headers: { Accept: 'application/vnd.github.v3+json' }
     });
     if (r.ok) {
       const json = await r.json();
       if (json.content) {
         const t = atob(json.content.replace(/\n/g, ''));
-        if (t.length > 1000) return { type: 'md', data: t };
+        if (t.length > 1000) {
+          console.log(`[${src.id}] ✓ GitHub API fallback, len:`, t.length);
+          return { type: 'md', data: t };
+        }
       }
     }
   } catch {}
 
-  throw new Error(`Could not fetch ${src.label}`);
+  throw new Error(`${src.label}: all fetch attempts failed`);
 }
 
-// Keep fetchWithCORS for alerts tab compatibility
 async function fetchWithCORS() {
   return fetchSource(SOURCES.simplify);
 }
@@ -875,13 +891,18 @@ async function loadOpenings() {
     const recentLabel = newestDate
       ? 'newest: ' + newestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       : '';
-    const errNote = errors.length ? `  ·  ⚠ ${errors.length} source(s) failed` : '';
+    const errNote = errors.length ? `  ·  ⚠ failed: ${errors.map(e=>e.split(':')[0]).join(', ')}` : '';
     document.getElementById('last-check').textContent = 'Updated: ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + (recentLabel ? '  ·  ' + recentLabel : '') + errNote;
 
     if (allJobs.length === 0) {
+      const errList = errors.map(e => `<div style="color:var(--red)">✗ ${e}</div>`).join('');
       results.innerHTML = `<div class="state"><span class="state-icon">⚠</span><div class="state-title">No jobs parsed</div>
-        <div style="font-size:11px;color:var(--muted);line-height:1.7">${errors.join('<br>') || 'Unknown error'}</div></div>`;
+        <div style="font-size:11px;color:var(--muted);line-height:1.9;margin-top:8px">${errList || 'Unknown error — check console'}</div></div>`;
     } else {
+      // Show a per-source breakdown in console
+      const bySource = {};
+      allJobs.forEach(j => bySource[j._sourceLabel||'unknown'] = (bySource[j._sourceLabel||'unknown']||0)+1);
+      console.log('[sources loaded]', bySource);
       renderJobs();
     }
   } catch(err) {
