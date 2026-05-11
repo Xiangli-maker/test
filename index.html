@@ -902,7 +902,7 @@ function switchTab(tabName) {
   document.getElementById('openings-controls').style.display=tabName==='openings'?'block':'none';
   if (tabName==='openings' && allJobs.length) renderJobs();
   if (tabName==='summary') renderApps();
-  if (tabName==='alerts')  initAlerts();
+  if (tabName==='alerts')  { initAlerts(); if(alertJobs.length) renderAlerts(); }
 }
 document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 
@@ -982,7 +982,9 @@ function setAlertDay(day){
 
 function renderAlerts(){
   const el=document.getElementById('alert-results'); if(!alertJobs.length)return;
-  const filtered=alertDayFilter==='all'?alertJobs:alertJobs.filter(j=>j.isoDate===alertDayFilter);
+  const trackedSet=getTrackedSet();
+  const filtered=(alertDayFilter==='all'?alertJobs:alertJobs.filter(j=>j.isoDate===alertDayFilter))
+    .map(j=>({...j, _tracked: trackedSet.has((j.company+'||'+j.role).toLowerCase())}));
   if(!filtered.length){el.innerHTML='<div class="state" style="padding:32px"><div class="state-title">No openings on this day</div></div>';return;}
   const byDay={};
   filtered.forEach(j=>{if(!byDay[j.isoDate])byDay[j.isoDate]=[];byDay[j.isoDate].push(j);});
